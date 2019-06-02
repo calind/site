@@ -5,7 +5,7 @@
  * Plugin URI: https://wordpress.org/plugins/fg-debug-bar-rewrite-rules/
  * Description: Displays the current rewrite rules for the site. Requires the debug bar plugin.
  * Author: Frédéric GILLES
- * Version: 1.1.1
+ * Version: 1.1.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
