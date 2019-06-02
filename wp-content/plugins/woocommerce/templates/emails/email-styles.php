@@ -40,17 +40,22 @@ $base_lighter_40 = wc_hex_lighter( $base, 40 );
 $text_lighter_20 = wc_hex_lighter( $text, 20 );
 
 // !important; is a gmail hack to prevent styles being stripped if it doesn't like something.
+// body{padding: 0;} ensures proper scale/positioning of the email in the iOS native email app.
 ?>
+body {
+	padding: 0;
+}
+
 #wrapper {
 	background-color: <?php echo esc_attr( $bg ); ?>;
 	margin: 0;
-	padding: 70px 0 70px 0;
+	padding: 70px 0;
 	-webkit-text-size-adjust: none !important;
 	width: 100%;
 }
 
 #template_container {
-	box-shadow: 0 1px 4px rgba(0,0,0,0.1) !important;
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1) !important;
 	background-color: <?php echo esc_attr( $body ); ?>;
 	border: 1px solid <?php echo esc_attr( $bg_darker_10 ); ?>;
 	border-radius: 3px !important;
@@ -74,16 +79,16 @@ $text_lighter_20 = wc_hex_lighter( $text, 20 );
 
 #template_footer td {
 	padding: 0;
-	-webkit-border-radius: 6px;
+	border-radius: 6px;
 }
 
 #template_footer #credit {
-	border:0;
+	border: 0;
 	color: <?php echo esc_attr( $base_lighter_40 ); ?>;
-	font-family: Arial;
-	font-size:12px;
-	line-height:125%;
-	text-align:center;
+	font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+	font-size: 12px;
+	line-height: 125%;
+	text-align: center;
 	padding: 0 48px 48px 48px;
 }
 
