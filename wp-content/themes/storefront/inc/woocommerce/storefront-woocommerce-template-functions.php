@@ -255,7 +255,7 @@ if ( ! function_exists( 'storefront_product_categories' ) ) {
 				'limit'            => 3,
 				'columns'          => 3,
 				'child_categories' => 0,
-				'orderby'          => 'name',
+				'orderby'          => 'menu_order',
 				'title'            => __( 'Shop by Category', 'storefront' ),
 			)
 		);
@@ -754,6 +754,18 @@ if ( ! function_exists( 'storefront_sticky_single_add_to_cart' ) ) {
 		}
 
 		if ( ! is_product() ) {
+			return;
+		}
+
+		$show = false;
+
+		if ( $product->is_purchasable() && $product->is_in_stock() ) {
+			$show = true;
+		} else if ( $product->is_type( 'external' ) ) {
+			$show = true;
+		}
+
+		if ( ! $show ) {
 			return;
 		}
 

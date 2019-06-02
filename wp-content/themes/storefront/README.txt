@@ -1,9 +1,9 @@
 === Storefront ===
 Contributors: automattic, tiagonoronha, jameskoster
 Requires at least: 4.7
-Tested up to: 5.0
-Stable tag: 2.4.3
-Version: 2.4.3
+Tested up to: 5.2
+Stable tag: 2.5.0
+Version: 2.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: e-commerce, two-columns, left-sidebar, right-sidebar, custom-background, custom-colors, custom-header, custom-menu, featured-images, full-width-template, threaded-comments, accessibility-ready, rtl-language-support, footer-widgets, sticky-post, theme-options, editor-style
@@ -48,6 +48,42 @@ To the best of our knowledge, Google doesn’t track nor share end user data.
 Privacy Policy for the Google Fonts API: https://developers.google.com/fonts/faq#what_does_using_the_google_fonts_api_mean_for_the_privacy_of_my_users
 
 == Changelog ==
+
+= 2.5.0 - 2019-05-09 =
+* Feature - Updated Starter Content to make use of WooCommerce 3.6 blocks, and also the new cover block introduced in WordPress 5.2, to create a custom editable homepage.
+* Tweak - Added edit link to post, pages, and products.
+* Fix - Prevent overlap of site title and handheld menu button when not using a logo image.
+* Fix - Added error styling to T&C checkbox and Country select in the Checkout page.
+* Fix - Ensure all inputs use accent color set in the Customizer.
+* Fix - Don't show sticky add to cart if product cannot be purchased.
+* Fix - Added margin to view cart link in the "Added to cart" notice.
+* Fix - Replaced CSS calc with Sass math when calculating block gallery column widths for better compatibility with IE11.
+* Fix - Change color and size of "remove" icon in the Cart page.
+* Fix - Change product pagination z-index for compatibility with PhotoSwipe.
+* Fix - Fix double scrollbar when original length of the mini cart surpasses the end of the page.
+* Fix - Move all Gutenberg assets to Gutenberg hooks.
+* Dev - Updated Composite Products integration for compatibility with version 4.0.
+* Dev - Updated FontAwesome to 5.8.1.
+
+= 2.4.6 - 2019-04-26 =
+* Fix - Sort homepage template categories by `menu_order` instead of `name`.
+* Fix - Remove menu transition when no menu is assigned to primary location.
+
+= 2.4.5 - 2019-03-15 =
+* Fix - Revert changes made to the navigation menus that in some cases could cause menus to be hidden on the page.
+
+= 2.4.4 - 2019-03-14 =
+* Tweak - Update UTM parameters on WooCommerce.com links.
+* Tweak - Compress and minify `pep.min.js`.
+* Tweak - Minify CSS files in the `base` folder.
+* Fix - Underline links in post content, footer, and breadcrumbs for better accessibility.
+* Fix - Bolder outline styles for better accessibility.
+* Fix - Stop Handheld Navigation items from being read by screen readers when the menu is collapsed.
+* Fix - Add styling for product columns on the header widget area.
+* Fix - Hide bundle/composite child cart items below the desktop size threshold.
+* Fix - Split Jetpack styles into separate files to fix a flash of content when using the infinite scroll option.
+* Dev - Update node dependencies.
+* Dev - Handheld Footer Bar JavaScript moved from `navigation.js` to `footer.js`.
 
 = 2.4.3 - 2019-02-05 =
 * Feature - Replicate Storefront's layout logic in the block editor. Wide and Full-width options are made available only if supported.

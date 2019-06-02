@@ -45,8 +45,7 @@
     margin: 0 0 1em;
     width: auto;
     max-height: 2.2906835em;
-    -ms-grid-row-align: center;
-        align-self: center;
+    align-self: center;
     -webkit-box-ordinal-group: 2;
             order: 1; }
   .tax-product_brand .woocommerce-products-header .woocommerce-products-header__title,
