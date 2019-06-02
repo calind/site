@@ -9,110 +9,87 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	die( 'We\'re sorry, but you can not directly access this file.' );
 }
+
+global $health_check_site_status;
 ?>
 
-	<div class="notice notice-info inline">
-		<p>
-			<?php esc_html_e( 'The health check shows critical information about your WordPress configuration and items that require your attention.', 'health-check' ); ?>
-		</p>
+<div class="site-status-all-clear hide">
+	<p class="icon">
+		<span class="dashicons dashicons-yes"></span>
+	</p>
+
+	<p class="encouragement">
+		<?php _e( 'Great job!', 'health-check' ); ?>
+	</p>
+
+	<p>
+		<?php _e( 'Everything is running smoothly here.', 'health-check' ); ?>
+	</p>
+</div>
+
+<div class="site-status-has-issues">
+	<h2>
+		<?php _e( 'Site Health Status', 'health-check' ); ?>
+	</h2>
+
+	<p><?php _e( 'The site health check shows critical information about your WordPress configuration and items that require your attention.', 'health-check' ); ?></p>
+
+	<div class="site-health-issues-wrapper" id="health-check-issues-critical">
+		<h3 class="site-health-issue-count-title">
+			<?php
+			/* translators: %s: number of critical issues found */
+			printf( _n( '%s Critical issue', '%s Critical issues', 0, 'health-check' ), '<span class="issue-count">0</span>' );
+			?>
+		</h3>
+
+		<div id="health-check-site-status-critical" class="health-check-accordion issues"></div>
 	</div>
 
-	<table class="widefat striped health-check-table">
-		<tbody>
-			<tr>
-				<td><?php esc_html_e( 'WordPress Version', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="wordpress_version">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
+	<div class="site-health-issues-wrapper" id="health-check-issues-recommended">
+		<h3 class="site-health-issue-count-title">
+			<?php
+			/* translators: %s: number of recommended improvements */
+			printf( _n( '%s Recommended improvement', '%s Recommended improvements', 0, 'health-check' ), '<span class="issue-count">0</span>' );
+			?>
+		</h3>
 
-			<tr>
-				<td><?php esc_html_e( 'Plugin Versions', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="plugin_version">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
+		<div id="health-check-site-status-recommended" class="health-check-accordion issues"></div>
+	</div>
+</div>
 
-			<tr>
-				<td><?php esc_html_e( 'Theme Versions', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="theme_version">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
+<div class="site-health-view-more">
+	<button type="button" class="button site-health-view-passed" aria-expanded="false" aria-controls="health-check-issues-good">
+		<?php _e( 'Passed tests', 'health-check' ); ?>
+		<span class="icon"></span>
+	</button>
+</div>
 
-			<tr>
-				<td><?php esc_html_e( 'PHP Version', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="php_version">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
+<div class="site-health-issues-wrapper hidden" id="health-check-issues-good">
+	<h3 class="site-health-issue-count-title">
+		<?php
+		/* translators: %s: number of items with no issues */
+		printf( _n( '%s Item with no issues detected', '%s Items with no issues detected', 0, 'health-check' ), '<span class="issue-count">0</span>' );
+		?>
+	</h3>
 
-			<tr>
-				<td>
-					<?php esc_html_e( 'Database Server version', 'health-check' ); ?>
-				</td>
-				<td class="health-check-site-status-test" data-site-status="sql_server">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
+	<div id="health-check-site-status-good" class="health-check-accordion issues"></div>
+</div>
 
-			<tr>
-				<td><?php esc_html_e( 'JSON Extension', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="json_extension">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
+<script id="tmpl-health-check-issue" type="text/template">
+	<h4 class="health-check-accordion-heading">
+		<button aria-expanded="false" class="health-check-accordion-trigger" aria-controls="health-check-accordion-block-{{ data.test }}" type="button">
+			<span class="title">{{ data.label }}</span>
+			<span class="badge {{ data.badge.color }}">{{ data.badge.label }}</span>
+			<span class="icon"></span>
+		</button>
+	</h4>
+	<div id="health-check-accordion-block-{{ data.test }}" class="health-check-accordion-panel" hidden="hidden">
+		{{{ data.description }}}
+		<div class="actions">
+			<p class="button-container">{{{ data.actions }}}</p>
+		</div>
+	</div>
+</script>
 
-			<tr>
-				<td><?php esc_html_e( 'MySQL utf8mb4 support', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="utf8mb4_support">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
-
-			<tr>
-				<td><?php esc_html_e( 'Communication with WordPress.org', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="dotorg_communication">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
-
-			<tr>
-				<td><?php esc_html_e( 'HTTPS status', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="https_status">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
-
-			<tr>
-				<td><?php esc_html_e( 'Secure communication', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="ssl_support">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
-
-			<tr>
-				<td><?php esc_html_e( 'Scheduled events', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="scheduled_events">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
-
-			<tr>
-				<td><?php esc_html_e( 'Background updates', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="background_updates">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
-
-			<tr>
-				<td><?php esc_html_e( 'Loopback request', 'health-check' ); ?></td>
-				<td class="health-check-site-status-test" data-site-status="loopback_requests">
-					<span class="spinner is-active"></span>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-
-	<?php
-	include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/modals/js-result-warnings.php' );
+<?php
+include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/modals/js-result-warnings.php' );

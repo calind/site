@@ -5,6 +5,11 @@
  * @package Health Check
  */
 
+// Make sure the file is not directly accessible.
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'We\'re sorry, but you can not directly access this file.' );
+}
+
 /**
  * Class HealthCheck
  */
@@ -47,9 +52,7 @@ class Health_Check {
 
 		add_filter( 'plugin_row_meta', array( $this, 'settings_link' ), 10, 2 );
 
-		add_filter( 'plugin_action_links', array( $this, 'troubeshoot_plugin_action' ), 20, 4 );
-
-		add_action( 'admin_footer', array( $this, 'show_backup_warning' ) );
+		add_filter( 'plugin_action_links', array( $this, 'troubleshoot_plugin_action' ), 20, 4 );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
@@ -64,25 +67,12 @@ class Health_Check {
 		add_action( 'wp_ajax_health-check-files-integrity-check', array( 'Health_Check_Files_Integrity', 'run_files_integrity_check' ) );
 		add_action( 'wp_ajax_health-check-view-file-diff', array( 'Health_Check_Files_Integrity', 'view_file_diff' ) );
 		add_action( 'wp_ajax_health-check-mail-check', array( 'Health_Check_Mail_Check', 'run_mail_check' ) );
-		add_action( 'wp_ajax_health-check-confirm-warning', array( 'Health_Check_Troubleshoot', 'confirm_warning' ) );
+		add_action( 'wp_ajax_health-check-get-sizes', array( 'Health_Check_Debug_Data', 'ajax_get_sizes' ) );
 
 		add_filter( 'health_check_tools_tab', array( 'Health_Check_Files_Integrity', 'tools_tab' ) );
 		add_filter( 'health_check_tools_tab', array( 'Health_Check_Mail_Check', 'tools_tab' ) );
-	}
 
-	/**
-	 * Show a warning modal about keeping backups.
-	 *
-	 * @uses Health_Check_Troubleshoot::has_seen_warning()
-	 *
-	 * @return void
-	 */
-	public function show_backup_warning() {
-		if ( Health_Check_Troubleshoot::has_seen_warning() ) {
-			return;
-		}
-
-		include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/modals/backup-warning.php' );
+		add_filter( 'cron_schedules', array( $this, 'cron_schedules' ) );
 	}
 
 	/**
@@ -96,7 +86,12 @@ class Health_Check {
 	 * @return void
 	 */
 	public function start_troubleshoot_mode() {
-		if ( ! isset( $_POST['health-check-troubleshoot-mode'] ) || ! current_user_can( 'manage_options' ) ) {
+		if ( ! isset( $_POST['health-check-troubleshoot-mode'] ) || ! current_user_can( 'install_plugins' ) ) {
+			return;
+		}
+
+		// Don't enable troubleshooting if nonces are missing or do not match.
+		if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'health-check-enable-troubleshooting' ) ) {
 			return;
 		}
 
@@ -123,7 +118,12 @@ class Health_Check {
 	 * @return void
 	 */
 	public function start_troubleshoot_single_plugin_mode() {
-		if ( ! isset( $_GET['health-check-troubleshoot-plugin'] ) || ! current_user_can( 'manage_options' ) ) {
+		if ( ! isset( $_GET['health-check-troubleshoot-plugin'] ) || ! current_user_can( 'install_plugins' ) ) {
+			return;
+		}
+
+		// Don't enable troubleshooting for an individual plugin if the nonce is missing or invalid.
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'health-check-troubleshoot-plugin-' . $_GET['health-check-troubleshoot-plugin'] ) ) {
 			return;
 		}
 
@@ -192,33 +192,109 @@ class Health_Check {
 	 * @return void
 	 */
 	public function enqueues() {
-		// Don't enqueue anything unless we're on the health check page
+		// Don't enqueue anything unless we're on the health check page.
 		if ( ! isset( $_GET['page'] ) || 'health-check' !== $_GET['page'] ) {
-
-			/*
-			 * Special consideration, if warnings are not dismissed we need to display
-			 * our modal, and thus require our styles, in other locations, before bailing.
-			 */
-			if ( ! Health_Check_Troubleshoot::has_seen_warning() ) {
-				wp_enqueue_style( 'health-check', HEALTH_CHECK_PLUGIN_URL . '/assets/css/health-check.css', array(), HEALTH_CHECK_PLUGIN_VERSION );
-			}
 			return;
 		}
 
-		wp_enqueue_style( 'health-check', HEALTH_CHECK_PLUGIN_URL . '/assets/css/health-check.css', array(), HEALTH_CHECK_PLUGIN_VERSION );
-
-		wp_enqueue_script( 'health-check', HEALTH_CHECK_PLUGIN_URL . '/assets/javascript/health-check.js', array( 'jquery' ), HEALTH_CHECK_PLUGIN_VERSION, true );
-
-		wp_localize_script( 'health-check', 'HealthCheck', array(
-			'string'  => array(
-				'please_wait'   => esc_html__( 'Please wait...', 'health-check' ),
-				'copied'        => esc_html__( 'Copied', 'health-check' ),
-				'running_tests' => esc_html__( 'Currently being tested...', 'health-check' ),
+		$health_check_js_variables = array(
+			'string'      => array(
+				'please_wait'                          => esc_html__( 'Please wait...', 'health-check' ),
+				'copied'                               => esc_html__( 'Copied', 'health-check' ),
+				'running_tests'                        => esc_html__( 'Currently being tested...', 'health-check' ),
+				'site_health_complete'                 => esc_html__( 'All site health tests have finished running.', 'health-check' ),
+				'site_info_show_copy'                  => esc_html__( 'Show options for copying this information', 'health-check' ),
+				'site_info_hide_copy'                  => esc_html__( 'Hide options for copying this information', 'health-check' ),
+				// translators: %s: The percentage pass rate for the tests.
+				'site_health_complete_screen_reader'   => esc_html__( 'All site health tests have finished running. Your site passed %s, and the results are now available on the page.', 'health-check' ),
+				'site_info_copied'                     => esc_html__( 'Site information has been added to your clipboard.', 'health-check' ),
+				// translators: %s: Amount of critical issues.
+				'site_info_heading_critical_single'    => esc_html__( '%s Critical issue', 'health-check' ),
+				// translators: %s: Amount of critical issues.
+				'site_info_heading_critical_plural'    => esc_html__( '%s Critical issues', 'health-check' ),
+				// translators: %s: Amount of recommended issues.
+				'site_info_heading_recommended_single' => esc_html__( '%s Recommended improvement', 'health-check' ),
+				// translators: %s: Amount of recommended issues.
+				'site_info_heading_recommended_plural' => esc_html__( '%s Recommended improvements', 'health-check' ),
+				// translators: %s: Amount of passed tests.
+				'site_info_heading_good_single'        => esc_html__( '%s Item with no issues detected', 'health-check' ),
+				// translators: %s: Amount of passed tests.
+				'site_info_heading_good_plural'        => esc_html__( '%s Items with no issues detected', 'health-check' ),
 			),
-			'warning' => array(
-				'seen_backup' => Health_Check_Troubleshoot::has_seen_warning(),
+			'nonce'       => array(
+				'loopback_no_plugins'         => wp_create_nonce( 'health-check-loopback-no-plugins' ),
+				'loopback_individual_plugins' => wp_create_nonce( 'health-check-loopback-individual-plugins' ),
+				'loopback_default_theme'      => wp_create_nonce( 'health-check-loopback-default-theme' ),
+				'files_integrity_check'       => wp_create_nonce( 'health-check-files-integrity-check' ),
+				'view_file_diff'              => wp_create_nonce( 'health-check-view-file-diff' ),
+				'mail_check'                  => wp_create_nonce( 'health-check-mail-check' ),
+				'site_status'                 => wp_create_nonce( 'health-check-site-status' ),
+				'site_status_result'          => wp_create_nonce( 'health-check-site-status-result' ),
 			),
-		) );
+			'site_status' => array(
+				'direct' => array(),
+				'async'  => array(),
+				'issues' => array(
+					'good'        => 0,
+					'recommended' => 0,
+					'critical'    => 0,
+				),
+			),
+		);
+
+		$issue_counts = get_transient( 'health-check-site-status-result' );
+
+		if ( false !== $issue_counts ) {
+			$issue_counts = json_decode( $issue_counts );
+
+			$health_check_js_variables['site_status']['issues'] = $issue_counts;
+		}
+
+		if ( ! isset( $_GET['tab'] ) || ( isset( $_GET['tab'] ) && 'site-status' === $_GET['tab'] ) ) {
+			$tests = Health_Check_Site_Status::get_tests();
+
+			// Don't run https test on localhost
+			if ( 'localhost' === preg_replace( '|https?://|', '', get_site_url() ) ) {
+				unset( $tests['direct']['https_status'] );
+			}
+
+			foreach ( $tests['direct'] as $test ) {
+				if ( is_string( $test['test'] ) ) {
+					$test_function = sprintf(
+						'get_test_%s',
+						$test['test']
+					);
+
+					if ( method_exists( $this, $test_function ) && is_callable( array( $this, $test_function ) ) ) {
+						$health_check_js_variables['site_status']['direct'][] = call_user_func( array( $this, $test_function ) );
+						continue;
+					}
+				}
+
+				if ( is_callable( $test['test'] ) ) {
+					$health_check_js_variables['site_status']['direct'][] = call_user_func( $test['test'] );
+				}
+			}
+
+			foreach ( $tests['async'] as $test ) {
+				if ( is_string( $test['test'] ) ) {
+					$health_check_js_variables['site_status']['async'][] = array(
+						'test'      => $test['test'],
+						'completed' => false,
+					);
+				}
+			}
+		}
+
+		if ( ! wp_script_is( 'clipboard', 'registered' ) ) {
+			wp_register_script( 'clipboard', trailingslashit( HEALTH_CHECK_PLUGIN_URL ) . 'assets/javascript/clipboard.min.js', array(), '2.0.4' );
+		}
+
+		wp_enqueue_style( 'health-check', trailingslashit( HEALTH_CHECK_PLUGIN_URL ) . 'assets/css/health-check.css', array(), HEALTH_CHECK_PLUGIN_VERSION );
+
+		wp_enqueue_script( 'health-check', trailingslashit( HEALTH_CHECK_PLUGIN_URL ) . 'assets/javascript/health-check.js', array( 'jquery', 'wp-a11y', 'clipboard', 'wp-util' ), HEALTH_CHECK_PLUGIN_VERSION, true );
+
+		wp_localize_script( 'health-check', 'SiteHealth', $health_check_js_variables );
 	}
 
 	/**
@@ -230,7 +306,42 @@ class Health_Check {
 	 * @return void
 	 */
 	public function action_admin_menu() {
-		add_dashboard_page( _x( 'Health Check', 'Menu, Section and Page Title', 'health-check' ), _x( 'Health Check', 'Menu, Section and Page Title', 'health-check' ), 'manage_options', 'health-check', array( $this, 'dashboard_page' ) );
+		$critical_issues = 0;
+		$issue_counts    = get_transient( 'health-check-site-status-result' );
+
+		if ( false !== $issue_counts ) {
+			$issue_counts = json_decode( $issue_counts );
+
+			$critical_issues = absint( $issue_counts->critical );
+		}
+
+		$critical_count = sprintf(
+			'<span class="update-plugins count-%d"><span class="update-count">%s</span></span>',
+			esc_attr( $critical_issues ),
+			sprintf(
+				'%d<span class="screen-reader-text"> %s</span>',
+				esc_html( $critical_issues ),
+				esc_html_x( 'Critical issues', 'Issue counter label for the admin menu', 'health-check' )
+			)
+		);
+
+		$menu_title =
+			sprintf(
+				// translators: %s: Critical issue counter, if any.
+				_x( 'Site Health %s', 'Menu Title', 'health-check' ),
+				( ! $issue_counts || $critical_issues < 1 ? '' : $critical_count )
+			);
+
+		remove_submenu_page( 'tools.php', 'site-health.php' );
+
+		add_submenu_page(
+			'tools.php',
+			_x( 'Site Health', 'Page Title', 'health-check' ),
+			$menu_title,
+			'install_plugins',
+			'health-check',
+			array( $this, 'dashboard_page' )
+		);
 	}
 
 	/**
@@ -263,7 +374,7 @@ class Health_Check {
 	 *
 	 * @return array
 	 */
-	public function troubeshoot_plugin_action( $actions, $plugin_file, $plugin_data, $context ) {
+	public function troubleshoot_plugin_action( $actions, $plugin_file, $plugin_data, $context ) {
 		// Don't add anything if this is a Must-Use plugin, we can't touch those.
 		if ( 'mustuse' === $context ) {
 			return $actions;
@@ -279,10 +390,14 @@ class Health_Check {
 			$plugin_data['slug'] = $plugin_file;
 		}
 
+		// If a slug isn't present, use the plugin's name
+		$plugin_name = ( isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : sanitize_title( $plugin_data['Name'] ) );
+
 		$actions['troubleshoot'] = sprintf(
 			'<a href="%s">%s</a>',
 			esc_url( add_query_arg( array(
-				'health-check-troubleshoot-plugin' => ( isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : sanitize_title( $plugin_data['Name'] ) ),
+				'health-check-troubleshoot-plugin' => $plugin_name,
+				'_wpnonce'                         => wp_create_nonce( 'health-check-troubleshoot-plugin-' . $plugin_name ),
 			), admin_url( 'plugins.php' ) ) ),
 			esc_html__( 'Troubleshoot', 'health-check' )
 		);
@@ -303,62 +418,41 @@ class Health_Check {
 	 * @return void
 	 */
 	public function dashboard_page() {
-		?>
-		<div class="wrap">
-			<h1>
-				<?php _ex( 'Health Check', 'Menu, Section and Page Title', 'health-check' ); ?>
-			</h1>
+		include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/site-health-header.php' );
 
-			<?php
-			$tabs = array(
-				'site-status'  => esc_html__( 'Site Status', 'health-check' ),
-				'debug'        => esc_html__( 'Debug Information', 'health-check' ),
-				'troubleshoot' => esc_html__( 'Troubleshooting', 'health-check' ),
-				'phpinfo'      => esc_html__( 'PHP Information', 'health-check' ),
-				'tools'        => esc_html__( 'Tools', 'health-check' ),
-			);
+		switch ( Health_Check::current_tab() ) {
+			case 'debug':
+				include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/debug-data.php' );
+				break;
+			case 'phpinfo':
+				include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/phpinfo.php' );
+				break;
+			case 'troubleshoot':
+				include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/troubleshoot.php' );
+				break;
+			case 'tools':
+				include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/tools.php' );
+				break;
+			case 'site-status':
+			default:
+				include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/site-status.php' );
+		}
 
-			$current_tab = ( isset( $_GET['tab'] ) ? $_GET['tab'] : 'site-status' );
-			?>
+		// Close out the div tag opened as a wrapper in the header.
+		echo '</div>';
+	}
 
-			<h2 class="nav-tab-wrapper wp-clearfix">
-				<?php
-				foreach ( $tabs as $tab => $label ) {
-					printf(
-						'<a href="%s" class="nav-tab %s">%s</a>',
-						sprintf(
-							'%s&tab=%s',
-							menu_page_url( 'health-check', false ),
-							$tab
-						),
-						( $current_tab === $tab ? 'nav-tab-active' : '' ),
-						$label
-					);
-				}
-				?>
-			</h2>
+	static function tabs() {
+		return array(
+			'site-status'  => esc_html__( 'Status', 'health-check' ),
+			'debug'        => esc_html__( 'Info', 'health-check' ),
+			'troubleshoot' => esc_html__( 'Troubleshooting', 'health-check' ),
+			'tools'        => esc_html__( 'Tools', 'health-check' ),
+		);
+	}
 
-			<?php
-			switch ( $current_tab ) {
-				case 'debug':
-					include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/debug-data.php' );
-					break;
-				case 'phpinfo':
-					include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/phpinfo.php' );
-					break;
-				case 'troubleshoot':
-					include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/troubleshoot.php' );
-					break;
-				case 'tools':
-					include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/tools.php' );
-					break;
-				case 'site-status':
-				default:
-					include_once( HEALTH_CHECK_PLUGIN_DIRECTORY . '/pages/site-status.php' );
-			}
-			?>
-		</div>
-		<?php
+	static function current_tab() {
+		return ( isset( $_GET['tab'] ) ? $_GET['tab'] : 'site-status' );
 	}
 
 	/**
@@ -373,16 +467,10 @@ class Health_Check {
 	 */
 	static function display_notice( $message, $status = 'success' ) {
 		printf(
-			'<div class="notice notice-%s inline">',
-			$status
-		);
-
-		printf(
-			'<p>%s</p>',
+			'<div class="notice notice-%s inline"><p>%s</p></div>',
+			esc_attr( $status ),
 			$message
 		);
-
-		echo '</div>';
 	}
 
 	/**
@@ -398,6 +486,17 @@ class Health_Check {
 				$admin_notice->message
 			);
 		}
+	}
+
+	public function cron_schedules( $schedules ) {
+		if ( ! isset( $schedules['weekly'] ) ) {
+			$schedules['weekly'] = array(
+				'interval' => 7 * DAY_IN_SECONDS,
+				'display'  => __( 'Once weekly', 'health-check' ),
+			);
+		}
+
+		return $schedules;
 	}
 
 
@@ -424,33 +523,26 @@ class Health_Check {
 		);
 
 		$url   = wp_nonce_url( add_query_arg( $args, admin_url() ) );
-		$creds = request_filesystem_credentials( $url, '', false, WP_CONTENT_DIR, array( 'health-check-troubleshoot-mode', 'action' ) );
+		$creds = request_filesystem_credentials( $url, '', false, WP_CONTENT_DIR, array( 'health-check-troubleshoot-mode', 'action', '_wpnonce' ) );
 		if ( false === $creds ) {
 			return false;
 		}
 
 		if ( ! WP_Filesystem( $creds ) ) {
-			request_filesystem_credentials( $url, '', true, WPMU_PLUGIN_DIR, array( 'health-check-troubleshoot-mode', 'action' ) );
+			request_filesystem_credentials( $url, '', true, WPMU_PLUGIN_DIR, array( 'health-check-troubleshoot-mode', 'action', '_wpnonce' ) );
 			return false;
 		}
 
 		return true;
 	}
 
-	/**
-	 * Perform a check to see is JSON is enabled.
-	 *
-	 * @uses extension_loaded()
-	 * @uses function_Exists()
-	 * @uses son_encode()
-	 *
-	 * @return bool
-	 */
-	static function json_check() {
-		$extension_loaded = extension_loaded( 'json' );
-		$functions_exist  = function_exists( 'json_encode' ) && function_exists( 'json_decode' );
-		$functions_work   = function_exists( 'json_encode' ) && ( '' != json_encode( 'my test string' ) );
+	public static function plugin_activation() {
+		if ( ! wp_next_scheduled( 'health-check-scheduled-site-status-check' ) ) {
+			wp_schedule_event( time(), 'weekly', 'health-check-scheduled-site-status-check' );
+		}
+	}
 
-		return $extension_loaded && $functions_exist && $functions_work;
+	public static function plugin_deactivation() {
+		wp_clear_scheduled_hook( 'health-check-scheduled-site-status-check' );
 	}
 }

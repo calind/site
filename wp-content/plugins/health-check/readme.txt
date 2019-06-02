@@ -2,12 +2,17 @@
 Tags: health check
 Contributors: wordpressdotorg, westi, pento, Clorith
 Requires at least: 4.0
-Tested up to: 4.9
-Stable tag: 1.2.1
+Requires PHP: 5.2
+Tested up to: 5.2
+Stable tag: 1.3.2
 License: GPLv2
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
+Health Check identifies common problems, and helps you troubleshoot plugin and theme conflicts.
+
 == Description ==
+
+*The plugins menu position has changed, and can now be found under **Tools** > **Site Health**, where it replaces the Site Health feature included with WordPress 5.2*
 
 This plugin will perform a number of checks on your WordPress install to detect common configuration errors and known issues.
 
@@ -33,23 +38,25 @@ Are you unfamiliar with how to clear your cookies? No worries, you may also clos
 
 1. The health check screen after the automated tests have gone over the system.
 2. The debug information, with the copy and paste field expanded.
-3. The generic PHP information tab, when more detailed information is required.
+3. A selection of tools that can be ran on your site.
+4. Troubleshooting mode enabled, showing your website Dashboard
 
 == Changelog ==
 
-= v 1.2.1 =
-* Make sure only those with access to the plugin see the backup encouragement notice.
-* Make sure the `is_troubleshooting()` checks are available to the Site Status tester when the MU plugin may not have updated yet.
-* Avoid a warning of an undefined variable if you have the latest WordPress version installed.
+= v1.3.2 =
+* Add polyfill for directory size calculations for sites running WordPress versions older than 5.2.0
+* Fix link for the extended PHP information
 
-= v 1.2.0 =
-* Changed plugin name, it now better describes the plugins two primary purposes.
-* Changed the `Health Check` tab, it's now named `Site Status`, as we used the old name too many places and it was confusing.
-* Site status tests now run asynchronously, making the page load much faster.
-* The HTTPS tests now also check your Site URL settings to make sure they are following recommended best practices.
-* Fixed a warning preventing plugin names from displaying on the front-end in some cases.
-* Fixed an issue where you might get a 500 error if you tried using Troubleshooting Mode while using a child theme.
-* Automatically disable/enable a plugin or theme in Troubleshooting Mode if they are detected to cause errors.
-* Introduce a new dashboard widget during Troubleshooting Mode (and a simplified version on the plugins screen) to better explain what is going on, and make available actions more discoverable than the admin menu is.
-* Some text improvements throughout the plugin.
-* When loopback tests fail, we previously tested all plugins at once, for sites that have many plugins this may fail as the request times out. We now test one plugin at a time to avoid this, while also showing more information at the tests are running to the end user.
+= v1.3.1 =
+* Include missing dependency for JavaScript files, first introduced in WordPress 5.2
+
+= v1.3.0 =
+* Plugin moved to the Tools section in the admin menu
+* New UI/UX for the plugin pages
+* New troubleshooting mode UI/UX
+* Removed the backup reminder nag
+* Improved security hardening
+* Changed cookie names for improved hosting compatibility
+* Improved accessibility
+* Automatically check for critical issues once a week (adds a counter next to the menu item)
+* Dates in the email tester now follow your site settings

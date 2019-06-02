@@ -5,6 +5,11 @@
  * @package Health Check
  */
 
+// Make sure the file is not directly accessible.
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'We\'re sorry, but you can not directly access this file.' );
+}
+
 /**
  * Class Health_Check_Loopback
  */
@@ -65,10 +70,10 @@ class Health_Check_Loopback {
 
 		if ( is_wp_error( $r ) ) {
 			return (object) array(
-				'status'  => 'error',
+				'status'  => 'critical',
 				'message' => sprintf(
 					'%s<br>%s',
-					esc_html__( 'The loopback request to your site failed, this may prevent WP_Cron from working, along with theme and plugin editors.', 'health-check' ),
+					esc_html__( 'The loopback request to your site failed, this means features relying on them are not currently working as expected.', 'health-check' ),
 					sprintf(
 						/* translators: %1$d: The HTTP response code. %2$s: The error message returned. */
 						esc_html__( 'Error encountered: (%1$d) %2$s', 'health-check' ),
@@ -81,10 +86,10 @@ class Health_Check_Loopback {
 
 		if ( 200 !== wp_remote_retrieve_response_code( $r ) ) {
 			return (object) array(
-				'status'  => 'warning',
+				'status'  => 'recommended',
 				'message' => sprintf(
 					/* translators: %d: The HTTP response code returned. */
-					esc_html__( 'The loopback request returned an unexpected status code, %d, this may affect tools such as WP_Cron, or theme and plugin editors.', 'health-check' ),
+					esc_html__( 'The loopback request returned an unexpected http status code, %d, it was not possible to determine if this will prevent features from working as expected.', 'health-check' ),
 					wp_remote_retrieve_response_code( $r )
 				),
 			);
@@ -119,6 +124,12 @@ class Health_Check_Loopback {
 	 * @return void
 	 */
 	static function loopback_no_plugins() {
+		check_ajax_referer( 'health-check-loopback-no-plugins' );
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error();
+		}
+
 		ob_start();
 
 		$needs_creds = false;
@@ -228,6 +239,12 @@ class Health_Check_Loopback {
 	 * @return void
 	 */
 	static function loopback_test_individual_plugins() {
+		check_ajax_referer( 'health-check-loopback-individual-plugins' );
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error();
+		}
+
 		ob_start();
 
 		$needs_creds = false;
@@ -273,6 +290,12 @@ class Health_Check_Loopback {
 	}
 
 	static function loopback_test_default_theme() {
+		check_ajax_referer( 'health-check-loopback-default-theme' );
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error();
+		}
+
 		ob_start();
 
 		$needs_creds = false;

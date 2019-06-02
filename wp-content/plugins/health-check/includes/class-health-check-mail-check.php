@@ -6,6 +6,11 @@
  * @package Health Check
  */
 
+// Make sure the file is not directly accessible.
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'We\'re sorry, but you can not directly access this file.' );
+}
+
 /**
  * Class Mail Check
  */
@@ -22,27 +27,41 @@ class Health_Check_Mail_Check {
 	 * @return void
 	 */
 	static function run_mail_check() {
+		check_ajax_referer( 'health-check-mail-check' );
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error();
+		}
+
 		$output        = '';
 		$sendmail      = false;
 		$email         = sanitize_email( $_POST['email'] );
 		$email_message = sanitize_text_field( $_POST['email_message'] );
 		$wp_address    = get_bloginfo( 'url' );
 		$wp_name       = get_bloginfo( 'name' );
-		$date          = date( 'F j, Y' );
-		$time          = date( 'g:i a' );
+		$date          = date_i18n( get_option( 'date_format' ), current_time( 'timestamp' ) );
+		$time          = date_i18n( get_option( 'time_format' ), current_time( 'timestamp' ) );
 
 		// translators: %s: website url.
 		$email_subject = sprintf( esc_html__( 'Health Check – Test Message from %s', 'health-check' ), $wp_address );
 
 		$email_body = sprintf(
-			// translators: %1$s: website name. %2$s: website url. %3$s: The date the message was sent. %4$s: The time the message was sent. %5$s: Additional custom message from the administrator.
-			__( 'Hi! This test message was sent by the Health Check plugin from %1$s (%2$s) on %3$s at %4$s. Since you’re reading this, it obviously works. Additional message from admin: %5$s', 'health-check' ),
+			// translators: %1$s: website name. %2$s: website url. %3$s: The date the message was sent. %4$s: The time the message was sent.
+			__( 'Hi! This test message was sent by the Health Check plugin from %1$s (%2$s) on %3$s at %4$s. Since you’re reading this, it obviously works.', 'health-check' ),
 			$wp_name,
 			$wp_address,
 			$date,
 			$time,
 			$email_message
 		);
+
+		if ( ! empty( $email_message ) ) {
+			$email_body .= "\n\n" . sprintf(
+				// translators: %s: The custom message that may be included with the email.
+				__( 'Additional message from admin: %s', 'health-check' ),
+				$email_message
+			);
+		}
 
 		$sendmail = wp_mail( $email, $email_subject, $email_body );
 
@@ -71,7 +90,7 @@ class Health_Check_Mail_Check {
 	 *
 	 * @param array $tabs
 	 *
-	 * return array
+	 * @return array
 	 */
 	public static function tools_tab( $tabs ) {
 		ob_start();

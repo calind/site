@@ -6,6 +6,11 @@
  * @package Health Check
  */
 
+// Make sure the file is not directly accessible.
+if ( ! defined( 'ABSPATH' ) ) {
+	die( 'We\'re sorry, but you can not directly access this file.' );
+}
+
 /**
  * Class Files_Integrity
  */
@@ -17,6 +22,7 @@ class Health_Check_Files_Integrity {
 	 * @return void
 	 */
 	static function run_files_integrity_check() {
+		check_ajax_referer( 'health-check-files-integrity-check' );
 
 		$checksums = Health_Check_Files_Integrity::call_checksum_api();
 
@@ -49,6 +55,8 @@ class Health_Check_Files_Integrity {
 
 		// Encode the API response body.
 		$checksumapibody = json_decode( wp_remote_retrieve_body( $checksumapi ), true );
+
+		set_transient( 'health-check-checksums', $checksumapibody, 2 * HOUR_IN_SECONDS );
 
 		// Remove the wp-content/ files from checking
 		foreach ( $checksumapibody['checksums'] as $file => $checksum ) {
@@ -126,7 +134,7 @@ class Health_Check_Files_Integrity {
 			$output .= '</td></tr></tfoot><tbody>';
 			foreach ( $files as $tampered ) {
 				$output .= '<tr>';
-				$output .= '<td><span class="error"></span></td>';
+				$output .= '<td><span class="error"><span class="screen-reader-text">' . esc_html__( 'Error', 'health-check' ) . '</span></span></td>';
 				$output .= '<td>' . $filepath . $tampered[0] . '</td>';
 				$output .= '<td>' . $tampered[1] . '</td>';
 				$output .= '</tr>';
@@ -160,9 +168,31 @@ class Health_Check_Files_Integrity {
 	* @return void
 	*/
 	static function view_file_diff() {
-		$filepath         = ABSPATH;
-		$file             = $_POST['file'];
-		$wpversion        = get_bloginfo( 'version' );
+		check_ajax_referer( 'health-check-view-file-diff' );
+
+		if ( ! current_user_can( 'install_plugins' ) ) {
+			wp_send_json_error();
+		}
+
+		$filepath  = ABSPATH;
+		$file      = $_POST['file'];
+		$wpversion = get_bloginfo( 'version' );
+
+		if ( 0 !== validate_file( $filepath . $file ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You do not have access to this file.', 'health-check' ) ) );
+		}
+
+		$allowed_files = get_transient( 'health-check-checksums' );
+		if ( false === $allowed_files ) {
+			Health_Check_Files_Integrity::call_checksum_api();
+
+			$allowed_files = get_transient( 'health-check-checksums' );
+		}
+
+		if ( ! isset( $allowed_files['checksums'][ $file ] ) ) {
+			wp_send_json_error( array( 'message' => esc_html__( 'You do not have access to this file.', 'health-check' ) ) );
+		}
+
 		$local_file_body  = file_get_contents( $filepath . $file, FILE_USE_INCLUDE_PATH );
 		$remote_file      = wp_remote_get( 'https://core.svn.wordpress.org/tags/' . $wpversion . '/' . $file );
 		$remote_file_body = wp_remote_retrieve_body( $remote_file );
@@ -190,7 +220,7 @@ class Health_Check_Files_Integrity {
 	 *
 	 * @param array $tabs
 	 *
-	 * return array
+	 * @return array
 	 */
 	static function tools_tab( $tabs ) {
 		ob_start();
