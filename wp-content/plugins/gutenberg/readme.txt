@@ -1,8 +1,8 @@
 === Gutenberg ===
 Contributors: matveb, joen, karmatosed
-Requires at least: 4.9.8
-Tested up to: 4.9
-Stable tag: 4.6.0
+Requires at least: 5.0.0
+Tested up to: 5.2
+Stable tag: 5.7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,91 @@ See also <a href="https://github.com/WordPress/gutenberg/blob/master/CONTRIBUTIN
 
 == Changelog ==
 
-= Latest =
+# Features
 
-* Parser: Make attribute parsing possessive (Fix High CPU usage).
+- Support changing the text color in the Heading block.
+- Support reordering gallery images.
+- Complete the initial version of the widgets screen POC
+  - Add an experimental endpoint to fetch the block-based widget areas.
+  - Connect the screen to the widget areas endpoint.
+  - Load the widget scripts.
+  - Load colors, font sizes and file upload settings in the widgets screen.
+  - Render the block based widget areas in the frontend.
+
+# Enhancements
+
+- Clarify the label of the custom classname inspector panel.
+- Update Calendar block icon for better alignment with the Archives block icon.
+- Add width constraints to the Media & Text block.
+- Allow dropping blocks into container blocks using the new block appender.
+- Provide default margins for the Latest Posts block excerpts.
+
+# Bug Fixes
+
+- Support block style variations for container blocks.
+- A11y
+  - Use semantic markup for the document outline.
+  - Fix the reading order of the keyboard shortcuts modal.
+  - Add a visible help text to the tags input.
+  - Update the icon of the Heading block.
+  - Move the View Posts anchor out of the toolbar section in the header.
+  - Close the block settings menu after removing the block.
+- Fix the blurriness of the disabled block switcher icons.
+- Fix missing template validation warning.
+- Fix several content spitting issues and make the onSplit prop stable.
+- Allow the Shortcode block field to expand automatically.
+- Left pad the DateTimePicker minutes input.
+- Fix the frontend classname used for the Latest Posts block excerpts.
+- Fix error happening when deleting the last block if the paragraph block is unregistered.
+- Fix focus jumps when typing in meta block fields.
+
+# Documentation
+
+- Improve the Slot/Fill documentation.
+- Document the Github teams used in the repository.
+- Document the icon prop for the MediaPlaceholder component.
+- Update the changelogs maintenance documentation.
+- Clarify the save function documentation to discourage side effects.
+- Clarify the block attributes documentation.
+- Replace @link with @see in JSDocs.
+- Fixes and tweaks to the API docs generation tool.
+- Typos and tweaks: 1, 2, 3, 4, 5, 6, 7, 8.
+
+# Various
+
+- Add a new editor setting to allow disabling the code editor.
+- Add a new @wordpress/data-controls package.
+- Add an automation tool to simplify the Gutenberg release process.
+- Support the all hook in non-production environments.
+- Expose hasResolver property on the data module selectors.
+- Support multiple pattern replacement for the custom-templated-path-webpack-plugin package.
+- Update node-sass dependency to support the latest Node.js version. 
+- Fix React warning showing when loading the editor (Fill component).
+- Fix React warning message when using the Image block.
+- Refactor the popover component using React Hooks.
+- Remove WebpackRTLPlugin usage.
+- Remove an outdated chrome fix for iframes drag and drop.
+- Skip Chromium download in Travis by default.
+- Rewrite Node.js packages to use CommonJS exports.
+- Speed up Docker and e2e tests setup Travis.
+- Extracted the deprecated block version declarations to their own files.
+- Add missing file from the published @wordpress/dependency-extraction-webpack-plugin-files package. 
+- Upgrade package dependencies: Lerna and Webpack Bundle Analyzer. 
+
+# Mobile
+
+- Add the Quote block.
+- Make the Video block publicly available.
+- Fix bug when merging blocks.
+- Improve the UI/UX of the different media blocks.
+- Support nested lists.
+- Fix Image block with an undefined url.
+- Support rich captions in the Image block.
+- Improve screen reader support on BottomSheet’s cells.
+- Fix several focus related bugs.
+- Fix undo related issue.
+- Update onSplit method on the native RichText component to the latest version.
+- Move the BottomSheet component to the @wordpress/components package.
+- Handle the iOS z-gesture to exit modals and block selection.
+- Implement the invalid block content UI.
+
