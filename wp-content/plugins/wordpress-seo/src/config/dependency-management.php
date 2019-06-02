@@ -5,7 +5,7 @@
  * @package Yoast\YoastSEO\Config
  */
 
-namespace Yoast\YoastSEO\Config;
+namespace Yoast\WP\Free\Config;
 
 use Composer\Script\Event;
 use Composer\Installer\PackageEvent;
@@ -14,6 +14,7 @@ use Composer\Installer\PackageEvent;
  * Sets up class aliases and defines required constants.
  */
 class Dependency_Management {
+
 	/**
 	 * Registers the autoloader to create class aliases when needed.
 	 *
@@ -99,7 +100,7 @@ class Dependency_Management {
 	 * @return bool True if the class exists.
 	 */
 	protected function class_exists( $class ) {
-		return class_exists( $class );
+		return class_exists( $class ) || interface_exists( $class );
 	}
 
 	/**

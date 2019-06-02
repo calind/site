@@ -3,10 +3,10 @@ Contributors: yoast, joostdevalk, tacoverdo, omarreiss, atimmer, jipmoors
 Donate link: https://yoa.st/1up
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
-Tags: SEO, XML sitemap, Google Search Console, Content analysis, Readability
-Requires at least: 4.8
-Tested up to: 5.0
-Stable tag: 9.2.1
+Tags: SEO, XML sitemap, Content analysis, Readability
+Requires at least: 4.9
+Tested up to: 5.2.1
+Stable tag: 11.3
 Requires PHP: 5.2.4
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -42,11 +42,10 @@ Yoast SEO does everything in its power to please both visitors and search engine
 
 * Yoast SEO tunes the engine of your site so you can work on creating great content.
 * Our cornerstone content and internal linking features help you optimize your site structure in a breeze.
-* Integrates with Google Search Console: See how your site performs in the search engines and fix crawl errors.
 * Manage SEO roles: Give your colleagues access to specific sections of the Yoast SEO plugin.
 * Bulk editor: Make large-scale edits to your site.
 * **[Premium]** Social previews to manage the way your page is shared on social networks like Facebook and Twitter.
-* **[Premium]** Redirect manager: It keeps your site healthy by easily redirecting errors from Google Search Console, deleted pages and changed URLs.
+* **[Premium]** Redirect manager: It keeps your site healthy by easily redirecting deleted pages and changed URLs.
 
 ### Premium support
 
@@ -106,77 +105,66 @@ You'll find answers to many of your questions on [kb.yoast.com](https://yoa.st/1
 
 == Changelog ==
 
-= 9.2.1 =
-Release Date: November 21th, 2018
+= 11.3.0 =
+Release Date: May 28th, 2019
 
-Bugfixes:
-
-* Fixes a bug where the title and meta description field's cursor would jump to the start when typing.
-
-= 9.2.0 =
-Release Date: November 20th, 2018
+High-time for another release, namely Yoast SEO 11.3. This release features enhancements and bug fixes aimed at improving the way your favorite SEO plugin performs. Read more about the release in [our 11.3 release post](https://yoa.st/release-11-3).
 
 Enhancements:
 
-* Adds support for the 'eye' markers in Gutenberg using the experimental annotations API in Gutenberg. They will work for the paragraph, quote, heading and list blocks.
-* Adds the latest og:locale options provided by Facebook. Props to [valtlfelipe](https://github.com/valtlfelipe)
-* Adds support for oEmbed utilization of Yoast custom fields (post meta) values. Specifically the image and the title. Props to [ben-caplan](https://github.com/ben-caplan)
-* Defines attachment as non-accessible when attachment urls are redirected to the attachment file itself. Props to [stodorovic](https://github.com/stodorovic)
-* Improves the accessibility of the "Bulk editor" and "Search console" tables.
-* Hides SEO title and metadescription fields on the author edit page when the author archives are disabled.
-* Replaces Settings ZIP download (export) and upload (import) functionality with Settings fields.
+* When the site is set to represent a person, a logo/avatar to be used in the knowledge graph can now be selected in the Search Appearance settings.
+* Adds the `wpseo_should_index_links` filter that can be used to disable the link indexation.
+* Enables builtin Taxonomies for the 'Content type archive to show in breadcrumbs for taxonomies' section to allow the Blog archive page be added to the breadcrumbs.
+* Props to [@ramiy](https://profiles.wordpress.org/ramiy/) for making translating the plugin easier by merging near identical strings.
 
 Bugfixes:
 
-* Fixes a bug where assessments would fail if a "<" character is present in the content.
-* Fixes a bug where the excerpt replacement variable will output a piece of the post content when no excerpt is given.
-* Fixes a bug where the wrong title is rendered for the WooCommerce product archive.
-* Fixes a bug where the Yoast metabox is visible even when the attachment urls are redirected to the attachment file itself.
-* Fixes a bug where the Dashboard Widget was not displayed in the correct language.
-* Fixes a bug in combination with Gutenberg where paragraphs were sometimes not correctly detected because paragraph tags were not automatically added in WordPress-like fashion.
-* Fixes a bug in combination with Gutenberg where multiple marker buttons could be active at the same time.
-* Fixes a bug in combination with Gutenberg where escaped HTML is shown in the OpenGraph description.
-
-Compatibility:
-
-* Adds the `__block_editor_compatible_meta_box` flag to our metabox registrations to indicate they are compatible with WordPress 5.0.
-* Revise the enqueue order of the JavaScript assets to ensure compatibility with the classic editor plugin and WordPress 5.0.
-
-Security:
-
-* Fixes a possible command execution by users with SEO Manager roles. Props to [Dimopoulos Elias](https://twitter.com/gweeperx)
+* Fixes a bug where sitemaps would be shown in the `sitemap_index.xml` but result in a 404 when requested.
+* Fixes a bug where the schema output would include an invalid publisher when the site was set to represent a person.
+* Fixes a bug where a `Person` schema object would be output, when the site was set to represent a person, but no specific person was selected.
+* Fixes a bug where it would no longer be possible to change the user in the Search Appearance settings when the previously selected user had been deleted.
 
 Other:
 
-* Disables the non-functioning markers for the subheading distribution assessment.
-* Refactor SEO assessment filenames and exports. Props to [Kingdutch](https://github.com/Kingdutch)
-* Deprecates the `Yoast_Modal` class.
+* Removes the help center from the metabox.
+* Removes redundant `name` attribute from `author` in `Article` schema markup piece.
+* Increases the MyYoast API request timeout from 1 to 5 seconds, to give servers with a less optimal connection to our services more room to fetch the data.
 
-= 9.1.0 =
-Release Date: November 6th, 2018
+= 11.2.1 =
+Release Date: May 16th, 2019
+
+Bugfixes:
+
+* Fixes a bug where the metabox would be empty on WordPress versions below 5.0.
+* Fixes a bug where the metabox would be empty when both the classic editor plugin as well as the Gutenberg plugin were installed.
+
+Other:
+
+* Introduces a notification that encourages updating to the latest WordPress version.
+
+= 11.2.0 =
+Release Date: May 15th, 2019
 
 Enhancements:
 
-* Improves keyphrase recognition in the first paragraph on texts which start with images and captions.
-* Adds a warning notification to the permalink settings page, linking to a knowledge base article. Props to [valtlfelipe](https://github.com/valtlfelipe)
-* Adds the filter `wpseo_opengraph_is_valid_image_url` that allows custom image URL validation. Props to [petenelson](https://github.com/petenelson)
-* Updates the font size of the snippet title measure element to correctly mimic Google desktop snippet title. Props to [ol0lll](https://github.com/ol0lll)
+* Introduces a fallback to the first image in the content for the schema output when no featured image has been set.
+* Adds a `wpseo_schema_person_social_profiles` filter to allow filtering in/out extra social profiles to show.
+* Adds a `wpseo_schema_needs_<class_name>` filter that allows filtering graph pieces in or out.
+* Adds a `wpseo_sitemap_post_statuses` filter to add posts with custom post statuses to the sitemap. Props to [stodorovic](https://github.com/stodorovic) and [tolnem](https://github.com/tolnem).
+* Adds a custom overlay color to the snippet preview modal.
+* Adds the correct focus style to the Configuration Wizard navigation buttons.
+* Props to [@ramiy](https://profiles.wordpress.org/ramiy/) for making translating the plugin easier by merging near identical strings.
 
 Bugfixes:
 
-* Fixes a bug where the featured image was not recognized in the SEO analysis when using Gutenberg.
-* Fixes an accessibility issue where focus would be lost when removing an uploaded image in the configuration wizard.
-* Fixes a bug where notices were being thrown when quick editing a post and no post type object could be found.
-* Fixes a bug where a dependency wasn't loaded for the SEO -> Tools page.
-* Fixes a faulty reference to the old SEOAssessor class.
-* Fixes the copy of the date archives help text which contains faulty information. Props to [mkronenfeld](https://github.com/mkronenfeld)
-* Fixes the spelling of the words "plug-in" and "set-up". Props to [pedro-mendonca](https://github.com/pedro-mendonca)
-* Fixes a bug where a type error is thrown when the posts or terms focus keyword isn't of the type WP_Post as this can collide with third-party plugins.
+* Fixes a bug where the URL to Pinterest's claim page was incorrect. Props [@ramiy](https://profiles.wordpress.org/ramiy/).
+* Fixes a bug where notifications about incompatibility would be thrown for inactive add-ons.
+* Fixes a bug where URLs with a non-Yoast SEO related xsl query string parameter would result in a blank page. Props [@stodorovic](https://github.com/stodorovic) and [@yiska](https://github.com/yiska).
 
 Other:
 
-* Changes the reference in the admin bar menu from "AdWords External" to "Google Ads".
-* Removes non-functioning eye-markers for the link keyphrase assessment.
+* Removes the `add_opengraph_namespace` filter because the OGP.me HTML namespace is not used anymore.
+* Decouples the sitemap debug information from the general `WP_DEBUG` development flag and introduces the `YOAST_SEO_DEBUG_SITEMAPS` flag to better control this functionality.
 
 = Earlier versions =
 

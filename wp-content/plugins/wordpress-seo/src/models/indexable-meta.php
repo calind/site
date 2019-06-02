@@ -5,10 +5,10 @@
  * @package Yoast\YoastSEO\Models
  */
 
-namespace Yoast\YoastSEO\Models;
+namespace Yoast\WP\Free\Models;
 
-use Yoast\YoastSEO\Loggers\Logger;
-use Yoast\YoastSEO\Yoast_Model;
+use Yoast\WP\Free\Loggers\Logger;
+use Yoast\WP\Free\Yoast_Model;
 
 /**
  * Table definition for the Indexable Meta table.
@@ -24,7 +24,7 @@ class Indexable_Meta extends Yoast_Model {
 	/**
 	 * Retrieves a meta value for an indexable.
 	 *
-	 * @param int    $indexable_id The indexable id.
+	 * @param int    $indexable_id The indexable ID.
 	 * @param string $meta_key     The meta key.
 	 *
 	 * @return bool|Indexable_Meta Indexable meta object.
@@ -39,7 +39,7 @@ class Indexable_Meta extends Yoast_Model {
 	/**
 	 * Creates an indexable meta for an indexable.
 	 *
-	 * @param int    $indexable_id The indexable id.
+	 * @param int    $indexable_id The indexable ID.
 	 * @param string $meta_key     The meta key.
 	 *
 	 * @return bool|Indexable_Meta Indexable meta object.
@@ -56,6 +56,7 @@ class Indexable_Meta extends Yoast_Model {
 
 		Logger::get_logger()->debug(
 			sprintf(
+				/* translators: 1: ID; 2: value of a meta key. */
 				__( 'Indexable meta created for indexable id %1$s with meta key %2$s', 'wordpress-seo' ),
 				$indexable_id,
 				$meta_key
@@ -94,6 +95,7 @@ class Indexable_Meta extends Yoast_Model {
 		if ( $saved ) {
 			Logger::get_logger()->debug(
 				sprintf(
+					/* translators: 1: ID; 2: value of a meta key. */
 					__( 'Indexable meta saved for indexable id %1$s with meta key %2$s', 'wordpress-seo' ),
 					$this->indexable_id,
 					$this->meta_key
