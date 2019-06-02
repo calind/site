@@ -150,7 +150,7 @@ class Jetpack_Search {
 	 * @since 5.0.0
 	 */
 	public function setup() {
-		if ( ! Jetpack::is_active() || ! Jetpack::active_plan_supports( 'search' ) ) {
+		if ( ! Jetpack::is_active() || ! Jetpack_Plan::supports( 'search' ) ) {
 			return;
 		}
 
@@ -243,6 +243,13 @@ class Jetpack_Search {
 				intval( $this->last_query_info['elapsed_time'] ),
 				esc_html( $this->last_query_info['es_time'] )
 			);
+
+			if ( isset( $_GET['searchdebug'] ) ) {
+				printf(
+					'<!-- Query response data: %s -->',
+					esc_html( print_r( $this->last_query_info, 1 ) )
+				);
+			}
 		}
 	}
 
@@ -308,7 +315,7 @@ class Jetpack_Search {
 	 * @param WP_Query $query A WP_Query instance.
 	 */
 	public function maybe_add_post_type_as_var( WP_Query $query ) {
-		if ( $query->is_main_query() && $query->is_search && ! empty( $_GET['post_type'] ) ) {
+		if ( $this->should_handle_query( $query ) && ! empty( $_GET['post_type'] ) ) {
 			$post_types = ( is_string( $_GET['post_type'] ) && false !== strpos( $_GET['post_type'], ',' ) )
 				? $post_type = explode( ',', $_GET['post_type'] )
 				: (array) $_GET['post_type'];
@@ -442,17 +449,7 @@ class Jetpack_Search {
 	 * @return array Array of matching posts.
 	 */
 	public function filter__posts_pre_query( $posts, $query ) {
-		/**
-		 * Determine whether a given WP_Query should be handled by ElasticSearch.
-		 *
-		 * @module search
-		 *
-		 * @since  5.6.0
-		 *
-		 * @param bool     $should_handle Should be handled by Jetpack Search.
-		 * @param WP_Query $query         The WP_Query object.
-		 */
-		if ( ! apply_filters( 'jetpack_search_should_handle_query', ( $query->is_main_query() && $query->is_search() ), $query ) ) {
+		if ( ! $this->should_handle_query( $query ) ) {
 			return $posts;
 		}
 
@@ -500,7 +497,7 @@ class Jetpack_Search {
 	 * @param WP_Query $query The original WP_Query to use for the parameters of our search.
 	 */
 	public function do_search( WP_Query $query ) {
-		if ( ! $query->is_main_query() || ! $query->is_search() ) {
+		if ( ! $this->should_handle_query( $query ) ) {
 			return;
 		}
 
@@ -1610,7 +1607,20 @@ class Jetpack_Search {
 			} // End foreach().
 		} // End foreach().
 
-		return $aggregation_data;
+		/**
+		 * Modify the aggregation filters returned by get_filters().
+		 *
+		 * Useful if you are setting custom filters outside of the supported filters (taxonomy, post_type etc.) and
+		 * want to hook them up so they're returned when you call `get_filters()`.
+		 *
+		 * @module search
+		 *
+		 * @since  6.9.0
+		 *
+		 * @param array    $aggregation_data The array of filters keyed on label.
+		 * @param WP_Query $query            The WP_Query object.
+		 */
+		return apply_filters( 'jetpack_search_get_filters', $aggregation_data, $query );
 	}
 
 	/**
@@ -1799,6 +1809,27 @@ class Jetpack_Search {
 		if ( $changed ) {
 			wp_set_sidebars_widgets( $sidebars_widgets );
 		}
+	}
+
+	/**
+	 * Determine whether a given WP_Query should be handled by ElasticSearch.
+	 *
+	 * @param WP_Query $query The WP_Query object.
+	 *
+	 * @return bool
+	 */
+	public function should_handle_query( $query ) {
+		/**
+		 * Determine whether a given WP_Query should be handled by ElasticSearch.
+		 *
+		 * @module search
+		 *
+		 * @since  5.6.0
+		 *
+		 * @param bool     $should_handle Should be handled by Jetpack Search.
+		 * @param WP_Query $query         The WP_Query object.
+		 */
+		return apply_filters( 'jetpack_search_should_handle_query', $query->is_main_query() && $query->is_search(), $query );
 	}
 
 	/**

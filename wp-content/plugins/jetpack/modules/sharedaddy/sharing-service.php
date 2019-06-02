@@ -41,7 +41,6 @@ class Sharing_Service {
 	 * Gets a list of all available service names and classes
 	 */
 	public function get_all_services( $include_custom = true ) {
-		global $wp_version;
 		// Default services
 		// if you update this list, please update the REST API tests
 		// in bin/tests/api/suites/SharingTest.php
@@ -51,7 +50,6 @@ class Sharing_Service {
 			'linkedin'         => 'Share_LinkedIn',
 			'reddit'           => 'Share_Reddit',
 			'twitter'          => 'Share_Twitter',
-			'google-plus-1'    => 'Share_GooglePlus1',
 			'tumblr'           => 'Share_Tumblr',
 			'pinterest'        => 'Share_Pinterest',
 			'pocket'           => 'Share_Pocket',
@@ -74,7 +72,7 @@ class Sharing_Service {
 			$services['email'] = 'Share_Email';
 		}
 
-		if ( is_multisite() && ( version_compare( $wp_version, '4.9-RC1-42107', '<' ) || is_plugin_active( 'press-this/press-this-plugin.php' ) ) ) {
+		if ( is_multisite() && is_plugin_active( 'press-this/press-this-plugin.php' ) ) {
 			$services['press-this'] = 'Share_PressThis';
 		}
 
@@ -577,6 +575,13 @@ function sharing_maybe_enqueue_scripts() {
 }
 
 function sharing_add_footer() {
+	if (
+		class_exists( 'Jetpack_AMP_Support' )
+		&& Jetpack_AMP_Support::is_amp_request()
+	) {
+		return;
+	}
+
 	global $jetpack_sharing_counts;
 
 	/**
@@ -743,8 +748,25 @@ function sharing_display( $text = '', $echo = false ) {
 		$show = false;
 	}
 
-	// Allow to be used on P2 ajax requests for latest posts.
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX && isset( $_REQUEST['action'] ) && 'get_latest_posts' == $_REQUEST['action'] ) {
+	/**
+	 * Filter the Sharing buttons' Ajax action name Jetpack checks for.
+	 * This allows the use of the buttons with your own Ajax implementation.
+	 *
+	 * @module sharedaddy
+	 *
+	 * @since 7.3.0
+	 *
+	 * @param string $sharing_ajax_action_name Name of the Sharing buttons' Ajax action.
+	 */
+	$ajax_action = apply_filters( 'sharing_ajax_action', 'get_latest_posts' );
+
+	// Allow to be used in ajax requests for latest posts.
+	if (
+		defined( 'DOING_AJAX' )
+		&& DOING_AJAX
+		&& isset( $_REQUEST['action'] )
+		&& $ajax_action === $_REQUEST['action']
+	) {
 		$show = true;
 	}
 
@@ -792,8 +814,15 @@ function sharing_display( $text = '', $echo = false ) {
 			// Visible items
 			$visible = '';
 			foreach ( $enabled['visible'] as $id => $service ) {
+				$klasses = array( 'share-' . $service->get_class() );
+				if ( $service->is_deprecated() ) {
+					if ( ! current_user_can( 'manage_options' ) ) {
+						continue;
+					}
+					$klasses[] = 'share-deprecated';
+				}
 				// Individual HTML for sharing service
-				$visible .= '<li class="share-' . $service->get_class() . '">' . $service->get_display( $post ) . '</li>';
+				$visible .= '<li class="' . implode( ' ', $klasses ) . '">' . $service->get_display( $post ) . '</li>';
 			}
 
 			$parts   = array();
@@ -832,7 +861,14 @@ function sharing_display( $text = '', $echo = false ) {
 				$count = 1;
 				foreach ( $enabled['hidden'] as $id => $service ) {
 					// Individual HTML for sharing service
-					$sharing_content .= '<li class="share-' . $service->get_class() . '">';
+					$klasses = array( 'share-' . $service->get_class() );
+					if ( $service->is_deprecated() ) {
+						if ( ! current_user_can( 'manage_options' ) ) {
+							continue;
+						}
+						$klasses[] = 'share-deprecated';
+					}
+					$sharing_content .= '<li class="' . implode( ' ', $klasses ) . '">';
 					$sharing_content .= $service->get_display( $post );
 					$sharing_content .= '</li>';
 
