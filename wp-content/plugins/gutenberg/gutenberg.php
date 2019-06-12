@@ -3,7 +3,7 @@
  * Plugin Name: Gutenberg
  * Plugin URI: https://github.com/WordPress/gutenberg
  * Description: Printing since 1440. This is the development plugin for the new block editor in core.
- * Version: 5.8.0
+ * Version: 5.9.0
  * Author: Gutenberg Team
  * Text Domain: gutenberg
  *
@@ -11,8 +11,8 @@
  */
 
 ### BEGIN AUTO-GENERATED DEFINES
-define( 'GUTENBERG_VERSION', '5.8.0' );
-define( 'GUTENBERG_GIT_COMMIT', '803d5b14a86b719febd4001108d180a7d50f6660' );
+define( 'GUTENBERG_VERSION', '5.9.0' );
+define( 'GUTENBERG_GIT_COMMIT', '0c75cbaa48966ef98283b0683d5e6c778e84cacd' );
 ### END AUTO-GENERATED DEFINES
 
 gutenberg_pre_init();
@@ -90,7 +90,7 @@ function gutenberg_wordpress_version_notice() {
  */
 function gutenberg_build_files_notice() {
 	echo '<div class="error"><p>';
-	_e( 'Gutenberg development mode requires files to be built. Run <code>npm install</code> to install dependencies, <code>npm run build</code> to build the files or <code>npm run dev</code> to build the files and watch for changes. Read the <a href="https://github.com/WordPress/gutenberg/blob/master/CONTRIBUTING.md">contributing</a> file for more information.', 'gutenberg' );
+	_e( 'Gutenberg development mode requires files to be built. Run <code>npm install</code> to install dependencies, <code>npm run build</code> to build the files or <code>npm run dev</code> to build the files and watch for changes. Read the <a href="https://github.com/WordPress/gutenberg/blob/master/docs/contributors/getting-started.md">contributing</a> file for more information.', 'gutenberg' );
 	echo '</p></div>';
 }
 
