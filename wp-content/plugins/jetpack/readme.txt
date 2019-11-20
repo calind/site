@@ -96,6 +96,15 @@ There are opportunities for developers at all levels to contribute. [Learn more 
 
 == Changelog ==
 
+= 7.4.1 =
+
+* Release date: June 17, 2019
+* Release post: https://wp.me/p1moTy-kvz
+
+**Bug fix**
+
+* Contact Form Block: avoid errors when trying to edit a form block, when using the Gutenberg plugin.
+
 = 7.4 =
 
 * Release date: June 4, 2019
