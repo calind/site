@@ -101,12 +101,12 @@ jQuery(document).ready(function ($) {
 			$(this).after('<div id="picker-' + i + '" style="z-index: 1000; background: #EEE; border: 1px solid #CCC; position: absolute; display: block;"></div>');
 			$('#picker-' + i).hide().farbtastic($(this));
 		})
-			.focus(function () {
-				$(this).next().show();
-			})
-			.blur(function () {
-				$(this).next().hide();
-			});
+		                               .focus(function () {
+			                               $(this).next().show();
+		                               })
+		                               .blur(function () {
+			                               $(this).next().hide();
+		                               });
 	}
 
 	/**
@@ -197,7 +197,7 @@ jQuery(document).ready(function ($) {
 	 * Ajax oEmbed display
 	 */
 
-		// ajax on paste
+	// ajax on paste
 	$('.cmb_oembed').bind('paste', function (e) {
 		var pasteitem = $(this);
 		// paste event is fired before the value is filled, so wait a bit
@@ -380,6 +380,23 @@ jQuery(document).ready(function ($) {
 		$(selector).find('select, input:radio').trigger('change');
 	};
 
+	function showMetaboxesGutenberg() {
+		$('#custom_portfolio_page_settings').show();
+		$('.editor-block-list__layout').hide();
+		$('.edit-post-layout__content .edit-post-visual-editor').css(
+			{
+				'flex-basis': 0,
+				'flex': 'unset'
+			}
+		);
+	}
+
+	function hideMetaboxesGutenberg() {
+		$('#custom_portfolio_page_settings').hide();
+		$('.editor-block-list__layout').show();
+		$('.edit-post-layout__content .edit-post-visual-editor').removeAttr('style');
+	}
+
 	/**
 	 * Fold elements when the entire page is loaded
 	 * Some css classes are added dynamically, they can only be used after the load event
@@ -392,6 +409,10 @@ jQuery(document).ready(function ($) {
 		$('.show_metabox_on').each(function () {
 			toggle_metaboxes(this);
 		});
+
+		if ($('.editor-page-attributes__template select').val() === 'page-templates/custom-portfolio-page.php') {
+			showMetaboxesGutenberg();
+		}
 	});
 
 	var toggle_metaboxes = function(el) {
@@ -405,12 +426,27 @@ jQuery(document).ready(function ($) {
 
 		if ( key == 'page-template' ) {
 
+			var templateSelector = $('.editor-page-attributes__template select');
+
 			var condition = false;
 			$.each(value, function(key,val){
-				if ( $('select#page_template').val() == val ) {
+				var $select = $('select#page_template').length ? $('select#page_template') : $('.editor-page-attributes__template select');
+				if ( $select.val() === val ) {
 					condition = true;
 				}
 			});
+
+			// Make metaboxes show on Gutenberg Editor
+			if ($('body').hasClass('block-editor-page')) {
+
+				templateSelector.on('change', function(){
+					if (templateSelector.val() === 'page-templates/custom-portfolio-page.php') {
+						showMetaboxesGutenberg()
+					} else {
+						hideMetaboxesGutenberg();
+					}
+				});
+			}
 
 			if ( condition ) {
 				display_metabox( el, !hide );
@@ -446,38 +482,6 @@ jQuery(document).ready(function ($) {
 			toggle_metaboxes(this);
 		});
 	});
-
-//		$.ajax({
-//			type: 'post',
-//			dataType: 'json',
-//			url: window.ajaxurl,
-//			data: {
-//				'action': 'ajax_update_metaboxes',
-//				'new_page_template': $(this).val(),
-//				'post_ID': window.cmb_ajax_data.post_id,
-//				'post_type': window.cmb_ajax_data.post_type,
-//				'ajax_nonce': window.cmb_ajax_data.ajax_nonce
-//				// do a nonce here
-//			},
-//			success: function (response) {
-//
-//				if (response.hasOwnProperty('metaboxes')) {
-//					$('#postbox-container-2').html(response.metaboxes);
-//				}
-//
-////				// update wp-editors
-////				$('#postbox-container-2 .wp-editor-area').each(function (i, e) {
-////					var editor_id = $(e).attr('name');
-////
-////					var editor = new tinymce.Editor(e);
-////					tinyMCE.add(editor);
-////					editor.render();
-////				});
-//
-//				$(window).trigger('load');
-//			}
-//		});
-//	});
 
 	//LENS - Ahaaaaaa!!! This is so evil and shameful, but I like it
 
@@ -664,5 +668,4 @@ jQuery(document).ready(function ($) {
 		}
 
 	});
-
 });
