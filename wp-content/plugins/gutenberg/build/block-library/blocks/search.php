@@ -15,7 +15,9 @@
 function gutenberg_render_block_core_search( $attributes ) {
 	static $instance_id = 0;
 
-	$input_id = 'wp-block-search__input-' . ++$instance_id;
+	$input_id      = 'wp-block-search__input-' . ++$instance_id;
+	$label_markup  = '';
+	$button_markup = '';
 
 	if ( ! empty( $attributes['label'] ) ) {
 		$label_markup = sprintf(
@@ -23,10 +25,16 @@ function gutenberg_render_block_core_search( $attributes ) {
 			$input_id,
 			$attributes['label']
 		);
+	} else {
+		$label_markup = sprintf(
+			'<label for="%s" class="wp-block-search__label screen-reader-text">%s</label>',
+			$input_id,
+			__( 'Search' )
+		);
 	}
 
 	$input_markup = sprintf(
-		'<input type="search" id="%s" class="wp-block-search__input" name="s" value="%s" placeholder="%s" />',
+		'<input type="search" id="%s" class="wp-block-search__input" name="s" value="%s" placeholder="%s" required />',
 		$input_id,
 		esc_attr( get_search_query() ),
 		esc_attr( $attributes['placeholder'] )
@@ -43,7 +51,6 @@ function gutenberg_render_block_core_search( $attributes ) {
 	if ( isset( $attributes['className'] ) ) {
 		$class .= ' ' . $attributes['className'];
 	}
-
 	if ( isset( $attributes['align'] ) ) {
 		$class .= ' align' . $attributes['align'];
 	}
