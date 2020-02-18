@@ -90,7 +90,7 @@ class Health_Check_Site_Status {
 	public function site_status_result() {
 		check_ajax_referer( 'health-check-site-status-result' );
 
-		if ( ! current_user_can( 'install_plugins' ) ) {
+		if ( ! current_user_can( 'view_site_health_checks' ) ) {
 			wp_send_json_error();
 		}
 
@@ -100,7 +100,7 @@ class Health_Check_Site_Status {
 	public function site_status() {
 		check_ajax_referer( 'health-check-site-status' );
 
-		if ( ! current_user_can( 'install_plugins' ) ) {
+		if ( ! current_user_can( 'view_site_health_checks' ) ) {
 			wp_send_json_error();
 		}
 
@@ -627,93 +627,6 @@ class Health_Check_Site_Status {
 	}
 
 	/**
-	 * Fallback function replicating core behavior from WordPress 5.1 to check PHP versions.
-	 *
-	 * @return array|bool|mixed|object|WP_Error
-	 */
-	private function wp_check_php_version() {
-		$version = phpversion();
-		$key     = md5( $version );
-
-		$response = get_site_transient( 'php_check_' . $key );
-		if ( false === $response ) {
-			$url = 'http://api.wordpress.org/core/serve-happy/1.0/';
-			if ( wp_http_supports( array( 'ssl' ) ) ) {
-				$url = set_url_scheme( $url, 'https' );
-			}
-
-			$url = add_query_arg( 'php_version', $version, $url );
-
-			$response = wp_remote_get( $url );
-
-			if ( is_wp_error( $response ) || 200 !== wp_remote_retrieve_response_code( $response ) ) {
-				return false;
-			}
-
-			/**
-			 * Response should be an array with:
-			 *  'recommended_version' - string - The PHP version recommended by WordPress.
-			 *  'is_supported' - boolean - Whether the PHP version is actively supported.
-			 *  'is_secure' - boolean - Whether the PHP version receives security updates.
-			 *  'is_acceptable' - boolean - Whether the PHP version is still acceptable for WordPress.
-			 */
-			$response = json_decode( wp_remote_retrieve_body( $response ), true );
-
-			if ( ! is_array( $response ) ) {
-				return false;
-			}
-
-			set_site_transient( 'php_check_' . $key, $response, WEEK_IN_SECONDS );
-		}
-
-		if ( isset( $response['is_acceptable'] ) && $response['is_acceptable'] ) {
-			/**
-			 * Filters whether the active PHP version is considered acceptable by WordPress.
-			 *
-			 * Returning false will trigger a PHP version warning to show up in the admin dashboard to administrators.
-			 *
-			 * This filter is only run if the wordpress.org Serve Happy API considers the PHP version acceptable, ensuring
-			 * that this filter can only make this check stricter, but not loosen it.
-			 *
-			 * @since 5.1.1
-			 *
-			 * @param bool   $is_acceptable Whether the PHP version is considered acceptable. Default true.
-			 * @param string $version       PHP version checked.
-			 */
-			$response['is_acceptable'] = (bool) apply_filters( 'wp_is_php_version_acceptable', true, $version );
-		}
-
-		return $response;
-	}
-
-	private function wp_get_update_php_url() {
-		$default_url = _x( 'https://wordpress.org/support/update-php/', 'localized PHP upgrade information page', 'health-check' );
-
-		$update_url = $default_url;
-		if ( false !== getenv( 'WP_UPDATE_PHP_URL' ) ) {
-			$update_url = getenv( 'WP_UPDATE_PHP_URL' );
-		}
-
-		/**
-		 * Filters the URL to learn more about updating the PHP version the site is running on.
-		 *
-		 * Providing an empty string is not allowed and will result in the default URL being used. Furthermore
-		 * the page the URL links to should preferably be localized in the site language.
-		 *
-		 * @since 5.1.0
-		 *
-		 * @param string $update_url URL to learn more about updating PHP.
-		 */
-		$update_url = apply_filters( 'wp_update_php_url', $update_url );
-
-		if ( empty( $update_url ) ) {
-			$update_url = $default_url;
-		}
-
-		return $update_url;
-	}
-
-	/**
 	 * Test if the supplied PHP version is supported.
 	 *
 	 * @since 5.2.0
@@ -721,11 +634,7 @@ class Health_Check_Site_Status {
 	 * @return array The test results.
 	 */
 	public function get_test_php_version() {
-		if ( ! function_exists( 'wp_check_php_version' ) ) {
-			$response = $this->wp_check_php_version();
-		} else {
-			$response = wp_check_php_version();
-		}
+		$response = wp_check_php_version();
 
 		$result = array(
 			'label'       => sprintf(
@@ -744,7 +653,7 @@ class Health_Check_Site_Status {
 			),
 			'actions'     => sprintf(
 				'<p><a href="%s" target="_blank" rel="noopener noreferrer">%s <span class="screen-reader-text">%s</span><span aria-hidden="true" class="dashicons dashicons-external"></span></a></p>',
-				esc_url( ( function_exists( 'wp_get_update_php_url' ) ? wp_get_update_php_url() : $this->wp_get_update_php_url() ) ),
+				esc_url( wp_get_update_php_url() ),
 				__( 'Learn more about updating PHP', 'health-check' ),
 				/* translators: accessibility text */
 				__( '(opens in a new tab)', 'health-check' )
@@ -790,12 +699,13 @@ class Health_Check_Site_Status {
 	 *
 	 * @param string $extension Optional. The extension name to test. Default null.
 	 * @param string $function  Optional. The function name to test. Default null.
+	 * @param string $constant  Optional. The constant to text for. Default null.
 	 *
 	 * @return bool Whether or not the extension and function are available.
 	 */
-	private function test_php_extension_availability( $extension = null, $function = null ) {
+	private function test_php_extension_availability( $extension = null, $function = null, $constant = null ) {
 		// If no extension or function is passed, claim to fail testing, as we have nothing to test against.
-		if ( ! $extension && ! $function ) {
+		if ( ! $extension && ! $function && ! $constant ) {
 			return false;
 		}
 
@@ -803,6 +713,9 @@ class Health_Check_Site_Status {
 			return false;
 		}
 		if ( $function && ! function_exists( $function ) ) {
+			return false;
+		}
+		if ( $constant && ! defined( $constant ) ) {
 			return false;
 		}
 
@@ -877,7 +790,7 @@ class Health_Check_Site_Status {
 				'required' => false,
 			),
 			'libsodium' => array(
-				'function'            => 'sodium_compare',
+				'constant'            => 'SODIUM_LIBRARY_VERSION',
 				'required'            => false,
 				'php_bundled_version' => '7.2.0',
 			),
@@ -913,6 +826,14 @@ class Health_Check_Site_Status {
 				'required'     => false,
 				'fallback_for' => 'zip',
 			),
+			'mbstring'  => array(
+				'extension' => 'mbstring',
+				'required'  => true,
+			),
+			'json'      => array(
+				'extension' => 'json',
+				'required'  => true,
+			),
 		);
 
 		/**
@@ -929,6 +850,7 @@ class Health_Check_Site_Status {
 		 *
 		 *         string $function     Optional. A function name to test for the existence of.
 		 *         string $extension    Optional. An extension to check if is loaded in PHP.
+		 *         string $constant     Optional. A constant to check for to verify an extension exists.
 		 *         bool   $required     Is this a required feature or not.
 		 *         string $fallback_for Optional. The module this module replaces as a fallback.
 		 *     }
@@ -941,6 +863,7 @@ class Health_Check_Site_Status {
 		foreach ( $modules as $library => $module ) {
 			$extension = ( isset( $module['extension'] ) ? $module['extension'] : null );
 			$function  = ( isset( $module['function'] ) ? $module['function'] : null );
+			$constant  = ( isset( $module['constant'] ) ? $module['constant'] : null );
 
 			// If this module is a fallback for another function, check if that other function passed.
 			if ( isset( $module['fallback_for'] ) ) {
@@ -955,7 +878,7 @@ class Health_Check_Site_Status {
 				}
 			}
 
-			if ( ! $this->test_php_extension_availability( $extension, $function ) && ( ! isset( $module['php_bundled_version'] ) || version_compare( PHP_VERSION, $module['php_bundled_version'], '<' ) ) ) {
+			if ( ! $this->test_php_extension_availability( $extension, $function, $constant ) && ( ! isset( $module['php_bundled_version'] ) || version_compare( PHP_VERSION, $module['php_bundled_version'], '<' ) ) ) {
 				if ( $module['required'] ) {
 					$result['status'] = 'critical';
 
@@ -1284,6 +1207,48 @@ class Health_Check_Site_Status {
 	}
 
 	/**
+	 * Test if the site is using timezones relative to their location, or by using an offset value.
+	 *
+	 * Daylight Savings Time (DST) may affect the times used and shown by your site, and using an UTC offset,
+	 * instead of a localized timezone, means that the site does not get automatic DST updates.
+	 *
+	 * This check looks for default or UTC values and recommends changing to a fixed location.
+	 *
+	 * @return array The test results.
+	 */
+	public function get_test_timezone_not_utc() {
+		$result = array(
+			'label'       => __( 'Your site uses localized timezones', 'health-check' ),
+			'status'      => 'good',
+			'badge'       => array(
+				'label' => __( 'Performance', 'health-check' ),
+				'color' => 'blue',
+			),
+			'description' => sprintf(
+				'<p>%s</p>',
+				__( 'Daylight Savings Time (DST) may affect the times used and shown by your site, and using an UTC offset, instead of a localized timezone, means that the site does not get automatic DST updates.', 'health-check' )
+			),
+			'actions'     => '',
+			'test'        => 'timezone_not_utc',
+		);
+
+		$timezone = get_option( 'timezone_string', null );
+
+		if ( empty( $timezone ) || 'UTC' === substr( $timezone, 0, 3 ) ) {
+			$result['status'] = 'recommended';
+			$result['label']  = __( 'Your site is not using localized timezones', 'health-check' );
+
+			$result['actions'] .= sprintf(
+				'<p><a href="%s">%s</a></p>',
+				esc_url( admin_url( 'options-general.php' ) ),
+				__( 'Update your site timezone', 'health-check' )
+			);
+		}
+
+		return $result;
+	}
+
+	/**
 	 * Test if debug information is enabled.
 	 *
 	 * When WP_DEBUG is enabled, errors and information may be disclosed to site visitors, or it may be
@@ -1509,21 +1474,32 @@ class Health_Check_Site_Status {
 					$schedule->has_missed_cron()->get_error_message()
 				)
 			);
-		} else {
-			if ( $schedule->has_missed_cron() ) {
-				$result['status'] = 'recommended';
+		} elseif ( $schedule->has_missed_cron() ) {
+			$result['status'] = 'recommended';
 
-				$result['label'] = __( 'A scheduled event has failed', 'health-check' );
+			$result['label'] = __( 'A scheduled event has failed', 'health-check' );
 
-				$result['description'] = sprintf(
-					'<p>%s</p>',
-					sprintf(
-						/* translators: %s: The name of the failed cron event. */
-						__( 'The scheduled event, %s, failed to run. Your site still works, but this may indicate that scheduling posts or automated updates may not work as intended.', 'health-check' ),
-						$schedule->last_missed_cron
-					)
-				);
-			}
+			$result['description'] = sprintf(
+				'<p>%s</p>',
+				sprintf(
+					/* translators: %s: The name of the failed cron event. */
+					__( 'The scheduled event, %s, failed to run. Your site still works, but this may indicate that scheduling posts or automated updates may not work as intended.', 'health-check' ),
+					$schedule->last_missed_cron
+				)
+			);
+		} elseif ( $schedule->has_late_cron() ) {
+			$result['status'] = 'recommended';
+
+			$result['label'] = __( 'A scheduled event is late', 'health-check' );
+
+			$result['description'] = sprintf(
+				'<p>%s</p>',
+				sprintf(
+					/* translators: %s: The name of the late cron event. */
+					__( 'The scheduled event, %s, is late to run. Your site still works, but this may indicate that scheduling posts or automated updates may not work as intended.', 'health-check' ),
+					$schedule->last_late_cron
+				)
+			);
 		}
 
 		return $result;
@@ -1951,6 +1927,10 @@ class Health_Check_Site_Status {
 				'debug_enabled'     => array(
 					'label' => __( 'Debugging enabled', 'health-check' ),
 					'test'  => array( $health_check_site_status, 'get_test_is_in_debug_mode' ),
+				),
+				'timezones'         => array(
+					'label' => __( 'Timezone', 'health-check' ),
+					'test'  => array( $health_check_site_status, 'get_test_timezone_not_utc' ),
 				),
 			),
 			'async'  => array(

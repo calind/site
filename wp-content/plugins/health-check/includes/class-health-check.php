@@ -50,9 +50,8 @@ class Health_Check {
 
 		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
 
-		add_filter( 'plugin_row_meta', array( $this, 'settings_link' ), 10, 2 );
-
 		add_filter( 'plugin_action_links', array( $this, 'troubleshoot_plugin_action' ), 20, 4 );
+		add_filter( 'plugin_action_links_' . plugin_basename( HEALTH_CHECK_PLUGIN_FILE ), array( $this, 'page_plugin_action' ) );
 
 		add_action( 'admin_notices', array( $this, 'admin_notices' ) );
 
@@ -64,15 +63,36 @@ class Health_Check {
 		add_action( 'wp_ajax_health-check-loopback-no-plugins', array( 'Health_Check_Loopback', 'loopback_no_plugins' ) );
 		add_action( 'wp_ajax_health-check-loopback-individual-plugins', array( 'Health_Check_Loopback', 'loopback_test_individual_plugins' ) );
 		add_action( 'wp_ajax_health-check-loopback-default-theme', array( 'Health_Check_Loopback', 'loopback_test_default_theme' ) );
-		add_action( 'wp_ajax_health-check-files-integrity-check', array( 'Health_Check_Files_Integrity', 'run_files_integrity_check' ) );
-		add_action( 'wp_ajax_health-check-view-file-diff', array( 'Health_Check_Files_Integrity', 'view_file_diff' ) );
-		add_action( 'wp_ajax_health-check-mail-check', array( 'Health_Check_Mail_Check', 'run_mail_check' ) );
 		add_action( 'wp_ajax_health-check-get-sizes', array( 'Health_Check_Debug_Data', 'ajax_get_sizes' ) );
 
-		add_filter( 'health_check_tools_tab', array( 'Health_Check_Files_Integrity', 'tools_tab' ) );
-		add_filter( 'health_check_tools_tab', array( 'Health_Check_Mail_Check', 'tools_tab' ) );
-
 		add_filter( 'cron_schedules', array( $this, 'cron_schedules' ) );
+
+		add_filter( 'user_has_cap', array( $this, 'maybe_grant_site_health_caps' ), 1, 4 );
+	}
+
+	/**
+	 * Filters the user capabilities to grant the 'view_site_health_checks' capabilities as necessary.
+	 *
+	 * @since 5.2.2
+	 *
+	 * @param bool[]   $allcaps An array of all the user's capabilities.
+	 * @param string[] $caps    Required primitive capabilities for the requested capability.
+	 * @param array    $args {
+	 *     Arguments that accompany the requested capability check.
+	 *
+	 *     @type string    $0 Requested capability.
+	 *     @type int       $1 Concerned user ID.
+	 *     @type mixed  ...$2 Optional second and further parameters, typically object ID.
+	 * }
+	 * @param WP_User  $user    The user object.
+	 * @return bool[] Filtered array of the user's capabilities.
+	 */
+	function maybe_grant_site_health_caps( $allcaps, $caps, $args, $user ) {
+		if ( ! empty( $allcaps['install_plugins'] ) && ( ! is_multisite() || is_super_admin( $user->ID ) ) ) {
+			$allcaps['view_site_health_checks'] = true;
+		}
+
+		return $allcaps;
 	}
 
 	/**
@@ -86,7 +106,7 @@ class Health_Check {
 	 * @return void
 	 */
 	public function start_troubleshoot_mode() {
-		if ( ! isset( $_POST['health-check-troubleshoot-mode'] ) || ! current_user_can( 'install_plugins' ) ) {
+		if ( ! isset( $_POST['health-check-troubleshoot-mode'] ) || ! current_user_can( 'view_site_health_checks' ) ) {
 			return;
 		}
 
@@ -118,7 +138,7 @@ class Health_Check {
 	 * @return void
 	 */
 	public function start_troubleshoot_single_plugin_mode() {
-		if ( ! isset( $_GET['health-check-troubleshoot-plugin'] ) || ! current_user_can( 'install_plugins' ) ) {
+		if ( ! isset( $_GET['health-check-troubleshoot-plugin'] ) || ! current_user_can( 'view_site_health_checks' ) ) {
 			return;
 		}
 
@@ -156,9 +176,11 @@ class Health_Check {
 			return;
 		}
 
-		Health_Check_Troubleshoot::initiate_troubleshooting_mode( array(
-			$_GET['health-check-troubleshoot-plugin'] => $_GET['health-check-troubleshoot-plugin'],
-		) );
+		Health_Check_Troubleshoot::initiate_troubleshooting_mode(
+			array(
+				$_GET['health-check-troubleshoot-plugin'] => $_GET['health-check-troubleshoot-plugin'],
+			)
+		);
 
 		wp_redirect( admin_url( 'plugins.php' ) );
 	}
@@ -192,8 +214,10 @@ class Health_Check {
 	 * @return void
 	 */
 	public function enqueues() {
+		$screen = get_current_screen();
+
 		// Don't enqueue anything unless we're on the health check page.
-		if ( ! isset( $_GET['page'] ) || 'health-check' !== $_GET['page'] ) {
+		if ( ( ! isset( $_GET['page'] ) || 'health-check' !== $_GET['page'] ) && 'dashboard' !== $screen->base ) {
 			return;
 		}
 
@@ -203,10 +227,10 @@ class Health_Check {
 				'copied'                               => esc_html__( 'Copied', 'health-check' ),
 				'running_tests'                        => esc_html__( 'Currently being tested...', 'health-check' ),
 				'site_health_complete'                 => esc_html__( 'All site health tests have finished running.', 'health-check' ),
-				'site_info_show_copy'                  => esc_html__( 'Show options for copying this information', 'health-check' ),
-				'site_info_hide_copy'                  => esc_html__( 'Hide options for copying this information', 'health-check' ),
-				// translators: %s: The percentage pass rate for the tests.
-				'site_health_complete_screen_reader'   => esc_html__( 'All site health tests have finished running. Your site passed %s, and the results are now available on the page.', 'health-check' ),
+				'site_health_complete_pass_sr'         => esc_html__( 'All site health tests have finished running. Your site is looking good, and the results are now available on the page.', 'health-check' ),
+				'site_health_complete_fail_sr'         => esc_html__( 'All site health tests have finished running. There are items that should be addressed, and the results are now available on the page.', 'health-check' ),
+				'site_health_complete_pass'            => esc_html__( 'Good', 'health-check' ),
+				'site_health_complete_fail'            => esc_html__( 'Should be improved', 'health-check' ),
 				'site_info_copied'                     => esc_html__( 'Site information has been added to your clipboard.', 'health-check' ),
 				// translators: %s: Amount of critical issues.
 				'site_info_heading_critical_single'    => esc_html__( '%s Critical issue', 'health-check' ),
@@ -230,6 +254,7 @@ class Health_Check {
 				'mail_check'                  => wp_create_nonce( 'health-check-mail-check' ),
 				'site_status'                 => wp_create_nonce( 'health-check-site-status' ),
 				'site_status_result'          => wp_create_nonce( 'health-check-site-status-result' ),
+				'tools_plugin_compat'         => wp_create_nonce( 'health-check-tools-plugin-compat' ),
 			),
 			'site_status' => array(
 				'direct' => array(),
@@ -250,7 +275,7 @@ class Health_Check {
 			$health_check_js_variables['site_status']['issues'] = $issue_counts;
 		}
 
-		if ( ! isset( $_GET['tab'] ) || ( isset( $_GET['tab'] ) && 'site-status' === $_GET['tab'] ) ) {
+		if ( 'dashboard' !== $screen->base && ( ! isset( $_GET['tab'] ) || ( isset( $_GET['tab'] ) && 'site-status' === $_GET['tab'] ) ) ) {
 			$tests = Health_Check_Site_Status::get_tests();
 
 			// Don't run https test on localhost
@@ -266,13 +291,34 @@ class Health_Check {
 					);
 
 					if ( method_exists( $this, $test_function ) && is_callable( array( $this, $test_function ) ) ) {
-						$health_check_js_variables['site_status']['direct'][] = call_user_func( array( $this, $test_function ) );
+						/**
+						 * Filter the output of a finished Site Health test.
+						 *
+						 * @since 5.3.0
+						 *
+						 * @param array $test_result {
+						 *     An associated array of test result data.
+						 *
+						 *     @param string $label  A label describing the test, and is used as a header in the output.
+						 *     @param string $status The status of the test, which can be a value of `good`, `recommended` or `critical`.
+						 *     @param array  $badge {
+						 *         Tests are put into categories which have an associated badge shown, these can be modified and assigned here.
+						 *
+						 *         @param string $label The test label, for example `Performance`.
+						 *         @param string $color Default `blue`. A string representing a color to use for the label.
+						 *     }
+						 *     @param string $description A more descriptive explanation of what the test looks for, and why it is important for the end user.
+						 *     @param string $actions     An action to direct the user to where they can resolve the issue, if one exists.
+						 *     @param string $test        The name of the test being ran, used as a reference point.
+						 * }
+						 */
+						$health_check_js_variables['site_status']['direct'][] = apply_filters( 'site_status_test_result', call_user_func( array( $this, $test_function ) ) );
 						continue;
 					}
 				}
 
 				if ( is_callable( $test['test'] ) ) {
-					$health_check_js_variables['site_status']['direct'][] = call_user_func( $test['test'] );
+					$health_check_js_variables['site_status']['direct'][] = apply_filters( 'site_status_test_result', call_user_func( $test['test'] ) );
 				}
 			}
 
@@ -338,30 +384,10 @@ class Health_Check {
 			'tools.php',
 			_x( 'Site Health', 'Page Title', 'health-check' ),
 			$menu_title,
-			'install_plugins',
+			'view_site_health_checks',
 			'health-check',
 			array( $this, 'dashboard_page' )
 		);
-	}
-
-	/**
-	 * Add a quick-access link under our plugin name on the plugins-list.
-	 *
-	 * @uses plugin_basename()
-	 * @uses sprintf()
-	 * @uses menu_page_url()
-	 *
-	 * @param array  $meta An array containing meta links.
-	 * @param string $name The plugin slug that these metas relate to.
-	 *
-	 * @return array
-	 */
-	public function settings_link( $meta, $name ) {
-		if ( plugin_basename( __FILE__ ) === $name ) {
-			$meta[] = sprintf( '<a href="%s">' . _x( 'Health Check', 'Menu, Section and Page Title', 'health-check' ) . '</a>', menu_page_url( 'health-check', false ) );
-		}
-
-		return $meta;
 	}
 
 	/**
@@ -387,21 +413,44 @@ class Health_Check {
 
 		// Set a slug if the plugin lives in the plugins directory root.
 		if ( ! stristr( $plugin_file, '/' ) ) {
-			$plugin_data['slug'] = $plugin_file;
+			$plugin_slug = $plugin_file;
+		} else { // Set the slug for plugin inside a folder.
+			$plugin_slug = explode( '/', $plugin_file );
+			$plugin_slug = $plugin_slug[0];
 		}
-
-		// If a slug isn't present, use the plugin's name
-		$plugin_name = ( isset( $plugin_data['slug'] ) ? $plugin_data['slug'] : sanitize_title( $plugin_data['Name'] ) );
 
 		$actions['troubleshoot'] = sprintf(
 			'<a href="%s">%s</a>',
-			esc_url( add_query_arg( array(
-				'health-check-troubleshoot-plugin' => $plugin_name,
-				'_wpnonce'                         => wp_create_nonce( 'health-check-troubleshoot-plugin-' . $plugin_name ),
-			), admin_url( 'plugins.php' ) ) ),
+			esc_url(
+				add_query_arg(
+					array(
+						'health-check-troubleshoot-plugin' => $plugin_slug,
+						'_wpnonce'                         => wp_create_nonce( 'health-check-troubleshoot-plugin-' . $plugin_slug ),
+					),
+					admin_url( 'plugins.php' )
+				)
+			),
 			esc_html__( 'Troubleshoot', 'health-check' )
 		);
 
+		return $actions;
+	}
+
+	/**
+	 * Add a quick-access action link to the Heath Check page.
+	 *
+	 * @param $actions
+	 *
+	 * @return array
+	 */
+	public function page_plugin_action( $actions ) {
+
+		$page_link = sprintf(
+			'<a href="%s">%s</a>',
+			menu_page_url( 'health-check', false ),
+			_x( 'Health Check', 'Menu, Section and Page Title', 'health-check' )
+		);
+		array_unshift( $actions, $page_link );
 		return $actions;
 	}
 

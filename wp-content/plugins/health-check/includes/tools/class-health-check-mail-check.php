@@ -14,7 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Mail Check
  */
-class Health_Check_Mail_Check {
+class Health_Check_Mail_Check extends Health_Check_Tool {
+
+	public function __construct() {
+		$this->label       = __( 'Mail Check', 'health-check' );
+		$this->description = __( 'The Mail Check will invoke the <code>wp_mail()</code> function and check if it succeeds. We will use the E-mail address you have set up, but you can change it below if you like.', 'health-check' );
+
+		add_action( 'wp_ajax_health-check-mail-check', array( $this, 'run_mail_check' ) );
+
+		parent::__construct();
+	}
 
 	/**
 	 * Checks if wp_mail() works.
@@ -29,7 +38,7 @@ class Health_Check_Mail_Check {
 	static function run_mail_check() {
 		check_ajax_referer( 'health-check-mail-check' );
 
-		if ( ! current_user_can( 'install_plugins' ) ) {
+		if ( ! current_user_can( 'view_site_health_checks' ) ) {
 			wp_send_json_error();
 		}
 
@@ -88,18 +97,10 @@ class Health_Check_Mail_Check {
 	/**
 	 * Add the Mail Checker to the tools tab.
 	 *
-	 * @param array $tabs
-	 *
-	 * @return array
+	 * @return void
 	 */
-	public static function tools_tab( $tabs ) {
-		ob_start();
+	public function tab_content() {
 		?>
-
-		<div>
-			<p>
-				<?php _e( 'The Mail Check will invoke the <code>wp_mail()</code> function and check if it succeeds. We will use the E-mail address you have set up, but you can change it below if you like.', 'health-check' ); ?>
-			</p>
 			<form action="#" id="health-check-mail-check" method="POST">
 				<table class="widefat tools-email-table">
 					<tr>
@@ -108,7 +109,7 @@ class Health_Check_Mail_Check {
 								<?php
 								$current_user = wp_get_current_user();
 								?>
-								<label for="email"><?php _e( 'E-mail', 'health-check' ); ?></label>
+								<label for="email"><?php _e( 'Email', 'health-check' ); ?></label>
 								<input type="text" name="email" id="email" value="<?php echo $current_user->user_email; ?>">
 							</p>
 						</td>
@@ -126,16 +127,8 @@ class Health_Check_Mail_Check {
 			<div id="tools-mail-check-response-holder">
 				<span class="spinner"></span>
 			</div>
-		</div>
-
 		<?php
-		$tab_content = ob_get_clean();
-
-		$tabs[] = array(
-			'label'   => esc_html__( 'Mail Check', 'health-check' ),
-			'content' => $tab_content,
-		);
-
-		return $tabs;
 	}
 }
+
+new Health_Check_Mail_Check();

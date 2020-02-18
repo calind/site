@@ -43,7 +43,7 @@ class Health_Check_Debug_Data {
 	 * @return array The debug data for the site.
 	 */
 	static function debug_data() {
-		global $wpdb;
+		global $wpdb, $is_apache;
 
 		// Save few function calls.
 		$upload_dir             = wp_get_upload_dir();
@@ -141,8 +141,13 @@ class Health_Check_Debug_Data {
 			'fields' => array(),
 		);
 
-		$info['wp-themes'] = array(
-			'label'      => __( 'Other Themes', 'health-check' ),
+		$info['wp-parent-theme'] = array(
+			'label'  => __( 'Parent Theme', 'health-check' ),
+			'fields' => array(),
+		);
+
+		$info['wp-themes-inactive'] = array(
+			'label'      => __( 'Inactive Themes', 'health-check' ),
 			'show_count' => true,
 			'fields'     => array(),
 		);
@@ -593,10 +598,26 @@ class Health_Check_Debug_Data {
 			$php_sapi = 'unknown';
 		}
 
+		if ( function_exists( 'get_current_user' ) && function_exists( 'getmyuid' ) ) {
+			$php_getuid = sprintf(
+				'%s (%s)',
+				get_current_user(),
+				getmyuid()
+			);
+		} else {
+			$php_getuid = 'unknown';
+		}
+
 		$info['wp-server']['fields']['server_architecture'] = array(
 			'label' => __( 'Server architecture', 'health-check' ),
 			'value' => ( 'unknown' !== $server_architecture ? $server_architecture : __( 'Unable to determine server architecture', 'health-check' ) ),
 			'debug' => $server_architecture,
+		);
+		$info['wp-server']['fields']['php-uid']             = array(
+			'label'   => __( 'Website server user', 'health-check' ),
+			'value'   => ( 'unknown' !== $php_getuid ? $php_getuid : __( 'Unable to determine the websites server user', 'health-check' ) ),
+			'debug'   => $php_getuid,
+			'private' => true,
 		);
 		$info['wp-server']['fields']['httpd_software']      = array(
 			'label' => __( 'Web server', 'health-check' ),
@@ -681,8 +702,35 @@ class Health_Check_Debug_Data {
 			'debug' => $imagick_loaded,
 		);
 
+		$cookies = wp_unslash( $_COOKIE );
+		$timeout = 10;
+		$headers = array(
+			'Cache-Control' => 'no-cache',
+			'X-WP-Nonce'    => wp_create_nonce( 'wp_rest' ),
+		);
+		if ( isset( $_SERVER['PHP_AUTH_USER'] ) && isset( $_SERVER['PHP_AUTH_PW'] ) ) {
+			$headers['Authorization'] = 'Basic ' . base64_encode( wp_unslash( $_SERVER['PHP_AUTH_USER'] ) . ':' . wp_unslash( $_SERVER['PHP_AUTH_PW'] ) );
+		}
+
+		$server_request = wp_remote_get( site_url(), compact( 'cookies', 'headers', 'timeout' ) );
+		if ( is_wp_error( $server_request ) ) {
+			$info['wp-server']['fields']['server-headers'] = array(
+				'label' => __( 'Server headers', 'health-check' ),
+				'value' => __( 'Could not retrieve server headers', 'health-check' ),
+				'debug' => 'unknown',
+			);
+		} else {
+			$server_headers = wp_remote_retrieve_headers( $server_request );
+
+			$info['wp-server']['fields']['server-headers'] = array(
+				'label' => __( 'Server headers', 'health-check' ),
+				'value' => ( $server_headers instanceof \Requests_Utility_CaseInsensitiveDictionary ? $server_headers->getAll() : $server_headers ),
+				'debug' => ( $server_headers instanceof \Requests_Utility_CaseInsensitiveDictionary ? $server_headers->getAll() : $server_headers ),
+			);
+		}
+
 		// Check if a .htaccess file exists.
-		if ( is_file( ABSPATH . '.htaccess' ) ) {
+		if ( $is_apache && is_file( ABSPATH . '.htaccess' ) ) {
 			// If the file exists, grab the content of it.
 			$htaccess_content = file_get_contents( ABSPATH . '.htaccess' );
 
@@ -709,22 +757,7 @@ class Health_Check_Debug_Data {
 			$extension = null;
 		}
 
-		/*
-		 * Check what database engine is used, this will throw compatibility
-		 * warnings from PHP compatibility testers, but `mysql_*` is
-		 * still valid in PHP 5.6, so we need to account for that.
-		 */
-		if ( method_exists( $wpdb, 'db_version' ) ) {
-			if ( $wpdb->use_mysqli ) {
-				// phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysqli_get_server_info
-				$server = mysqli_get_server_info( $wpdb->dbh );
-			} else {
-				// phpcs:ignore WordPress.DB.RestrictedFunctions.mysql_mysql_get_server_info
-				$server = mysql_get_server_info( $wpdb->dbh );
-			}
-		} else {
-			$server = null;
-		}
+		$server = $wpdb->get_var( 'SELECT VERSION()' );
 
 		if ( isset( $wpdb->use_mysqli ) && $wpdb->use_mysqli ) {
 			$client_version = $wpdb->dbh->client_info;
@@ -868,7 +901,7 @@ class Health_Check_Debug_Data {
 		$active_theme  = wp_get_theme();
 		$theme_updates = get_theme_updates();
 
-		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		$active_theme_version       = $active_theme->Version;
 		$active_theme_version_debug = $active_theme_version;
 
@@ -885,8 +918,13 @@ class Health_Check_Debug_Data {
 		$info['wp-active-theme']['fields'] = array(
 			'name'           => array(
 				'label' => __( 'Name', 'health-check' ),
-				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
-				'value' => $active_theme->Name,
+				'value' => sprintf(
+					// translators: 1: Parent theme name. 2: Parent theme slug.
+					__( '%1$s (%2$s)', 'health-check' ),
+					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					$active_theme->Name,
+					$active_theme->stylesheet
+				),
 			),
 			'version'        => array(
 				'label' => __( 'Version', 'health-check' ),
@@ -895,7 +933,7 @@ class Health_Check_Debug_Data {
 			),
 			'author'         => array(
 				'label' => __( 'Author', 'health-check' ),
-				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+				// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 				'value' => wp_kses( $active_theme->Author, array() ),
 			),
 			'author_website' => array(
@@ -905,8 +943,8 @@ class Health_Check_Debug_Data {
 			),
 			'parent_theme'   => array(
 				'label' => __( 'Parent theme', 'health-check' ),
-				'value' => ( $active_theme->parent_theme ? $active_theme->parent_theme : __( 'None', 'health-check' ) ),
-				'debug' => ( $active_theme->parent_theme ? $active_theme->parent_theme : 'none' ),
+				'value' => ( $active_theme->parent_theme ? $active_theme->parent_theme . ' (' . $active_theme->template . ')' : __( 'None', 'health-check' ) ),
+				'debug' => ( $active_theme->parent_theme ? $active_theme->parent_theme . ' (' . $active_theme->template . ')' : 'none' ),
 			),
 			'theme_features' => array(
 				'label' => __( 'Theme features', 'health-check' ),
@@ -914,9 +952,59 @@ class Health_Check_Debug_Data {
 			),
 			'theme_path'     => array(
 				'label' => __( 'Theme directory location', 'health-check' ),
-				'value' => get_template_directory(),
+				'value' => get_stylesheet_directory(),
 			),
 		);
+
+		$parent_theme = $active_theme->parent();
+
+		if ( $parent_theme ) {
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$parent_theme_version       = $parent_theme->Version;
+			$parent_theme_version_debug = $parent_theme_version;
+
+			if ( array_key_exists( $parent_theme->stylesheet, $theme_updates ) ) {
+				$parent_theme_update_new_version = $theme_updates[ $parent_theme->stylesheet ]->update['new_version'];
+
+				// translators: %s: Latest theme version number.
+				$parent_theme_version       .= ' ' . sprintf( __( '(Latest version: %s)', 'health-check' ), $parent_theme_update_new_version );
+				$parent_theme_version_debug .= sprintf( ' (latest version: %s)', $parent_theme_update_new_version );
+			}
+
+			$parent_theme_author_uri = $parent_theme->offsetGet( 'Author URI' );
+
+			$info['wp-parent-theme']['fields'] = array(
+				'name'           => array(
+					'label' => __( 'Name', 'health-check' ),
+					'value' => sprintf(
+						// translators: 1: Parent theme name. 2: Parent theme slug.
+						__( '%1$s (%2$s)', 'health-check' ),
+						// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+						$parent_theme->Name,
+						$parent_theme->stylesheet
+					),
+				),
+				'version'        => array(
+					'label' => __( 'Version', 'health-check' ),
+					'value' => $parent_theme_version,
+					'debug' => $parent_theme_version_debug,
+				),
+				'author'         => array(
+					'label' => __( 'Author', 'health-check' ),
+					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+					'value' => wp_kses( $parent_theme->Author, array() ),
+				),
+				'author_website' => array(
+					'label' => __( 'Author website', 'health-check' ),
+					'value' => ( $parent_theme_author_uri ? $parent_theme_author_uri : __( 'Undefined', 'health-check' ) ),
+					'debug' => ( $parent_theme_author_uri ? $parent_theme_author_uri : '(undefined)' ),
+				),
+				'theme_path'     => array(
+					'label' => __( 'Theme directory location', 'health-check' ),
+					'value' => get_template_directory(),
+				),
+			);
+		}
 
 		// Populate a list of all themes available in the install.
 		$all_themes = wp_get_themes();
@@ -926,9 +1014,15 @@ class Health_Check_Debug_Data {
 			if ( $active_theme->stylesheet === $theme_slug ) {
 				continue;
 			}
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+
+			// Ignore the currently active parent theme from the list of all themes.
+			if ( ! empty( $parent_theme ) && $parent_theme->stylesheet === $theme_slug ) {
+				continue;
+			}
+
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$theme_version = $theme->Version;
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 			$theme_author = $theme->Author;
 
 			// Sanitize
@@ -961,12 +1055,12 @@ class Health_Check_Debug_Data {
 				$theme_version_string_debug .= sprintf( ' (latest version: %s)', $theme_updates[ $theme_slug ]->update['new_version'] );
 			}
 
-			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
-			$info['wp-themes']['fields'][ sanitize_text_field( $theme->Name ) ] = array(
+			// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+			$info['wp-themes-inactive']['fields'][ sanitize_text_field( $theme->Name ) ] = array(
 				'label' => sprintf(
 					// translators: 1: Theme name. 2: Theme slug.
 					__( '%1$s (%2$s)', 'health-check' ),
-					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.NotSnakeCaseMemberVar
+					// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 					$theme->Name,
 					$theme_slug
 				),
@@ -1126,7 +1220,7 @@ class Health_Check_Debug_Data {
 	public static function ajax_get_sizes() {
 		check_ajax_referer( 'health-check-site-status-result' );
 
-		if ( ! current_user_can( 'install_plugins' ) || is_multisite() ) {
+		if ( ! current_user_can( 'view_site_health_checks' ) || is_multisite() ) {
 			wp_send_json_error();
 		}
 

@@ -49,9 +49,12 @@ class Health_Check_Loopback {
 		$url = admin_url();
 
 		if ( ! empty( $disable_plugin_hash ) ) {
-			$url = add_query_arg( array(
-				'health-check-disable-plugin-hash' => $disable_plugin_hash,
-			), $url );
+			$url = add_query_arg(
+				array(
+					'health-check-disable-plugin-hash' => $disable_plugin_hash,
+				),
+				$url
+			);
 		}
 		if ( ! empty( $allowed_plugins ) ) {
 			if ( ! is_array( $allowed_plugins ) ) {
@@ -126,7 +129,7 @@ class Health_Check_Loopback {
 	static function loopback_no_plugins() {
 		check_ajax_referer( 'health-check-loopback-no-plugins' );
 
-		if ( ! current_user_can( 'install_plugins' ) ) {
+		if ( ! current_user_can( 'view_site_health_checks' ) ) {
 			wp_send_json_error();
 		}
 
@@ -241,7 +244,7 @@ class Health_Check_Loopback {
 	static function loopback_test_individual_plugins() {
 		check_ajax_referer( 'health-check-loopback-individual-plugins' );
 
-		if ( ! current_user_can( 'install_plugins' ) ) {
+		if ( ! current_user_can( 'view_site_health_checks' ) ) {
 			wp_send_json_error();
 		}
 
@@ -292,7 +295,7 @@ class Health_Check_Loopback {
 	static function loopback_test_default_theme() {
 		check_ajax_referer( 'health-check-loopback-default-theme' );
 
-		if ( ! current_user_can( 'install_plugins' ) ) {
+		if ( ! current_user_can( 'view_site_health_checks' ) ) {
 			wp_send_json_error();
 		}
 

@@ -1,4 +1,3 @@
-@charset "UTF-8";
 body {
 	/* Accordion styles */
 }
@@ -64,105 +63,45 @@ body.tools_page_health-check .health-check-header {
 	border-bottom: 1px solid #e2e4e7;
 }
 
-body.tools_page_health-check .health-check-header .health-check-title-section {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	clear: both;
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section h1 {
-	display: inline-block;
-	font-weight: 600;
-	font-size: 23px;
-	margin: 1rem 0.8rem;
-	padding: 9px 0 4px;
-	line-height: 1.3;
-	font-family: inherit;
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress {
-	display: inline-block;
-	height: 40px;
-	width: 40px;
-	margin: 0;
-	border-radius: 100%;
-	position: relative;
-	font-weight: 600;
-	font-size: 0.4rem;
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress.loading .site-health-progress-count:after {
-	content: "···";
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress.loading svg #bar {
-	stroke-dashoffset: 0;
-	stroke: #adc5d2;
-	animation: loadingPulse 3s infinite ease-in-out;
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress .site-health-progress-count {
-	position: absolute;
-	display: block;
-	height: 80px;
-	width: 80px;
-	left: 50%;
-	top: 50%;
-	margin-top: -40px;
-	margin-left: -40px;
-	border-radius: 100%;
-	line-height: 6.3;
-	font-size: 2em;
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress .site-health-progress-count:after {
-	content: "";
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress svg circle {
-	stroke-dashoffset: 0;
-	transition: stroke-dashoffset 1s linear;
-	stroke: #ccc;
-	stroke-width: 2em;
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress svg #bar {
-	stroke-dashoffset: 565;
-	stroke: #dc3232;
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress svg #bar.green {
-	stroke: #46b450;
-}
-
-body.tools_page_health-check .health-check-header .health-check-title-section .site-health-progress svg #bar.orange {
-	stroke: #ffb900;
-}
-
-@keyframes loadingPulse {
-	0% {
-		stroke: #adc5d2;
-	}
-	50% {
-		stroke: #00a0d2;
-	}
-	100% {
-		stroke: #adc5d2;
-	}
-}
-
 body.tools_page_health-check .health-check-header .health-check-tabs-wrapper {
-	display: block;
+	/* IE 11 */
+	display: -ms-inline-grid;
+	-ms-grid-columns: 1fr 1fr 1fr 1fr;
+	vertical-align: top;
+	/* modern browsers */
+	display: inline-grid;
+	/* stylelint-disable-line declaration-block-no-duplicate-properties */
+	grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 body.tools_page_health-check .health-check-header .health-check-tabs-wrapper .health-check-tab {
-	display: inline-block;
+	display: block;
+	/* IE 11 */
 	text-decoration: none;
 	color: inherit;
 	padding: 0.5rem 1rem 1rem;
 	margin: 0 1rem;
 	transition: box-shadow 0.5s ease-in-out;
+}
+
+body.tools_page_health-check .health-check-header .health-check-tabs-wrapper .health-check-tab:nth-child(1) {
+	-ms-grid-column: 1;
+	/* IE 11 */
+}
+
+body.tools_page_health-check .health-check-header .health-check-tabs-wrapper .health-check-tab:nth-child(2) {
+	-ms-grid-column: 2;
+	/* IE 11 */
+}
+
+body.tools_page_health-check .health-check-header .health-check-tabs-wrapper .health-check-tab:nth-child(3) {
+	-ms-grid-column: 3;
+	/* IE 11 */
+}
+
+body.tools_page_health-check .health-check-header .health-check-tabs-wrapper .health-check-tab:nth-child(4) {
+	-ms-grid-column: 4;
+	/* IE 11 */
 }
 
 body.tools_page_health-check .health-check-header .health-check-tabs-wrapper .health-check-tab.active {
@@ -181,6 +120,10 @@ body.tools_page_health-check .health-check-body {
 	margin: 0 auto;
 }
 
+body.tools_page_health-check .health-check-table {
+	table-layout: fixed;
+}
+
 body.tools_page_health-check .health-check-table thead th,
 body.tools_page_health-check .health-check-table thead td {
 	font-size: 13px;
@@ -192,12 +135,17 @@ body.tools_page_health-check .health-check-table thead td:first-child {
 }
 
 body.tools_page_health-check .health-check-table tbody td {
-	width: 70%;
+	width: 100%;
+	box-sizing: border-box;
+	display: block;
 	font-size: 13px;
+	word-wrap: break-word;
 }
 
 body.tools_page_health-check .health-check-table tbody td:first-child {
-	width: 30%;
+	width: 100%;
+	padding-bottom: 0;
+	font-weight: 600;
 }
 
 body.tools_page_health-check .health-check-table tbody td ul,
@@ -616,4 +564,88 @@ body .health-check-accordion dl dd {
 	float: right;
 	font-size: 28px;
 	font-weight: 600;
+}
+
+/* Progress indicator styles */
+.health-check-title-section {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	clear: both;
+}
+
+.health-check-title-section h1 {
+	display: inline-block;
+	font-weight: 600;
+	font-size: 23px;
+	margin: 0 0.8rem 1rem;
+	padding: 9px 0 4px;
+	line-height: 1.3;
+	font-family: inherit;
+}
+
+.health-check-title-section.site-health-progress-wrapper {
+	margin-bottom: 1rem;
+}
+
+.health-check-title-section.site-health-progress-wrapper.loading .site-health-progress svg #bar {
+	stroke-dashoffset: 0;
+	stroke: #adc5d2;
+	animation: loadingPulse 3s infinite ease-in-out;
+}
+
+@keyframes loadingPulse {
+	0% {
+		stroke: #adc5d2;
+	}
+	50% {
+		stroke: #00a0d2;
+	}
+	100% {
+		stroke: #adc5d2;
+	}
+}
+
+.health-check-title-section.site-health-progress-wrapper.green #bar {
+	stroke: #46b450;
+}
+
+.health-check-title-section.site-health-progress-wrapper.green .site-health-progress-label {
+	color: #46b450;
+}
+
+.health-check-title-section.site-health-progress-wrapper.orange #bar {
+	stroke: #ffb900;
+}
+
+.health-check-title-section.site-health-progress-wrapper.orange .site-health-progress-label {
+	color: #ffb900;
+}
+
+.health-check-title-section.site-health-progress-wrapper .site-health-progress {
+	display: inline-block;
+	height: 20px;
+	width: 20px;
+	margin: 0;
+	border-radius: 100%;
+	position: relative;
+	font-weight: 600;
+	font-size: 0.4rem;
+}
+
+.health-check-title-section.site-health-progress-wrapper .site-health-progress svg circle {
+	stroke-dashoffset: 0;
+	transition: stroke-dashoffset 1s linear;
+	stroke: #ccc;
+	stroke-width: 3em;
+}
+
+.health-check-title-section.site-health-progress-wrapper .site-health-progress svg #bar {
+	stroke-dashoffset: 565;
+}
+
+.health-check-title-section.site-health-progress-wrapper .site-health-progress-label {
+	font-weight: 600;
+	line-height: 20px;
+	margin-left: 0.3rem;
 }
