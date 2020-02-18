@@ -103,6 +103,11 @@ namespace wpCloud\StatelessMedia {
             new BuddyPress();
             
             /**
+             * Support for BuddyBoss
+             */
+            new BuddyBoss();
+            
+            /**
              * LiteSpeed Cache
              */
             new LSCacheWP();
@@ -111,6 +116,11 @@ namespace wpCloud\StatelessMedia {
              * EWWW Image Optimizer
              */
             new EWWW();
+            
+            /**
+             * WP Retina 2x
+             */
+            new WPRetina2x();
         }
 
         /**

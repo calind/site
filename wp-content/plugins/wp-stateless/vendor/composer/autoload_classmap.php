@@ -36,6 +36,7 @@ return array(
     'wpCloud\\StatelessMedia\\API' => $baseDir . '/lib/classes/class-api.php',
     'wpCloud\\StatelessMedia\\Ajax' => $baseDir . '/lib/classes/class-ajax.php',
     'wpCloud\\StatelessMedia\\Bootstrap' => $baseDir . '/lib/classes/class-bootstrap.php',
+    'wpCloud\\StatelessMedia\\BuddyBoss' => $baseDir . '/lib/classes/compatibility/buddyboss.php',
     'wpCloud\\StatelessMedia\\BuddyPress' => $baseDir . '/lib/classes/compatibility/buddypress.php',
     'wpCloud\\StatelessMedia\\CompatibilityAcfImageCrop' => $baseDir . '/lib/classes/compatibility/acf-image-crop.php',
     'wpCloud\\StatelessMedia\\CompatibilityWooExtraProductOptions' => $baseDir . '/lib/classes/compatibility/woo-extra-product-options.php',
@@ -62,5 +63,6 @@ return array(
     'wpCloud\\StatelessMedia\\Utility' => $baseDir . '/lib/classes/class-utility.php',
     'wpCloud\\StatelessMedia\\WPBakeryPageBuilder' => $baseDir . '/lib/classes/compatibility/wpbakery-page-builder.php',
     'wpCloud\\StatelessMedia\\WPForms' => $baseDir . '/lib/classes/compatibility/wpforms.php',
+    'wpCloud\\StatelessMedia\\WPRetina2x' => $baseDir . '/lib/classes/compatibility/wp-retina-2x.php',
     'wpCloud\\StatelessMedia\\WPSmush' => $baseDir . '/lib/classes/compatibility/wp-smush.php',
 );

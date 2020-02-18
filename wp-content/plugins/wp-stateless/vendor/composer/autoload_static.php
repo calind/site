@@ -61,6 +61,7 @@ class ComposerStaticInitc00cd3c666f8dfa818cb7edfd488ed20
         'wpCloud\\StatelessMedia\\API' => __DIR__ . '/../..' . '/lib/classes/class-api.php',
         'wpCloud\\StatelessMedia\\Ajax' => __DIR__ . '/../..' . '/lib/classes/class-ajax.php',
         'wpCloud\\StatelessMedia\\Bootstrap' => __DIR__ . '/../..' . '/lib/classes/class-bootstrap.php',
+        'wpCloud\\StatelessMedia\\BuddyBoss' => __DIR__ . '/../..' . '/lib/classes/compatibility/buddyboss.php',
         'wpCloud\\StatelessMedia\\BuddyPress' => __DIR__ . '/../..' . '/lib/classes/compatibility/buddypress.php',
         'wpCloud\\StatelessMedia\\CompatibilityAcfImageCrop' => __DIR__ . '/../..' . '/lib/classes/compatibility/acf-image-crop.php',
         'wpCloud\\StatelessMedia\\CompatibilityWooExtraProductOptions' => __DIR__ . '/../..' . '/lib/classes/compatibility/woo-extra-product-options.php',
@@ -87,6 +88,7 @@ class ComposerStaticInitc00cd3c666f8dfa818cb7edfd488ed20
         'wpCloud\\StatelessMedia\\Utility' => __DIR__ . '/../..' . '/lib/classes/class-utility.php',
         'wpCloud\\StatelessMedia\\WPBakeryPageBuilder' => __DIR__ . '/../..' . '/lib/classes/compatibility/wpbakery-page-builder.php',
         'wpCloud\\StatelessMedia\\WPForms' => __DIR__ . '/../..' . '/lib/classes/compatibility/wpforms.php',
+        'wpCloud\\StatelessMedia\\WPRetina2x' => __DIR__ . '/../..' . '/lib/classes/compatibility/wp-retina-2x.php',
         'wpCloud\\StatelessMedia\\WPSmush' => __DIR__ . '/../..' . '/lib/classes/compatibility/wp-smush.php',
     );
 
