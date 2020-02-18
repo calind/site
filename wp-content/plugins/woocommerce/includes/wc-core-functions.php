@@ -320,6 +320,8 @@ function get_woocommerce_currency() {
 /**
  * Get full list of currency codes.
  *
+ * Currency Symbols and mames should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
+ *
  * @return array
  */
 function get_woocommerce_currencies() {
@@ -426,7 +428,7 @@ function get_woocommerce_currencies() {
 					'MMK' => __( 'Burmese kyat', 'woocommerce' ),
 					'MNT' => __( 'Mongolian t&ouml;gr&ouml;g', 'woocommerce' ),
 					'MOP' => __( 'Macanese pataca', 'woocommerce' ),
-					'MRO' => __( 'Mauritanian ouguiya', 'woocommerce' ),
+					'MRU' => __( 'Mauritanian ouguiya', 'woocommerce' ),
 					'MUR' => __( 'Mauritian rupee', 'woocommerce' ),
 					'MVR' => __( 'Maldivian rufiyaa', 'woocommerce' ),
 					'MWK' => __( 'Malawian kwacha', 'woocommerce' ),
@@ -464,7 +466,7 @@ function get_woocommerce_currencies() {
 					'SOS' => __( 'Somali shilling', 'woocommerce' ),
 					'SRD' => __( 'Surinamese dollar', 'woocommerce' ),
 					'SSP' => __( 'South Sudanese pound', 'woocommerce' ),
-					'STD' => __( 'S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra', 'woocommerce' ),
+					'STN' => __( 'S&atilde;o Tom&eacute; and Pr&iacute;ncipe dobra', 'woocommerce' ),
 					'SYP' => __( 'Syrian pound', 'woocommerce' ),
 					'SZL' => __( 'Swazi lilangeni', 'woocommerce' ),
 					'THB' => __( 'Thai baht', 'woocommerce' ),
@@ -504,6 +506,8 @@ function get_woocommerce_currencies() {
 
 /**
  * Get Currency symbol.
+ *
+ * Currency Symbols and mames should follow the Unicode CLDR recommendation (http://cldr.unicode.org/translation/currency-names)
  *
  * @param string $currency Currency. (default: '').
  * @return string
@@ -612,14 +616,14 @@ function get_woocommerce_currency_symbol( $currency = '' ) {
 			'MMK' => 'Ks',
 			'MNT' => '&#x20ae;',
 			'MOP' => 'P',
-			'MRO' => 'UM',
+			'MRU' => 'UM',
 			'MUR' => '&#x20a8;',
 			'MVR' => '.&#x783;',
 			'MWK' => 'MK',
 			'MXN' => '&#36;',
 			'MYR' => '&#82;&#77;',
 			'MZN' => 'MT',
-			'NAD' => '&#36;',
+			'NAD' => 'N&#36;',
 			'NGN' => '&#8358;',
 			'NIO' => 'C&#36;',
 			'NOK' => '&#107;&#114;',
@@ -651,7 +655,7 @@ function get_woocommerce_currency_symbol( $currency = '' ) {
 			'SOS' => 'Sh',
 			'SRD' => '&#36;',
 			'SSP' => '&pound;',
-			'STD' => 'Db',
+			'STN' => 'Db',
 			'SYP' => '&#x644;.&#x633;',
 			'SZL' => 'L',
 			'THB' => '&#3647;',
@@ -695,11 +699,12 @@ function get_woocommerce_currency_symbol( $currency = '' ) {
  * @param mixed  $message     Message.
  * @param string $headers     Headers. (default: "Content-Type: text/html\r\n").
  * @param string $attachments Attachments. (default: "").
+ * @return bool
  */
 function wc_mail( $to, $subject, $message, $headers = "Content-Type: text/html\r\n", $attachments = '' ) {
 	$mailer = WC()->mailer();
 
-	$mailer->send( $to, $subject, $message, $headers, $attachments );
+	return $mailer->send( $to, $subject, $message, $headers, $attachments );
 }
 
 /**
@@ -1113,7 +1118,7 @@ function wc_get_base_location() {
  * @return array
  */
 function wc_get_customer_default_location() {
-	$set_default_location_to = get_option( 'woocommerce_default_customer_address', 'geolocation' );
+	$set_default_location_to = get_option( 'woocommerce_default_customer_address', 'base' );
 	$default_location        = '' === $set_default_location_to ? '' : get_option( 'woocommerce_default_country', '' );
 	$location                = wc_format_country_state_string( apply_filters( 'woocommerce_customer_default_location', $default_location ) );
 
@@ -1135,7 +1140,7 @@ function wc_get_customer_default_location() {
 	$allowed_country_codes = WC()->countries->get_allowed_countries();
 
 	if ( ! empty( $location['country'] ) && ! array_key_exists( $location['country'], $allowed_country_codes ) ) {
-		$location['country'] = current( $allowed_country_codes );
+		$location['country'] = current( array_keys( $allowed_country_codes ) );
 		$location['state']   = '';
 	}
 
@@ -1821,7 +1826,7 @@ function wc_print_r( $expression, $return = false ) {
 
 	foreach ( $alternatives as $alternative ) {
 		if ( function_exists( $alternative['func'] ) ) {
-			$res = call_user_func_array( $alternative['func'], $alternative['args'] );
+			$res = $alternative['func']( ...$alternative['args'] );
 			if ( $return ) {
 				return $res;
 			}
@@ -2139,6 +2144,28 @@ function wc_is_active_theme( $theme ) {
 }
 
 /**
+ * Is the site using a default WP theme?
+ *
+ * @return boolean
+ */
+function wc_is_wp_default_theme_active() {
+	return wc_is_active_theme(
+		array(
+			'twentytwenty',
+			'twentynineteen',
+			'twentyseventeen',
+			'twentysixteen',
+			'twentyfifteen',
+			'twentyfourteen',
+			'twentythirteen',
+			'twentyeleven',
+			'twentytwelve',
+			'twentyten',
+		)
+	);
+}
+
+/**
  * Cleans up session data - cron callback.
  *
  * @since 3.3.0
@@ -2263,6 +2290,12 @@ function wc_get_server_database_version() {
  * @return void
  */
 function wc_load_cart() {
+	if ( ! did_action( 'before_woocommerce_init' ) || doing_action( 'before_woocommerce_init' ) ) {
+		/* translators: 1: wc_load_cart 2: woocommerce_init */
+		wc_doing_it_wrong( __FUNCTION__, sprintf( __( '%1$s should not be called before the %2$s action.', 'woocommerce' ), 'wc_load_cart', 'woocommerce_init' ), '3.7' );
+		return;
+	}
+
 	WC()->initialize_session();
 	WC()->initialize_cart();
 }

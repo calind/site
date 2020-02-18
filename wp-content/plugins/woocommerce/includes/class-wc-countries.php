@@ -363,7 +363,18 @@ class WC_Countries {
 			$countries[] = 'IM';
 		}
 
-		return $countries;
+		return apply_filters( 'woocommerce_european_union_countries', $countries, $type );
+	}
+
+	/**
+	 * Gets an array of Non-EU countries that use VAT as the Local name for their taxes based on this list - https://en.wikipedia.org/wiki/Value-added_tax#Non-European_Union_countries
+	 *
+	 * @return string[]
+	 */
+	public function countries_using_vat() {
+		$countries = array( 'AL', 'AR', 'AZ', 'BS', 'BH', 'BY', 'BB', 'BO', 'EG', 'ET', 'CL', 'CO', 'EC', 'SV', 'FJ', 'GM', 'GH', 'GT', 'IN', 'IR', 'IL', 'KZ', 'MU', 'MK', 'MX', 'MD', 'MN', 'ME', 'NA', 'NP', 'NG', 'PS', 'PY', 'RU', 'RW', 'KN', 'SA', 'RS', 'ZA', 'KR', 'LK', 'TH', 'TR', 'UA', 'UY', 'UZ', 'VE', 'VN', 'AE' );
+
+		return apply_filters( 'woocommerce_countries_using_vat', $countries );
 	}
 
 	/**
@@ -400,7 +411,7 @@ class WC_Countries {
 	 * @return string
 	 */
 	public function tax_or_vat() {
-		$return = in_array( $this->get_base_country(), array_merge( $this->get_european_union_countries( 'eu_vat' ), array( 'NO' ) ), true ) ? __( 'VAT', 'woocommerce' ) : __( 'Tax', 'woocommerce' );
+		$return = in_array( $this->get_base_country(), array_merge( $this->get_european_union_countries( 'eu_vat' ), array( 'NO' ), $this->countries_using_vat() ), true ) ? __( 'VAT', 'woocommerce' ) : __( 'Tax', 'woocommerce' );
 
 		return apply_filters( 'woocommerce_countries_tax_or_vat', $return );
 	}
@@ -411,7 +422,7 @@ class WC_Countries {
 	 * @return string
 	 */
 	public function inc_tax_or_vat() {
-		$return = in_array( $this->get_base_country(), array_merge( $this->get_european_union_countries( 'eu_vat' ), array( 'NO' ) ), true ) ? __( '(incl. VAT)', 'woocommerce' ) : __( '(incl. tax)', 'woocommerce' );
+		$return = in_array( $this->get_base_country(), array_merge( $this->get_european_union_countries( 'eu_vat' ), array( 'NO' ), $this->countries_using_vat() ), true ) ? __( '(incl. VAT)', 'woocommerce' ) : __( '(incl. tax)', 'woocommerce' );
 
 		return apply_filters( 'woocommerce_countries_inc_tax_or_vat', $return );
 	}
@@ -422,7 +433,7 @@ class WC_Countries {
 	 * @return string
 	 */
 	public function ex_tax_or_vat() {
-		$return = in_array( $this->get_base_country(), array_merge( $this->get_european_union_countries( 'eu_vat' ), array( 'NO' ) ), true ) ? __( '(ex. VAT)', 'woocommerce' ) : __( '(ex. tax)', 'woocommerce' );
+		$return = in_array( $this->get_base_country(), array_merge( $this->get_european_union_countries( 'eu_vat' ), array( 'NO' ), $this->countries_using_vat() ), true ) ? __( '(ex. VAT)', 'woocommerce' ) : __( '(ex. tax)', 'woocommerce' );
 
 		return apply_filters( 'woocommerce_countries_ex_tax_or_vat', $return );
 	}
@@ -506,6 +517,7 @@ class WC_Countries {
 					'ES'      => "{name}\n{company}\n{address_1}\n{address_2}\n{postcode} {city}\n{state}\n{country}",
 					'SE'      => "{company}\n{name}\n{address_1}\n{address_2}\n{postcode} {city}\n{country}",
 					'TR'      => "{name}\n{company}\n{address_1}\n{address_2}\n{postcode} {city} {state}\n{country}",
+					'UG'      => "{name}\n{company}\n{address_1}\n{address_2}\n{city}\n{state}, {country}",
 					'US'      => "{name}\n{company}\n{address_1}\n{address_2}\n{city}, {state_code} {postcode}\n{country}",
 					'VN'      => "{name}\n{company}\n{address_1}\n{city}\n{country}",
 				)
@@ -833,6 +845,9 @@ class WC_Countries {
 						),
 					),
 					'CA' => array(
+						'postcode' => array(
+							'label' => __( 'Postal code', 'woocommerce' ),
+						),
 						'state' => array(
 							'label' => __( 'Province', 'woocommerce' ),
 						),
@@ -988,14 +1003,24 @@ class WC_Countries {
 						),
 					),
 					'JP' => array(
-						'postcode' => array(
+						'last_name' => array(
+							'class'    => array( 'form-row-first' ),
+							'priority' => 10,
+						),
+						'first_name' => array(
+							'class'    => array( 'form-row-last' ),
+							'priority' => 20,
+						),
+						'postcode'  => array(
+							'class'    => array( 'form-row-first' ),
 							'priority' => 65,
 						),
-						'state'    => array(
+						'state'     => array(
 							'label'    => __( 'Prefecture', 'woocommerce' ),
+							'class'    => array( 'form-row-last' ),
 							'priority' => 66,
 						),
-						'city' => array(
+						'city'      => array(
 							'priority' => 67,
 						),
 						'address_1' => array(
@@ -1034,6 +1059,15 @@ class WC_Countries {
 					'MT' => array(
 						'state' => array(
 							'required' => false,
+						),
+					),
+					'MZ' => array(
+						'postcode' => array(
+							'required' => false,
+							'hidden'   => true,
+						),
+						'state'    => array(
+							'label' => __( 'Province', 'woocommerce' ),
 						),
 					),
 					'NL' => array(
@@ -1116,7 +1150,6 @@ class WC_Countries {
 						),
 						'city'  => array(
 							'required' => false,
-							'hidden'   => true,
 						),
 					),
 					'SK' => array(
@@ -1189,6 +1222,20 @@ class WC_Countries {
 							'label' => __( 'Province', 'woocommerce' ),
 						),
 					),
+					'UG' => array(
+						'postcode' => array(
+							'required' => false,
+							'hidden'   => true,
+						),
+						'city'     => array(
+							'label'    => __( 'Town / Village', 'woocommerce' ),
+							'required' => true,
+						),
+						'state'    => array(
+							'label'    => __( 'District', 'woocommerce' ),
+							'required' => true,
+						),
+					),
 					'US' => array(
 						'postcode' => array(
 							'label' => __( 'ZIP', 'woocommerce' ),
@@ -1218,6 +1265,7 @@ class WC_Countries {
 					'VN' => array(
 						'state'     => array(
 							'required' => false,
+							'hidden' => true,
 						),
 						'postcode'  => array(
 							'priority' => 65,

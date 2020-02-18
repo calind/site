@@ -33,7 +33,11 @@ class WC_Settings_Accounts extends WC_Settings_Page {
 	public function get_settings() {
 		$erasure_text = esc_html__( 'account erasure request', 'woocommerce' );
 		if ( current_user_can( 'manage_privacy_options' ) ) {
-			$erasure_text = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'tools.php?page=remove_personal_data' ) ), $erasure_text );
+			if ( version_compare( get_bloginfo( 'version' ), '5.3', '<' ) ) {
+				$erasure_text = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'tools.php?page=remove_personal_data' ) ), $erasure_text );
+			} else {
+				$erasure_text = sprintf( '<a href="%s">%s</a>', esc_url( admin_url( 'erase-personal-data.php' ) ), $erasure_text );
+			}
 		}
 
 		$account_settings = array(
@@ -78,7 +82,7 @@ class WC_Settings_Accounts extends WC_Settings_Page {
 				'autoload'      => false,
 			),
 			array(
-				'desc'          => __( 'When creating an account, automatically generate a username from the customer\'s email address', 'woocommerce' ),
+				'desc'          => __( 'When creating an account, automatically generate an account username for the customer based on their name, surname or email', 'woocommerce' ),
 				'id'            => 'woocommerce_registration_generate_username',
 				'default'       => 'yes',
 				'type'          => 'checkbox',
