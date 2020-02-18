@@ -29,12 +29,13 @@ $generated_i18n_strings = array(
 	__( 'Get the %s plugin now', 'wordpress-seo' ),
 
 	// Reference: js/src/components/Metabox.js:57
-	__( 'Snippet Preview', 'wordpress-seo' ),
+	// Reference: js/src/components/SnippetPreviewModal.js:53
+	__( 'Google preview', 'wordpress-seo' ),
 
-	// Reference: js/src/components/PrimaryTaxonomyFilter.js:78
+	// Reference: js/src/components/PrimaryTaxonomyFilter.js:80
 	__( 'An error occurred loading the %s primary taxonomy picker.', 'wordpress-seo' ),
 
-	// Reference: js/src/components/PrimaryTaxonomyFilter.js:84
+	// Reference: js/src/components/PrimaryTaxonomyFilter.js:86
 	__( 'Copy error', 'wordpress-seo' ),
 
 	// Reference: js/src/components/PrimaryTaxonomyPicker.js:242
@@ -43,14 +44,11 @@ $generated_i18n_strings = array(
 	// Reference: js/src/components/SettingsReplacementVariableEditor.js:35
 	__( 'Modify your meta description by editing it right here', 'wordpress-seo' ),
 
-	// Reference: js/src/components/SnippetPreviewModal.js:52
-	__( 'Snippet preview', 'wordpress-seo' ),
-
-	// Reference: js/src/components/SnippetPreviewModal.js:57
+	// Reference: js/src/components/SnippetPreviewModal.js:59
 	// Reference: js/src/components/modals/Modal.js:78
 	__( 'Close', 'wordpress-seo' ),
 
-	// Reference: js/src/components/WordPressUserSelector.js:107
+	// Reference: js/src/components/WordPressUserSelector.js:113
 	__( 'Select a user...', 'wordpress-seo' ),
 
 	// Reference: js/src/components/WordPressUserSelectorOnboardingWizard.js:45
@@ -68,45 +66,44 @@ $generated_i18n_strings = array(
 	// Reference: js/src/components/WordPressUserSelectorSearchAppearance.js:93
 	__( 'You have selected the user %1$s as the person this site represents. Their user profile information will now be used in search results. %2$sUpdate their profile to make sure the information is correct.%3$s', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/KeywordInput.js:37
+	// Reference: js/src/components/contentAnalysis/KeywordInput.js:39
 	__( 'Help on choosing the perfect focus keyphrase', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/KeywordInput.js:54
+	// Reference: js/src/components/contentAnalysis/KeywordInput.js:58
 	// Reference: js/src/values/defaultReplaceVariables.js:50
 	__( 'Focus keyphrase', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/ReadabilityAnalysis.js:50
-	__( 'Readability analysis', 'wordpress-seo' ),
-
-	// Reference: js/src/components/contentAnalysis/ReadabilityAnalysis.js:57
-	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:211
+	// Reference: js/src/components/contentAnalysis/ReadabilityAnalysis.js:54
+	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:238
 	__( 'Analysis results', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/ReadabilityAnalysis.js:63
+	// Reference: js/src/components/contentAnalysis/ReadabilityAnalysis.js:60
 	__( 'Learn more about the readability analysis', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:102
+	// Reference: js/src/components/contentAnalysis/ReadabilityAnalysis.js:95
+	__( 'Readability analysis', 'wordpress-seo' ),
+
+	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:105
 	// Reference: js/src/components/modals/KeywordSynonyms.js:62
 	// Reference: js/src/components/modals/MultipleKeywords.js:61
-	// Reference: js/src/components/modals/RedirectUpsell.js:89
 	__( 'Get %s', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:121
+	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:124
 	__( 'Would you like to add a related keyphrase?', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:152
+	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:155
 	__( 'Add related keyphrase', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:189
+	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:216
 	__( 'Enter a focus keyphrase to calculate the SEO score', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:197
+	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:224
 	__( 'SEO analysis', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:46
+	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:49
 	__( 'Add synonyms', 'wordpress-seo' ),
 
-	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:73
+	// Reference: js/src/components/contentAnalysis/SeoAnalysis.js:76
 	__( 'Would you like to add keyphrase synonyms?', 'wordpress-seo' ),
 
 	// Reference: js/src/components/modals/KeywordSynonyms.js:21
@@ -141,7 +138,6 @@ $generated_i18n_strings = array(
 
 	// Reference: js/src/components/modals/KeywordSynonyms.js:71
 	// Reference: js/src/components/modals/MultipleKeywords.js:70
-	// Reference: js/src/components/modals/RedirectUpsell.js:131
 	__( '1 year free support and updates included!', 'wordpress-seo' ),
 
 	// Reference: js/src/components/modals/Modal.js:76
@@ -150,20 +146,11 @@ $generated_i18n_strings = array(
 	// Reference: js/src/components/modals/MultipleKeywords.js:20
 	__( 'Great news: you can, with %s!', 'wordpress-seo' ),
 
-	// Reference: js/src/components/modals/RedirectUpsell.js:101
-	__( 'To be able to create a redirect and fix this issue, you need %1$s. ', 'wordpress-seo' ),
-
-	// Reference: js/src/components/modals/RedirectUpsell.js:107
-	__( 'You can buy the plugin, including one year of support and updates, on %1$s.', 'wordpress-seo' ),
-
-	// Reference: js/src/components/modals/RedirectUpsell.js:95
-	__( 'Creating redirects is a %s feature', 'wordpress-seo' ),
-
-	// Reference: js/src/containers/SnippetEditor.js:105
+	// Reference: js/src/containers/SnippetEditor.js:107
 	__( 'Please provide a meta description by editing the snippet below.', 'wordpress-seo' ),
 
-	// Reference: js/src/courses-overview.js:114
-	__( 'Free', 'wordpress-seo' ),
+	// Reference: js/src/help-scout-beacon.js:203
+	__( 'When you click OK we will open our HelpScout beacon where you can find answers to your questions. This beacon will load our support data and also potentially set cookies.', 'wordpress-seo' ),
 
 	// Reference: js/src/structured-data-blocks/faq/block.js:13
 	__( 'List your Frequently Asked Questions in an SEO-friendly way. You can only use one FAQ block per post.', 'wordpress-seo' ),
@@ -174,10 +161,14 @@ $generated_i18n_strings = array(
 	// Reference: js/src/structured-data-blocks/faq/block.js:18
 	__( 'Frequently Asked Questions', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/faq/components/FAQ.js:159
+	// Reference: js/src/structured-data-blocks/faq/block.js:19
+	// Reference: js/src/structured-data-blocks/how-to/block.js:57
+	__( 'Schema', 'wordpress-seo' ),
+
+	// Reference: js/src/structured-data-blocks/faq/components/FAQ.js:158
 	__( 'New question added', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/faq/components/FAQ.js:286
+	// Reference: js/src/structured-data-blocks/faq/components/FAQ.js:285
 	__( 'Add question', 'wordpress-seo' ),
 
 	// Reference: js/src/structured-data-blocks/faq/components/Question.js:216
@@ -211,56 +202,56 @@ $generated_i18n_strings = array(
 	// Reference: js/src/structured-data-blocks/how-to/block.js:56
 	__( 'How to', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:229
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:227
 	__( 'New step added', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:514
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:512
 	__( 'Add step', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:550
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:548
 	__( 'Showing step items as an unordered list', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:551
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:549
 	__( 'Showing step items as an ordered list.', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:674
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:672
 	__( 'Add total time', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:692
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:690
 	__( 'days', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:707
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:705
 	__( 'hours', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:722
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:720
 	__( 'minutes', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:735
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:733
 	__( 'Delete total time', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:759
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:757
 	__( 'Settings', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:761
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:759
 	__( 'CSS class(es) to apply to the steps', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:764
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:762
 	__( 'Optional. This can give you better control over the styling of the steps.', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:767
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:765
 	__( 'Describe the duration of the instruction:', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:770
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:768
 	__( 'Optional. Customize how you want to describe the duration of the instruction', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:774
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:772
 	__( 'Unordered list', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:805
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:803
 	__( 'Enter a description', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:86
-	// Reference: js/src/structured-data-blocks/how-to/legacy/8.2.js:150
+	// Reference: js/src/structured-data-blocks/how-to/components/HowTo.js:84
+	// Reference: js/src/structured-data-blocks/how-to/legacy/8.2.js:85
 	__( 'Time needed:', 'wordpress-seo' ),
 
 	// Reference: js/src/structured-data-blocks/how-to/components/HowToStep.js:205
@@ -281,23 +272,23 @@ $generated_i18n_strings = array(
 	// Reference: js/src/structured-data-blocks/how-to/components/HowToStep.js:373
 	__( 'Enter a step description', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/legacy/8.2.js:32
+	// Reference: js/src/structured-data-blocks/how-to/legacy/utils/8.2.js:31
 	// Reference: js/src/structured-data-blocks/how-to/utils/buildDurationString.js:31
 	_n_noop( '%d day', '%d days', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/legacy/8.2.js:35
+	// Reference: js/src/structured-data-blocks/how-to/legacy/utils/8.2.js:34
 	// Reference: js/src/structured-data-blocks/how-to/utils/buildDurationString.js:34
 	_n_noop( '%d hour', '%d hours', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/legacy/8.2.js:38
+	// Reference: js/src/structured-data-blocks/how-to/legacy/utils/8.2.js:37
 	// Reference: js/src/structured-data-blocks/how-to/utils/buildDurationString.js:37
 	_n_noop( '%d minute', '%d minutes', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/legacy/8.2.js:66
+	// Reference: js/src/structured-data-blocks/how-to/legacy/utils/8.2.js:65
 	// Reference: js/src/structured-data-blocks/how-to/utils/buildDurationString.js:65
 	__( '%s and %s', 'wordpress-seo' ),
 
-	// Reference: js/src/structured-data-blocks/how-to/legacy/8.2.js:73
+	// Reference: js/src/structured-data-blocks/how-to/legacy/utils/8.2.js:72
 	// Reference: js/src/structured-data-blocks/how-to/utils/buildDurationString.js:72
 	__( '%s, %s and %s', 'wordpress-seo' ),
 
@@ -350,15 +341,6 @@ $generated_i18n_strings = array(
 	__( 'Tag description', 'wordpress-seo' ),
 
 	// Reference: js/src/values/defaultReplaceVariables.js:95
-	__( 'Term description', 'wordpress-seo' ),
-
-	// Reference: js/src/wp-seo-help-center.js:142
-	__( 'Video tutorial', 'wordpress-seo' ),
-
-	// Reference: js/src/wp-seo-help-center.js:154
-	__( 'Knowledge base', 'wordpress-seo' ),
-
-	// Reference: js/src/wp-seo-help-center.js:40
-	__( 'Get support', 'wordpress-seo' )
+	__( 'Term description', 'wordpress-seo' )
 );
 /* THIS IS THE END OF THE GENERATED FILE */
