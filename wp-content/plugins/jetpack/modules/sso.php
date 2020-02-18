@@ -1,19 +1,23 @@
 <?php
+
+use Automattic\Jetpack\Roles;
+use Automattic\Jetpack\Status;
+use Automattic\Jetpack\Tracking;
+
 require_once( JETPACK__PLUGIN_DIR . 'modules/sso/class.jetpack-sso-helpers.php' );
 require_once( JETPACK__PLUGIN_DIR . 'modules/sso/class.jetpack-sso-notices.php' );
 
 /**
  * Module Name: Secure Sign On
- * Module Description: Allow users to log into this site using WordPress.com accounts
- * Jumpstart Description: Lets you log in to all your Jetpack-enabled sites with one click using your WordPress.com account.
+ * Module Description: Allow users to log in to this site using WordPress.com accounts
  * Sort Order: 30
  * Recommendation Order: 5
  * First Introduced: 2.6
  * Requires Connection: Yes
  * Auto Activate: No
  * Module Tags: Developers
- * Feature: Security, Jumpstart
- * Additional Search Queries: sso, single sign on, login, log in
+ * Feature: Security
+ * Additional Search Queries: sso, single sign on, login, log in, 2fa, two-factor
  */
 
 class Jetpack_SSO {
@@ -145,7 +149,7 @@ class Jetpack_SSO {
 		// Always add the jetpack-sso class so that we can add SSO specific styling even when the SSO form isn't being displayed.
 		$classes[] = 'jetpack-sso';
 
-		if ( ! Jetpack::is_staging_site() ) {
+		if ( ! ( new Status() )->is_staging_site() ) {
 			/**
 			 * Should we show the SSO login form?
 			 *
@@ -319,6 +323,8 @@ class Jetpack_SSO {
 	function login_init() {
 		global $action;
 
+		$tracking = new Tracking();
+
 		if ( Jetpack_SSO_Helpers::should_hide_login_form() ) {
 			/**
 			 * Since the default authenticate filters fire at priority 20 for checking username and password,
@@ -347,7 +353,7 @@ class Jetpack_SSO {
 				$this->handle_login();
 				$this->display_sso_login_form();
 			} else {
-				if ( Jetpack::is_staging_site() ) {
+				if ( ( new Status() )->is_staging_site() ) {
 					add_filter( 'login_message', array( 'Jetpack_SSO_Notices', 'sso_not_allowed_in_staging' ) );
 				} else {
 					// Is it wiser to just use wp_redirect than do this runaround to wp_safe_redirect?
@@ -360,7 +366,7 @@ class Jetpack_SSO {
 						Jetpack_options::update_option( 'sso_first_login', true );
 					}
 
-					JetpackTracking::record_user_event( 'sso_login_redirect_success' );
+					$tracking->record_user_event( 'sso_login_redirect_success' );
 					wp_safe_redirect( $sso_url );
 					exit;
 				}
@@ -379,7 +385,7 @@ class Jetpack_SSO {
 				add_filter( 'allowed_redirect_hosts', array( 'Jetpack_SSO_Helpers', 'allowed_redirect_hosts' ) );
 				$reauth = ! empty( $_GET['force_reauth'] );
 				$sso_url = $this->get_sso_url_or_die( $reauth );
-				JetpackTracking::record_user_event( 'sso_login_redirect_bypass_success' );
+				$tracking->record_user_event( 'sso_login_redirect_bypass_success' );
 				wp_safe_redirect( $sso_url );
 				exit;
 			}
@@ -396,7 +402,7 @@ class Jetpack_SSO {
 		add_filter( 'login_body_class', array( $this, 'login_body_class' ) );
 		add_action( 'login_head',       array( $this, 'print_inline_admin_css' ) );
 
-		if ( Jetpack::is_staging_site() ) {
+		if ( ( new Status() )->is_staging_site() ) {
 			add_filter( 'login_message', array( 'Jetpack_SSO_Notices', 'sso_not_allowed_in_staging' ) );
 			return;
 		}
@@ -591,7 +597,7 @@ class Jetpack_SSO {
 		if ( ! $wpcom_user_id = get_user_meta( $user_id, 'wpcom_user_id', true ) ) {
 			return;
 		}
-		Jetpack::load_xml_rpc_client();
+
 		$xml = new Jetpack_IXR_Client( array(
 			'wpcom_user_id' => $user_id,
 		) );
@@ -615,7 +621,6 @@ class Jetpack_SSO {
 			: false;
 
 		if ( ! $nonce ) {
-			Jetpack::load_xml_rpc_client();
 			$xml = new Jetpack_IXR_Client( array(
 				'user_id' => get_current_user_id(),
 			) );
@@ -647,7 +652,6 @@ class Jetpack_SSO {
 		$wpcom_nonce   = sanitize_key( $_GET['sso_nonce'] );
 		$wpcom_user_id = (int) $_GET['user_id'];
 
-		Jetpack::load_xml_rpc_client();
 		$xml = new Jetpack_IXR_Client( array(
 			'user_id' => get_current_user_id(),
 		) );
@@ -674,10 +678,12 @@ class Jetpack_SSO {
 		 */
 		do_action( 'jetpack_sso_pre_handle_login', $user_data );
 
+		$tracking = new Tracking();
+
 		if ( Jetpack_SSO_Helpers::is_two_step_required() && 0 === (int) $user_data->two_step_enabled ) {
 			$this->user_data = $user_data;
 
-			JetpackTracking::record_user_event( 'sso_login_failed', array(
+			$tracking->record_user_event( 'sso_login_failed', array(
 				'error_message' => 'error_msg_enable_two_step'
 			) );
 
@@ -724,7 +730,7 @@ class Jetpack_SSO {
 
 				$user = Jetpack_SSO_Helpers::generate_user( $user_data );
 				if ( ! $user ) {
-					JetpackTracking::record_user_event( 'sso_login_failed', array(
+					$tracking->record_user_event( 'sso_login_failed', array(
 						'error_message' => 'could_not_create_username'
 					) );
 					add_filter( 'login_message', array( 'Jetpack_SSO_Notices', 'error_unable_to_create_user' ) );
@@ -735,7 +741,7 @@ class Jetpack_SSO {
 					? 'user_created_new_user_override'
 					: 'user_created_users_can_register';
 			} else {
-				JetpackTracking::record_user_event( 'sso_login_failed', array(
+				$tracking->record_user_event( 'sso_login_failed', array(
 					'error_message' => 'error_msg_email_already_exists'
 				) );
 
@@ -781,12 +787,13 @@ class Jetpack_SSO {
 
 			$json_api_auth_environment = Jetpack_SSO_Helpers::get_json_api_auth_environment();
 
-			$is_json_api_auth = ! empty( $json_api_auth_environment );
+			$is_json_api_auth  = ! empty( $json_api_auth_environment );
 			$is_user_connected = Jetpack::is_user_connected( $user->ID );
-			JetpackTracking::record_user_event( 'sso_user_logged_in', array(
+			$roles             = new Roles();
+			$tracking->record_user_event( 'sso_user_logged_in', array(
 				'user_found_with'  => $user_found_with,
 				'user_connected'   => (bool) $is_user_connected,
-				'user_role'        => Jetpack::translate_current_user_to_role(),
+				'user_role'        => $roles->translate_current_user_to_role(),
 				'is_json_api_auth' => (bool) $is_json_api_auth,
 			) );
 
@@ -819,7 +826,7 @@ class Jetpack_SSO {
 
 		add_filter( 'jetpack_sso_default_to_sso_login', '__return_false' );
 
-		JetpackTracking::record_user_event( 'sso_login_failed', array(
+		$tracking->record_user_event( 'sso_login_failed', array(
 			'error_message' => 'cant_find_user'
 		) );
 
@@ -895,7 +902,8 @@ class Jetpack_SSO {
 			$error_message = sanitize_text_field(
 				sprintf( '%s: %s', $sso_redirect->get_error_code(), $sso_redirect->get_error_message() )
 			);
-			JetpackTracking::record_user_event( 'sso_login_redirect_failed', array(
+			$tracking = new Tracking();
+			$tracking->record_user_event( 'sso_login_redirect_failed', array(
 				'error_message' => $error_message
 			) );
 			wp_die( $error_message );

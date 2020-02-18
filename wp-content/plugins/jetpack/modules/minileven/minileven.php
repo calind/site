@@ -8,7 +8,7 @@
 // http://alexking.org/projects/wordpress
 //
 // Released under the GPL license
-// http://www.opensource.org/licenses/gpl-license.php
+// https://www.opensource.org/licenses/gpl-license.php
 //
 // **********************************************************************
 // This program is distributed in the hope that it will be useful, but
@@ -28,6 +28,9 @@ Version: 2.1a-WPCOM
 $_SERVER['REQUEST_URI'] = ( isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : $_SERVER['SCRIPT_NAME'] . (( isset($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '')));
 
 function jetpack_check_mobile() {
+	// allow mobile theme to be disabled via query string for testing during deprecation.
+	if ( isset( $_GET['jetpack-preview'] ) && 'responsivetheme' === $_GET['jetpack-preview'] )
+		return false;
 	if ( ( defined('XMLRPC_REQUEST') && XMLRPC_REQUEST ) || ( defined('APP_REQUEST') && APP_REQUEST ) )
 		return false;
 	if ( !isset($_SERVER["HTTP_USER_AGENT"]) || (isset($_COOKIE['akm_mobile']) && $_COOKIE['akm_mobile'] == 'false') )
@@ -136,7 +139,7 @@ function jetpack_mobile_available() {
 function jetpack_mobile_request_handler() {
 	global $wpdb;
 	if (isset($_GET['ak_action'])) {
-		$url = parse_url( get_bloginfo( 'url' ) );
+		$url = wp_parse_url( get_bloginfo( 'url' ) );
 		$domain = $url['host'];
 		if (!empty($url['path'])) {
 			$path = $url['path'];
@@ -220,7 +223,7 @@ function jetpack_mobile_theme_setup() {
 					exit;
 				break;
 				case 'ios':
-					header( 'Location: http://itunes.apple.com/us/app/wordpress/id335703880?mt=8' );
+					header( 'Location: https://itunes.apple.com/us/app/wordpress/id335703880?mt=8' );
 					exit;
 				break;
 				case 'blackberry':

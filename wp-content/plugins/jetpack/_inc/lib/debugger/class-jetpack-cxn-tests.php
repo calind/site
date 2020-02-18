@@ -5,6 +5,10 @@
  * @package Jetpack
  */
 
+use Automattic\Jetpack\Connection\Client;
+use Automattic\Jetpack\Status;
+use Automattic\Jetpack\Connection\Utils as Connection_Utils;
+
 /**
  * Class Jetpack_Cxn_Tests contains all of the actual tests.
  */
@@ -36,10 +40,11 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 		 * Determines if the WP.com testing suite should be included.
 		 *
 		 * @since 7.1.0
+		 * @since 8.1.0 Default false.
 		 *
-		 * @param bool $run_test To run the WP.com testing suite. Default true.
+		 * @param bool $run_test To run the WP.com testing suite. Default false.
 		 */
-		if ( apply_filters( 'jetpack_debugger_run_self_test', true ) ) {
+		if ( apply_filters( 'jetpack_debugger_run_self_test', false ) ) {
 			/**
 			 * Intentionally added last as it checks for an existing failure state before attempting.
 			 * Generally, any failed location condition would result in the WP.com check to fail too, so
@@ -65,7 +70,19 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 	 * Is Jetpack even connected and supposed to be talking to WP.com?
 	 */
 	protected function helper_is_jetpack_connected() {
-		return ( Jetpack::is_active() && ! Jetpack::is_development_mode() );
+		return ( Jetpack::is_active() && ! ( new Status() )->is_development_mode() );
+	}
+
+	/**
+	 * Returns 30 for use with a filter.
+	 *
+	 * To allow time for WP.com to run upstream testing, this function exists to increase the http_request_timeout value
+	 * to 30.
+	 *
+	 * @return int 30
+	 */
+	public static function increase_timeout() {
+		return 30; // seconds.
 	}
 
 	/**
@@ -75,7 +92,7 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 		$name = __FUNCTION__;
 		if ( $this->helper_is_jetpack_connected() ) {
 			$result = self::passing_test( $name );
-		} elseif ( Jetpack::is_development_mode() ) {
+		} elseif ( ( new Status() )->is_development_mode() ) {
 			$result = self::skipped_test( $name, __( 'Jetpack is in Development Mode:', 'jetpack' ) . ' ' . Jetpack::development_mode_trigger_text(), __( 'Disable development mode.', 'jetpack' ) );
 		} else {
 			$result = self::failing_test( $name, __( 'Jetpack is not connected.', 'jetpack' ), 'cycle_connection' );
@@ -141,7 +158,7 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 		if ( function_exists( 'xml_parser_create' ) ) {
 			$result = self::passing_test( $name );
 		} else {
-			$result = self::failing_test( $name, __( 'PHP XML manipluation libraries are not available.', 'jetpack' ), __( "Please ask your hosting provider to refer to our server requirements at https://jetpack.com/support/server-requirements/ and enable PHP's XML module.", 'jetpack' ) );
+			$result = self::failing_test( $name, __( 'PHP XML manipulation libraries are not available.', 'jetpack' ), __( "Please ask your hosting provider to refer to our server requirements at https://jetpack.com/support/server-requirements/ and enable PHP's XML module.", 'jetpack' ) );
 		}
 
 		return $result;
@@ -221,14 +238,17 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 	protected function test__wpcom_connection_test() {
 		$name = __FUNCTION__;
 
-		if ( ! Jetpack::is_active() || Jetpack::is_development_mode() || Jetpack::is_staging_site() || ! $this->pass ) {
+		$status = new Status();
+		if ( ! Jetpack::is_active() || $status->is_development_mode() || $status->is_staging_site() || ! $this->pass ) {
 			return self::skipped_test( $name );
 		}
 
-		$response = Jetpack_Client::wpcom_json_api_request_as_blog(
+		add_filter( 'http_request_timeout', array( 'Jetpack_Cxn_Tests', 'increase_timeout' ) );
+		$response = Client::wpcom_json_api_request_as_blog(
 			sprintf( '/jetpack-blogs/%d/test-connection', Jetpack_Options::get_option( 'id' ) ),
-			Jetpack_Client::WPCOM_JSON_API_VERSION
+			Client::WPCOM_JSON_API_VERSION
 		);
+		remove_filter( 'http_request_timeout', array( 'Jetpack_Cxn_Tests', 'increase_timeout' ) );
 
 		if ( is_wp_error( $response ) ) {
 			/* translators: %1$s is the error code, %2$s is the error message */
@@ -317,28 +337,53 @@ class Jetpack_Cxn_Tests extends Jetpack_Cxn_Test_Base {
 	 *
 	 * Intentionally added last as it will be skipped if any local failed conditions exist.
 	 *
+	 * @since 7.1.0
+	 * @since 7.9.0 Timeout waiting for a WP.com response no longer fails the test. Test is marked skipped instead.
+	 *
 	 * @return array Test results.
 	 */
 	protected function last__wpcom_self_test() {
 		$name = 'test__wpcom_self_test';
-		if ( ! Jetpack::is_active() || Jetpack::is_development_mode() || Jetpack::is_staging_site() || ! $this->pass ) {
+
+		$status = new Status();
+		if ( ! Jetpack::is_active() || $status->is_development_mode() || $status->is_staging_site() || ! $this->pass ) {
 			return self::skipped_test( $name );
 		}
 
 		$self_xml_rpc_url = site_url( 'xmlrpc.php' );
 
-		$testsite_url = Jetpack::fix_url_for_bad_hosts( JETPACK__API_BASE . 'testsite/1/?url=' );
+		$testsite_url = Connection_Utils::fix_url_for_bad_hosts( JETPACK__API_BASE . 'testsite/1/?url=' );
 
-		add_filter( 'http_request_timeout', array( 'Jetpack_Debugger', 'jetpack_increase_timeout' ) );
+		add_filter( 'http_request_timeout', array( 'Jetpack_Cxn_Tests', 'increase_timeout' ) );
 
 		$response = wp_remote_get( $testsite_url . $self_xml_rpc_url );
 
-		remove_filter( 'http_request_timeout', array( 'Jetpack_Debugger', 'jetpack_increase_timeout' ) );
+		remove_filter( 'http_request_timeout', array( 'Jetpack_Cxn_Tests', 'increase_timeout' ) );
+
+		$error_msg = wp_kses(
+			sprintf(
+				/* translators: Placeholder is a link to site's Jetpack debug page. */
+				__(
+					'<a target="_blank" rel="noopener noreferrer" href="%s">Visit the Jetpack.com debug page</a> for more information or <a target="_blank" rel="noopener noreferrer" href="https://jetpack.com/contact-support/">contact support</a>.',
+					'jetpack'
+				),
+				esc_url( add_query_arg( 'url', rawurlencode( site_url() ), 'https://jetpack.com/support/debug/' ) )
+			),
+			array(
+				'a' => array(
+					'href'   => array(),
+					'target' => array(),
+					'rel'    => array(),
+				),
+			)
+		);
 
 		if ( 200 === wp_remote_retrieve_response_code( $response ) ) {
 			return self::passing_test( $name );
+		} elseif ( is_wp_error( $response ) && false !== strpos( $response->get_error_message(), 'cURL error 28' ) ) { // Timeout.
+			return self::skipped_test( $name, __( 'The test timed out which may sometimes indicate a failure or may be a false failure.', 'jetpack' ) );
 		} else {
-			return self::failing_test( $name, __( 'Jetpack.com detected an error.', 'jetpack' ), __( 'Visit the Jetpack.com debugging page for more information or contact support.', 'jetpack' ) ); // @todo direct links.
+			return self::failing_test( $name, __( 'Jetpack.com detected an error on the WPcom Self Test.', 'jetpack' ), $error_msg );
 		}
 	}
 }
