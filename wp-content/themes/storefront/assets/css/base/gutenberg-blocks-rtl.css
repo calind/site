@@ -293,10 +293,6 @@
 .editor-styles-wrapper figure.wp-block-image {
   margin: 0 0 1.41575em; }
 
-.hentry .entry-content div.wp-block-image,
-.editor-styles-wrapper div.wp-block-image {
-  display: inline; }
-
 .hentry .entry-content .wp-block-cover p.wp-block-cover-text,
 .editor-styles-wrapper .wp-block-cover p.wp-block-cover-text {
   font-size: 1.618em;
@@ -411,7 +407,6 @@
     width: 47.8260869565%;
     margin: 0 0 4.347826087% 4.347826087%;
     -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
             flex-grow: 0; }
     .hentry .entry-content .wp-block-gallery .blocks-gallery-image:nth-of-type(even),
     .hentry .entry-content .wp-block-gallery .blocks-gallery-item:nth-of-type(even),
