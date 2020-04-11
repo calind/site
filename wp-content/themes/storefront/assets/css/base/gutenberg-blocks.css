@@ -270,24 +270,32 @@
     font-size: 1em;
     font-weight: 700; }
 
-.hentry .entry-content .wp-block-image figure,
-.editor-styles-wrapper .wp-block-image figure {
-  margin-bottom: 1.41575em; }
+.hentry .entry-content .wp-block-embed.alignleft,
+.editor-styles-wrapper .wp-block-embed.alignleft {
+  margin-right: 2.617924em; }
 
-.hentry .entry-content .wp-block-image .alignleft,
-.editor-styles-wrapper .wp-block-image .alignleft {
-  margin-right: 1.41575em; }
+.hentry .entry-content .wp-block-embed.alignright,
+.editor-styles-wrapper .wp-block-embed.alignright {
+  margin-left: 2.617924em; }
 
-.hentry .entry-content .wp-block-image .alignright,
-.editor-styles-wrapper .wp-block-image .alignright {
-  margin-left: 1.41575em; }
-
-.hentry .entry-content .wp-block-image figcaption,
-.editor-styles-wrapper .wp-block-image figcaption {
-  margin: 0;
-  padding: 0.875em 0;
-  font-size: 0.875em;
-  font-style: italic; }
+.hentry .entry-content .wp-block-image:not(.block-editor-media-placeholder),
+.editor-styles-wrapper .wp-block-image:not(.block-editor-media-placeholder) {
+  display: inline; }
+  .hentry .entry-content .wp-block-image:not(.block-editor-media-placeholder) figure,
+  .editor-styles-wrapper .wp-block-image:not(.block-editor-media-placeholder) figure {
+    margin-bottom: 1.41575em; }
+  .hentry .entry-content .wp-block-image:not(.block-editor-media-placeholder) .alignleft,
+  .editor-styles-wrapper .wp-block-image:not(.block-editor-media-placeholder) .alignleft {
+    margin-right: 2.617924em; }
+  .hentry .entry-content .wp-block-image:not(.block-editor-media-placeholder) .alignright,
+  .editor-styles-wrapper .wp-block-image:not(.block-editor-media-placeholder) .alignright {
+    margin-left: 2.617924em; }
+  .hentry .entry-content .wp-block-image:not(.block-editor-media-placeholder) figcaption,
+  .editor-styles-wrapper .wp-block-image:not(.block-editor-media-placeholder) figcaption {
+    margin: 0;
+    padding: 0.875em 0;
+    font-size: 0.875em;
+    font-style: italic; }
 
 .hentry .entry-content figure.wp-block-image,
 .editor-styles-wrapper figure.wp-block-image {
@@ -745,3 +753,7 @@
   .editor-styles-wrapper .wp-block-latest-comments br {
     display: inline;
     content: ''; }
+
+.wc-block-grid img {
+  display: block;
+  margin: 0 auto 1.618em; }

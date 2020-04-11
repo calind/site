@@ -277,12 +277,6 @@ ul.products,
     .wc-block-grid__products li.product .star-rating,
     .wc-block-grid__products .wc-block-grid__product .star-rating {
       font-size: 0.875em; }
-    ul.products li.product img,
-    ul.products .wc-block-grid__product img,
-    .wc-block-grid__products li.product img,
-    .wc-block-grid__products .wc-block-grid__product img {
-      display: block;
-      margin: 0 auto 1.618em; }
     ul.products li.product.product-category h2,
     ul.products li.product.product-category h3,
     ul.products li.product.product-category .woocommerce-loop-category__title,
