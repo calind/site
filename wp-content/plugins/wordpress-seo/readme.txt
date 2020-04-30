@@ -6,7 +6,7 @@ License URI: http://www.gnu.org/licenses/gpl.html
 Tags: SEO, XML sitemap, Content analysis, Readability
 Requires at least: 5.3
 Tested up to: 5.4
-Stable tag: 14.0
+Stable tag: 14.0.2
 Requires PHP: 5.6.20
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -208,6 +208,47 @@ Your question has most likely been answered on our knowledge base: [kb.yoast.com
 6. Easily import SEO data from other SEO plugins like All In One SEO pack, HeadSpace2 SEO and wpSEO.de.
 
 == Changelog ==
+
+= 14.0.2 =
+Release Date: April 29th, 2020
+
+Because we’ve changed the underlying framework of our Indexables technology, we’ve chosen to rebuild the table. This means you will have to go through the indexing process again. We’re sorry. For sites with more than 10,000 posts, we advise using the [WP CLI command to do the indexation on the server](https://yoa.st/wp-cli-index).
+
+Bugfixes:
+
+* Fixes a bug where a fatal error would be thrown when a title contained more than 191 characters.
+* Fixes a bug where a fatal error would be thrown when a focus keyphrase contained more than 191 characters.
+* Fixes a bug where a fatal error would be thrown when search engines were disallowed from indexing the site.
+* Fixes a bug where a fatal error would be thrown on WooCommerce installations when the `wpseo_metadesc` filter was called with only 1 argument.
+* Fixes a bug where a fatal error would be thrown when using the `WPSEO_Frontend` class to get the meta description.
+* Fixes a bug where a fatal error would be thrown when `WPSEO_Frontend` or `WPSEO_Breadcrumbs` was called before the `init` action.
+* Fixes a bug where a non-object property retrieval notice would be thrown when the site's content was being indexed.
+* Fixes a bug where a trailing slash would be added to canonical URLs and some `rel="prev"` URLs, even when the permalink structure settings didn't contain that trailing slash.
+* Fixes a bug where a double breadcrumb would be shown on home pages.
+* Fixes a bug where the indexation would continue indefinitely under specific circumstances.
+
+Other:
+
+* Removes all usages of `PDO` and `mysqli` directly and uses `wpdb` everywhere. This should prevent a lot of errors for database installations that have different encodings or configurations than what is generally seen.
+
+= 14.0.1 =
+Release Date: April 28th, 2020
+
+Bugfixes:
+
+* Fixes a bug where a fatal error would be thrown when a breadcrumb title was too long.
+* Fixes a bug where a fatal error would be thrown when `DB_CHARSET` was not defined.
+* Fixes a bug where a fatal error would be thrown when breadcrumbs were rendered in the admin.
+* Fixes a bug where a fatal error would be thrown when the Yoast migrations table did not have a primary key.
+* Fixes a bug where a fatal exception would be thrown when building an indexable failed.
+* Fixes a bug where the order of the breadcrumbs was incorrect when more than 3 nested taxonomies were used.
+* Fixes a bug where HTML tags would no longer be allowed in the breadcrumbs.
+* Fixes a bug where no title would be shown in the Yoast indexation status modal.
+* Fixes a bug where changes made through the `wpseo_robots` filter would not be shown in the googlebot and bingbot meta tag output.
+
+Other:
+
+* Yoast SEO needs to have the right to create a database index. If you have restricted the creation of database indexes on your setup, please make sure to temporarily allow Yoast SEO to create indexes before updating.
 
 = 14.0 =
 Release Date: April 28th, 2020
