@@ -2,9 +2,9 @@
 Contributors: automattic
 Tags: ecommerce, e-commerce, store, sales, reports, analytics, dashboard, activity, notices, insights, stats, woo commerce, woocommerce
 Requires at least: 5.3.0
-Tested up to: 5.3.2
+Tested up to: 5.4.1
 Requires PHP: 5.6.20
-Stable tag: 1.1.0
+Stable tag: 1.1.1
 License: GPLv3
 License URI: https://github.com/woocommerce/woocommerce-admin/blob/master/license.txt
 
@@ -70,6 +70,15 @@ Release and roadmap notes are available on the [WooCommerce Developers Blog](htt
 3. Analytics
 
 == Changelog ==
+
+= 1.1.1 2020-05-05 =
+- Fix: OBW Industry selection bug for non-US stores. #4120
+- Tweak: Remove Stripe deferred account activation, and revert to oAuth connection flow. #4164
+- Tweak: Remove A/B testing from order page shipping prompt. #4180
+- Tweak: Move Storefront theme to the beginning of the theme OBW step. #4187
+- Fix: Button hover color on shipping label banner. #4230
+- Fix: WooCommerce Services installation when OBW is disabled. #4233
+- Fix: App crash when using date-based advanced filters. #4286
 
 = 1.1.0 2020-04-14 =
 - Tweak: Update form example to better format the form return data #3706

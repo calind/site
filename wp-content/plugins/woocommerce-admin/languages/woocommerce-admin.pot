@@ -2,9 +2,10 @@
 # This file is distributed under the same license as the WooCommerce Admin package.
 msgid ""
 msgstr ""
-"Project-Id-Version: WooCommerce Admin 1.1.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/wc-admin\n"
-"POT-Creation-Date: 2020-04-21 00:21:58+00:00\n"
+"Project-Id-Version: WooCommerce Admin 1.1.1\n"
+"Report-Msgid-Bugs-To: "
+"https://wordpress.org/support/plugin/woocommerce-admin\n"
+"POT-Creation-Date: 2020-05-05 14:45:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2417,98 +2418,98 @@ msgstr ""
 msgid "Bookings"
 msgstr ""
 
-#: src/Features/Onboarding.php:423
+#: src/Features/Onboarding.php:441
 #. translators: Amount of product per year (e.g. Bookings - $240.00 per year)
 msgid " — %s per year"
 msgstr ""
 
-#: src/Features/Onboarding.php:429
+#: src/Features/Onboarding.php:447
 #. translators: site currency symbol (used to show that the product costs
 #. money)
 msgid " — %s"
 msgstr ""
 
-#: src/Features/Onboarding.php:759 src/Features/Onboarding.php:859
+#: src/Features/Onboarding.php:777 src/Features/Onboarding.php:877
 msgid "New onboarding experience"
 msgstr ""
 
-#: src/Features/Onboarding.php:760
+#: src/Features/Onboarding.php:778
 msgid ""
 "If you want to try out the new WooCommerce onboarding experience, click the "
 "button below."
 msgstr ""
 
-#: src/Features/Onboarding.php:761 src/Features/Onboarding.php:838
-#: src/Features/Onboarding.php:844
+#: src/Features/Onboarding.php:779 src/Features/Onboarding.php:856
+#: src/Features/Onboarding.php:862
 msgid "Enable"
 msgstr ""
 
-#: src/Features/Onboarding.php:832
+#: src/Features/Onboarding.php:850
 msgid "WooCommerce Onboarding"
 msgstr ""
 
-#: src/Features/Onboarding.php:834
+#: src/Features/Onboarding.php:852
 msgid "Profile Setup Wizard"
 msgstr ""
 
-#: src/Features/Onboarding.php:835
+#: src/Features/Onboarding.php:853
 msgid ""
 "If you need to enable or disable the setup wizard again, please click on "
 "the button below."
 msgstr ""
 
-#: src/Features/Onboarding.php:837 src/Features/Onboarding.php:845
-#: src/Features/Onboarding.php:861
+#: src/Features/Onboarding.php:855 src/Features/Onboarding.php:863
+#: src/Features/Onboarding.php:879
 msgid "Disable"
 msgstr ""
 
-#: src/Features/Onboarding.php:841
+#: src/Features/Onboarding.php:859
 msgid "Task List"
 msgstr ""
 
-#: src/Features/Onboarding.php:842
+#: src/Features/Onboarding.php:860
 msgid ""
 "If you need to enable or disable the task list, please click on the button "
 "below."
 msgstr ""
 
-#: src/Features/Onboarding.php:849
+#: src/Features/Onboarding.php:867
 msgid "Calypso / WordPress.com"
 msgstr ""
 
-#: src/Features/Onboarding.php:851
+#: src/Features/Onboarding.php:869
 msgid "Quickly access the Jetpack connection flow in Calypso."
 msgstr ""
 
-#: src/Features/Onboarding.php:852 src/Features/Onboarding.php:856
+#: src/Features/Onboarding.php:870 src/Features/Onboarding.php:874
 #: src/Notes/WC_Admin_Notes_Woo_Subscriptions_Notes.php:193
 #: client/dashboard/task-list/tasks/payments/paypal.js:113
 #: client/dashboard/task-list/tasks/payments/square.js:135
-#: client/dashboard/task-list/tasks/payments/stripe.js:269
+#: client/dashboard/task-list/tasks/payments/stripe.js:151
 #: client/dashboard/task-list/tasks/steps/connect.js:55
 msgid "Connect"
 msgstr ""
 
-#: src/Features/Onboarding.php:855
+#: src/Features/Onboarding.php:873
 msgid "Quickly access the WooCommerce.com connection flow in Calypso."
 msgstr ""
 
-#: src/Features/Onboarding.php:860
+#: src/Features/Onboarding.php:878
 msgid ""
 "To disable the new WooCommerce onboarding experience, click the button "
 "below."
 msgstr ""
 
-#: src/Features/Onboarding.php:907 src/Features/Onboarding.php:913
+#: src/Features/Onboarding.php:925 src/Features/Onboarding.php:931
 msgid "WooCommerce Helper was not able to connect to WooCommerce.com."
 msgstr ""
 
-#: src/Features/ShippingLabelBanner.php:92
+#: src/Features/ShippingLabelBanner.php:108
 #: client/wp-admin-scripts/print-shipping-label-banner/shipping-banner/index.js:215
 msgid "Shipping Label"
 msgstr ""
 
-#: src/Loader.php:634
+#: src/Loader.php:636
 #. translators: %1$s: updated title, %2$s: blog info name
 msgid "%1$s &lsaquo; %2$s"
 msgstr ""
@@ -2517,27 +2518,27 @@ msgstr ""
 msgid "WooCommerce Admin"
 msgstr ""
 
-#: src/Loader.php:790
+#: src/Loader.php:795
 msgid "Settings for WooCommerce admin reporting."
 msgstr ""
 
-#: src/Loader.php:809
+#: src/Loader.php:814
 msgid "Excluded report order statuses"
 msgstr ""
 
-#: src/Loader.php:810
+#: src/Loader.php:815
 msgid "Statuses that should not be included when calculating report totals."
 msgstr ""
 
-#: src/Loader.php:818
+#: src/Loader.php:823
 msgid "Actionable order statuses"
 msgstr ""
 
-#: src/Loader.php:819
+#: src/Loader.php:824
 msgid "Statuses that require extra action on behalf of the store admin."
 msgstr ""
 
-#: src/Loader.php:827 src/Loader.php:828
+#: src/Loader.php:832 src/Loader.php:833
 msgid "Default Date Range"
 msgstr ""
 
@@ -4757,7 +4758,7 @@ msgstr ""
 #: client/dashboard/task-list/tasks/appearance.js:338
 #: client/dashboard/task-list/tasks/payments/payfast.js:156
 #: client/dashboard/task-list/tasks/payments/paypal.js:229
-#: client/dashboard/task-list/tasks/payments/stripe.js:383
+#: client/dashboard/task-list/tasks/payments/stripe.js:251
 #: client/dashboard/task-list/tasks/shipping/index.js:204
 msgid "Proceed"
 msgstr ""
@@ -4836,7 +4837,7 @@ msgstr ""
 
 #: client/dashboard/task-list/tasks/payments/bacs.js:66
 #: client/dashboard/task-list/tasks/payments/payfast.js:75
-#: client/dashboard/task-list/tasks/payments/stripe.js:83
+#: client/dashboard/task-list/tasks/payments/stripe.js:69
 msgid "There was a problem saving your payment setings"
 msgstr ""
 
@@ -5083,69 +5084,44 @@ msgid ""
 "connect later in store settings."
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:119
+#: client/dashboard/task-list/tasks/payments/stripe.js:105
 msgid "Stripe connected successfully."
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:184
-msgid "Stripe"
-msgstr ""
-
-#: client/dashboard/task-list/tasks/payments/stripe.js:187
-msgid ""
-"We tried to create a Stripe account automatically for "
-"{{strong}}%s{{/strong}}, but an error occured. Please try connecting "
-"manually to continue."
-msgstr ""
-
-#: client/dashboard/task-list/tasks/payments/stripe.js:235
-msgid "OK"
-msgstr ""
-
-#: client/dashboard/task-list/tasks/payments/stripe.js:257
-msgid "Email address"
-msgstr ""
-
-#: client/dashboard/task-list/tasks/payments/stripe.js:302
+#: client/dashboard/task-list/tasks/payments/stripe.js:180
 msgid "Please enter a valid publishable key. Valid keys start with \"pk_live\"."
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:308
+#: client/dashboard/task-list/tasks/payments/stripe.js:186
 msgid ""
 "Please enter a valid secret key. Valid keys start with \"sk_live\" or "
 "\"rk_live\"."
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:321
-msgid "Please enter your email"
-msgstr ""
-
-#: client/dashboard/task-list/tasks/payments/stripe.js:330
+#: client/dashboard/task-list/tasks/payments/stripe.js:198
 msgid ""
 "Your API details can be obtained from your {{docsLink}}Stripe "
 "account{{/docsLink}}.  Don’t have a Stripe account? {{registerLink}}Create "
 "one.{{/registerLink}}"
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:362
+#: client/dashboard/task-list/tasks/payments/stripe.js:230
 msgid "Live Publishable Key"
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:370
+#: client/dashboard/task-list/tasks/payments/stripe.js:238
 msgid "Live Secret Key"
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:398
+#: client/dashboard/task-list/tasks/payments/stripe.js:267
 msgid "Connect your Stripe account"
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:416
-msgid ""
-"A Stripe account is required to process payments. We’ll create an account "
-"for you if you don’t have one already."
+#: client/dashboard/task-list/tasks/payments/stripe.js:277
+msgid "A Stripe account is required to process payments."
 msgstr ""
 
-#: client/dashboard/task-list/tasks/payments/stripe.js:426
+#: client/dashboard/task-list/tasks/payments/stripe.js:287
 msgid ""
 "Connect your store to your Stripe account. Don’t have a Stripe account? "
 "Create one."
