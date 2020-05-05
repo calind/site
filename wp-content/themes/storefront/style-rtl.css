@@ -4,7 +4,7 @@ Theme URI:    https://woocommerce.com/storefront/
 Author:       Automattic
 Author URI:   https://woocommerce.com/
 Description:  Storefront is the perfect theme for your next WooCommerce project. Designed and developed by WooCommerce Core developers, it features a bespoke integration with WooCommerce itself plus many of the most popular customer facing WooCommerce extensions. There are several layout & color options to personalise your shop, multiple widget regions, a responsive design and much more. Developers will love its lean and extensible codebase making it a joy to customize and extend. Looking for a WooCommerce theme? Look no further!
-Version:      2.5.5
+Version:      2.5.6
 License:      GNU General Public License v2 or later
 License URI:  https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain:  storefront
@@ -760,10 +760,12 @@ body {
   .site-footer h5,
   .site-footer h6 {
     color: #333437; }
-  .site-footer a:not(.button):not(.components-button) {
+  .site-footer a {
     color: #2c2d33;
     text-decoration: underline; }
-    .site-footer a:not(.button):not(.components-button):hover {
+    .site-footer a:hover {
+      text-decoration: none; }
+    .site-footer a.button, .site-footer a.components-button:not(.is-link), .site-footer a.wp-block-button__link {
       text-decoration: none; }
 
 .site-info {
@@ -1038,9 +1040,11 @@ table {
         .hentry .entry-header .post-comments a:hover,
         .hentry .entry-header .byline a:hover {
           text-decoration: none; }
-  .hentry .entry-content a:not(.button):not(.components-button) {
+  .hentry .entry-content a {
     text-decoration: underline; }
-    .hentry .entry-content a:not(.button):not(.components-button):hover {
+    .hentry .entry-content a:hover {
+      text-decoration: none; }
+    .hentry .entry-content a.button, .hentry .entry-content a.components-button:not(.is-link), .hentry .entry-content a.wp-block-button__link {
       text-decoration: none; }
   .hentry .entry-taxonomy {
     margin: 1.41575em 0 0;
@@ -1083,17 +1087,7 @@ textarea {
   font-size: 100%;
   /* Corrects font size not being inherited in all browsers */
   margin: 0;
-  /* Addresses margins set differently in IE6/7, F3/4, S5, Chrome */
-  vertical-align: baseline;
-  /* Improves appearance and consistency in all browsers */
-  /* stylelint-disable */
-  *vertical-align: middle;
-  /* Improves appearance and consistency in all browsers */
-  /* stylelint-enable */ }
-
-/* Override gutenberg styles. */
-.wp-block-button__link {
-  border-radius: 0 !important; }
+  /* Addresses margins set differently in IE6/7, F3/4, S5, Chrome */ }
 
 button,
 input[type='button'],
@@ -1558,7 +1552,8 @@ button.menu-toggle {
   .pagination .page-numbers,
   .woocommerce-pagination .page-numbers {
     list-style: none;
-    margin: 0; }
+    margin: 0;
+    vertical-align: middle; }
     .pagination .page-numbers li,
     .woocommerce-pagination .page-numbers li {
       display: inline-block; }
@@ -1717,10 +1712,10 @@ button.menu-toggle {
     margin-right: 0;
     margin-top: 1em; }
 
-.widget-area #wp-calendar th,
-.widget-area #wp-calendar td,
-.footer-widgets #wp-calendar th,
-.footer-widgets #wp-calendar td {
+#wp-calendar th,
+#wp-calendar td,
+.wp-calendar-table th,
+.wp-calendar-table td {
   padding: 0.236em;
   text-align: center; }
 
@@ -1741,10 +1736,12 @@ button.menu-toggle {
   font-size: 0.875em; }
   .widget-area .widget h1.widget-title {
     font-size: 1.41575em; }
-  .widget-area .widget a:not(.button):not(.components-button) {
+  .widget-area .widget a {
     font-weight: 600;
     text-decoration: underline; }
-    .widget-area .widget a:not(.button):not(.components-button):hover {
+    .widget-area .widget a:hover {
+      text-decoration: none; }
+    .widget-area .widget a.button, .widget-area .widget a.components-button:not(.is-link), .widget-area .widget a.wp-block-button__link {
       text-decoration: none; }
 
 /**
