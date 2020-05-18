@@ -2,9 +2,9 @@
 Contributors: mndpsingh287
 Tags: wp-file-manager, elfinder,file manager, ftp, wp-filemanager,file manager, wp-filemanager, Upload Files, WP File Manager, File Manage, Edit Files, Delete Files, FTP, filemanager, wpfilemanager, ftp, file transfer, update, create, delete, view, rename, editor, Cpanel, Control Panel, Admin, Shortcode, explorer, file explorer, filemanager
 Requires at least: 4.0
-Tested up to: 5.4
+Tested up to: 5.4.1
 Requires PHP: 5.2.4
-Stable tag: 5.9
+Stable tag: 6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -135,6 +135,18 @@ Yes, You can achieve any files and folders as zip then simple download it. Pleas
 
 
 == Changelog ==
+
+= 6.2 (15th May, 2020) =
+
+* jQuery confliction fixes
+
+= 6.1 (14th May, 2020) =
+
+* Compatibility issues
+
+= 6.0 (14th May, 2020) =
+
+* Google doc preview feature added and Library Updates - Major Update
 
 = 5.9 (13th APR, 2020) =
 
