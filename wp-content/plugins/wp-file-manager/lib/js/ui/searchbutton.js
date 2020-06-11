@@ -3,7 +3,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfindersearchbutton = function(cmd) {
+jQuery.fn.elfindersearchbutton = function(cmd) {
 	"use strict";
 	return this.each(function() {
 		var result = false,
@@ -14,7 +14,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 			id     = function(name){return fm.namespace + fm.escape(name);},
 			toolbar= fm.getUI('toolbar'),
 			btnCls = fm.res('class', 'searchbtn'),
-			button = $(this)
+			button = jQuery(this)
 				.hide()
 				.addClass('ui-widget-content elfinder-button '+btnCls)
 				.on('click', function(e) {
@@ -31,12 +31,12 @@ $.fn.elfindersearchbutton = function(cmd) {
 			},
 			search = function() {
 				input.data('inctm') && clearTimeout(input.data('inctm'));
-				var val = $.trim(input.val()),
-					from = !$('#' + id('SearchFromAll')).prop('checked'),
-					mime = $('#' + id('SearchMime')).prop('checked'),
+				var val = jQuery.trim(input.val()),
+					from = !jQuery('#' + id('SearchFromAll')).prop('checked'),
+					mime = jQuery('#' + id('SearchMime')).prop('checked'),
 					type = '';
 				if (from) {
-					if ($('#' + id('SearchFromVol')).prop('checked')) {
+					if (jQuery('#' + id('SearchFromVol')).prop('checked')) {
 						from = fm.root(fm.cwd().hash);
 					} else {
 						from = fm.cwd().hash;
@@ -73,7 +73,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 				}
 			},
 			incVal = '',
-			input  = $('<input type="text" size="42"/>')
+			input  = jQuery('<input type="text" size="42"/>')
 				.on('focus', function() {
 					// close other menus
 					!button.hasClass('ui-state-active') && fm.getUI().click();
@@ -110,9 +110,9 @@ $.fn.elfindersearchbutton = function(cmd) {
 				})
 				.on('keydown', function(e) {
 					e.stopPropagation();
-					if (e.keyCode === $.ui.keyCode.ENTER) {
+					if (e.keyCode === jQuery.ui.keyCode.ENTER) {
 						search();
-					} else if (e.keyCode === $.ui.keyCode.ESCAPE) {
+					} else if (e.keyCode === jQuery.ui.keyCode.ESCAPE) {
 						e.preventDefault();
 						abort();
 					}
@@ -163,7 +163,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 					.on('keyup', function(e) {
 						input.data('imetm') && clearTimeout(input.data('imetm'));
 						if (input.data('composing')) {
-							e.keyCode === $.ui.keyCode.ENTER && input.trigger('compositionend');
+							e.keyCode === jQuery.ui.keyCode.ENTER && input.trigger('compositionend');
 						} else {
 							input.trigger('input');
 						}
@@ -171,7 +171,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 			}
 		}
 		
-		$('<span class="ui-icon ui-icon-search" title="'+cmd.title+'"></span>')
+		jQuery('<span class="ui-icon ui-icon-search" title="'+cmd.title+'"></span>')
 			.appendTo(button)
 			.on('mousedown', function(e) {
 				e.stopPropagation();
@@ -183,7 +183,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 				}
 			});
 		
-		$('<span class="ui-icon ui-icon-close"></span>')
+		jQuery('<span class="ui-icon ui-icon-close"></span>')
 			.appendTo(button)
 			.on('mousedown', function(e) {
 				e.stopPropagation();
@@ -219,17 +219,17 @@ $.fn.elfindersearchbutton = function(cmd) {
 				});
 			})
 			.one('open', function() {
-				opts = (fm.api < 2.1)? null : $('<div class="ui-front ui-widget ui-widget-content elfinder-button-menu elfinder-button-search-menu ui-corner-all"></div>')
+				opts = (fm.api < 2.1)? null : jQuery('<div class="ui-front ui-widget ui-widget-content elfinder-button-menu elfinder-button-search-menu ui-corner-all"></div>')
 					.append(
-						$('<div class="buttonset"></div>')
+						jQuery('<div class="buttonset"></div>')
 							.append(
-								$('<input id="'+id('SearchFromCwd')+'" name="serchfrom" type="radio" checked="checked"/><label for="'+id('SearchFromCwd')+'">'+fm.i18n('btnCwd')+'</label>'),
-								$('<input id="'+id('SearchFromVol')+'" name="serchfrom" type="radio"/><label for="'+id('SearchFromVol')+'">'+fm.i18n('btnVolume')+'</label>'),
-								$('<input id="'+id('SearchFromAll')+'" name="serchfrom" type="radio"/><label for="'+id('SearchFromAll')+'">'+fm.i18n('btnAll')+'</label>')
+								jQuery('<input id="'+id('SearchFromCwd')+'" name="serchfrom" type="radio" checked="checked"/><label for="'+id('SearchFromCwd')+'">'+fm.i18n('btnCwd')+'</label>'),
+								jQuery('<input id="'+id('SearchFromVol')+'" name="serchfrom" type="radio"/><label for="'+id('SearchFromVol')+'">'+fm.i18n('btnVolume')+'</label>'),
+								jQuery('<input id="'+id('SearchFromAll')+'" name="serchfrom" type="radio"/><label for="'+id('SearchFromAll')+'">'+fm.i18n('btnAll')+'</label>')
 							),
-						$('<div class="buttonset elfinder-search-type"></div>')
+						jQuery('<div class="buttonset elfinder-search-type"></div>')
 							.append(
-								$('<input id="'+id('SearchName')+'" name="serchcol" type="radio" checked="checked" value="SearchName"/><label for="'+id('SearchName')+'">'+fm.i18n('btnFileName')+'</label>')
+								jQuery('<input id="'+id('SearchName')+'" name="serchcol" type="radio" checked="checked" value="SearchName"/><label for="'+id('SearchName')+'">'+fm.i18n('btnFileName')+'</label>')
 							)
 					)
 					.hide()
@@ -237,16 +237,16 @@ $.fn.elfindersearchbutton = function(cmd) {
 				if (opts) {
 					if (sTypes) {
 						typeSet = opts.find('.elfinder-search-type');
-						$.each(cmd.options.searchTypes, function(i, v) {
-							typeSet.append($('<input id="'+id(i)+'" name="serchcol" type="radio" value="'+fm.escape(i)+'"/><label for="'+id(i)+'">'+fm.i18n(v.name)+'</label>'));
+						jQuery.each(cmd.options.searchTypes, function(i, v) {
+							typeSet.append(jQuery('<input id="'+id(i)+'" name="serchcol" type="radio" value="'+fm.escape(i)+'"/><label for="'+id(i)+'">'+fm.i18n(v.name)+'</label>'));
 						});
 					}
 					opts.find('div.buttonset').buttonset();
-					$('#'+id('SearchFromAll')).next('label').attr('title', fm.i18n('searchTarget', fm.i18n('btnAll')));
+					jQuery('#'+id('SearchFromAll')).next('label').attr('title', fm.i18n('searchTarget', fm.i18n('btnAll')));
 					if (sTypes) {
-						$.each(sTypes, function(i, v) {
+						jQuery.each(sTypes, function(i, v) {
 							if (v.title) {
-								$('#'+id(i)).next('label').attr('title', fm.i18n(v.title));
+								jQuery('#'+id(i)).next('label').attr('title', fm.i18n(v.title));
 							}
 						});
 					}
@@ -256,7 +256,7 @@ $.fn.elfindersearchbutton = function(cmd) {
 						})
 						.on('click', 'input', function(e) {
 							e.stopPropagation();
-							$.trim(input.val())? search() : input.trigger('focus');
+							jQuery.trim(input.val())? search() : input.trigger('focus');
 						})
 						.on('close', function() {
 							input.trigger('blur');
@@ -271,12 +271,12 @@ $.fn.elfindersearchbutton = function(cmd) {
 					volroot = fm.file(fm.root(fm.cwd().hash));
 				
 				if (volroot) {
-					$.each(fm.parents(fm.cwd().hash), function(i, hash) {
+					jQuery.each(fm.parents(fm.cwd().hash), function(i, hash) {
 						dirs.push(fm.file(hash).name);
 					});
 		
-					$('#'+id('SearchFromCwd')).next('label').attr('title', fm.i18n('searchTarget', dirs.join(fm.option('separator'))));
-					$('#'+id('SearchFromVol')).next('label').attr('title', fm.i18n('searchTarget', volroot.name));
+					jQuery('#'+id('SearchFromCwd')).next('label').attr('title', fm.i18n('searchTarget', dirs.join(fm.option('separator'))));
+					jQuery('#'+id('SearchFromVol')).next('label').attr('title', fm.i18n('searchTarget', volroot.name));
 				}
 			})
 			.bind('open', function() {
@@ -311,8 +311,8 @@ $.fn.elfindersearchbutton = function(cmd) {
 					var code = e.originalEvent.keyCode,
 						next = function() {
 							var sel = fm.selected(),
-								key = $.ui.keyCode[(!sel.length || fm.cwdHash2Elm(sel[0]).next('[id]').length)? 'RIGHT' : 'HOME'];
-							$(document).trigger($.Event('keydown', { keyCode: key, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
+								key = jQuery.ui.keyCode[(!sel.length || fm.cwdHash2Elm(sel[0]).next('[id]').length)? 'RIGHT' : 'HOME'];
+							jQuery(document).trigger(jQuery.Event('keydown', { keyCode: key, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
 						},
 						val;
 					if (code >= 96 && code <= 105) {

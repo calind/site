@@ -47,20 +47,20 @@ elFinder.prototype.commands.paste = function() {
 			error  = 'err' + cmd.charAt(0).toUpperCase() + cmd.substr(1),
 			fpaste = [],
 			fcopy  = [],
-			dfrd   = $.Deferred()
+			dfrd   = jQuery.Deferred()
 				.fail(function(error) {
 					error && fm.error(error);
 				})
 				.always(function() {
-					fm.unlockfiles({files : $.map(files, function(f) { return f.hash; })});
+					fm.unlockfiles({files : jQuery.map(files, function(f) { return f.hash; })});
 				}),
 			copy  = function(files) {
 				return files.length && fm._commands.duplicate
 					? fm.exec('duplicate', files)
-					: $.Deferred().resolve();
+					: jQuery.Deferred().resolve();
 			},
 			paste = function(files) {
-				var dfrd      = $.Deferred(),
+				var dfrd      = jQuery.Deferred(),
 					existed   = [],
 					hashes  = {},
 					intersect = function(files, names) {
@@ -68,7 +68,7 @@ elFinder.prototype.commands.paste = function() {
 							i   = files.length;
 
 						while (i--) {
-							$.inArray(files[i].name, names) !== -1 && ret.unshift(i);
+							jQuery.inArray(files[i].name, names) !== -1 && ret.unshift(i);
 						}
 						return ret;
 					},
@@ -148,11 +148,11 @@ elFinder.prototype.commands.paste = function() {
 										// elFinder <= 2.1.6 command `is` results
 										existed = intersect(files, names);
 									} else {
-										$.each(names, function(i, v) {
+										jQuery.each(names, function(i, v) {
 											exists[v.name] = v.hash;
 										});
-										existed = intersect(files, $.map(exists, function(h, n) { return n; }));
-										$.each(files, function(i, file) {
+										existed = intersect(files, jQuery.map(exists, function(h, n) { return n; }));
+										jQuery.each(files, function(i, file) {
 											if (exists[file.name]) {
 												hashes[exists[file.name]] = file.name;
 											}
@@ -161,7 +161,7 @@ elFinder.prototype.commands.paste = function() {
 								}
 							} else {
 								existedArr = [];
-								existed = $.map(names, function(n) {
+								existed = jQuery.map(names, function(n) {
 									if (typeof n === 'string') {
 										return n;
 									} else {
@@ -181,7 +181,7 @@ elFinder.prototype.commands.paste = function() {
 					},
 					paste     = function(selFiles) {
 						var renames = [],
-							files  = $.grep(selFiles, function(file) { 
+							files  = jQuery.grep(selFiles, function(file) { 
 								if (file.rename) {
 									renames.push(file.name);
 								}
@@ -196,7 +196,7 @@ elFinder.prototype.commands.paste = function() {
 							return dfrd.resolve();
 						}
 
-						targets = $.map(files, function(f) { return f.hash; });
+						targets = jQuery.map(files, function(f) { return f.hash; });
 						
 						reqData = {cmd : 'paste', dst : dst.hash, targets : targets, cut : cut ? 1 : 0, renames : renames, hashes : hashes, suffix : fm.options.backupSuffix};
 						if (fm.api < 2.1) {
@@ -224,11 +224,11 @@ elFinder.prototype.commands.paste = function() {
 									added = data.added && data.added.length? data.added : null;
 								if (cut && added) {
 									// undo/redo
-									$.each(files, function(i, f) {
+									jQuery.each(files, function(i, f) {
 										var phash = f.phash,
 											srcHash = function(name) {
 												var hash;
-												$.each(added, function(i, f) {
+												jQuery.each(added, function(i, f) {
 													if (f.name === name) {
 														hash = f.hash;
 														return false;
@@ -250,13 +250,13 @@ elFinder.prototype.commands.paste = function() {
 											cmd : 'move',
 											callback : function() {
 												var reqs = [];
-												$.each(dsts, function(dst, targets) {
+												jQuery.each(dsts, function(dst, targets) {
 													reqs.push(fm.request({
 														data : {cmd : 'paste', dst : dst, targets : targets, cut : 1},
 														notify : {type : 'undo', cnt : targets.length}
 													}));
 												});
-												return $.when.apply(null, reqs);
+												return jQuery.when.apply(null, reqs);
 											}
 										};
 										data.redo = {
@@ -296,9 +296,9 @@ elFinder.prototype.commands.paste = function() {
 					if (!fm.option('copyOverwrite', dst.hash)) {
 						paste(files);
 					} else {
-						internames = $.map(files, function(f) { return f.name; });
+						internames = jQuery.map(files, function(f) { return f.name; });
 						dst.hash == fm.cwd().hash
-							? valid($.map(fm.files(), function(file) { return file.phash == dst.hash ? {hash: file.hash, name: file.name} : null; }))
+							? valid(jQuery.map(fm.files(), function(file) { return file.phash == dst.hash ? {hash: file.hash, name: file.name} : null; }))
 							: fm.request({
 								data : {cmd : 'ls', target : dst.hash, intersect : internames},
 								notify : {type : 'prepare', cnt : 1, hideCnt : true},
@@ -325,7 +325,7 @@ elFinder.prototype.commands.paste = function() {
 		
 		parents = fm.parents(dst.hash);
 		
-		$.each(files, function(i, file) {
+		jQuery.each(files, function(i, file) {
 			if (!file.read) {
 				return !dfrd.reject([error, file.name, 'errPerm']);
 			}
@@ -334,7 +334,7 @@ elFinder.prototype.commands.paste = function() {
 				return !dfrd.reject(['errLocked', file.name]);
 			}
 			
-			if ($.inArray(file.hash, parents) !== -1) {
+			if (jQuery.inArray(file.hash, parents) !== -1) {
 				return !dfrd.reject(['errCopyInItself', file.name]);
 			}
 			
@@ -344,9 +344,9 @@ elFinder.prototype.commands.paste = function() {
 			
 			fparents = fm.parents(file.hash);
 			fparents.pop();
-			if ($.inArray(dst.hash, fparents) !== -1) {
+			if (jQuery.inArray(dst.hash, fparents) !== -1) {
 				
-				if ($.grep(fparents, function(h) { var d = fm.file(h); return d.phash == dst.hash && d.name == file.name ? true : false; }).length) {
+				if (jQuery.grep(fparents, function(h) { var d = fm.file(h); return d.phash == dst.hash && d.name == file.name ? true : false; }).length) {
 					return !dfrd.reject(['errReplByChild', file.name]);
 				}
 			}
@@ -366,7 +366,7 @@ elFinder.prototype.commands.paste = function() {
 			return dfrd;
 		}
 
-		cutDfrd = $.Deferred();
+		cutDfrd = jQuery.Deferred();
 		if (cut && self.options.moveConfirm) {
 			fm.confirm({
 				title  : 'moveFiles',
@@ -389,7 +389,7 @@ elFinder.prototype.commands.paste = function() {
 		}
 
 		cutDfrd.done(function() {
-			$.when(
+			jQuery.when(
 				copy(fcopy),
 				paste(fpaste)
 			)

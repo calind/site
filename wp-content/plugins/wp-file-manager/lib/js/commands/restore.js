@@ -10,7 +10,7 @@
 		fm = this.fm,
 		fakeCnt = 0,
 		getFilesRecursively = function(files) {
-			var dfd = $.Deferred(),
+			var dfd = jQuery.Deferred(),
 				dirs = [],
 				results = [],
 				reqs = [],
@@ -18,18 +18,18 @@
 				getFile;
 			
 			dfd._xhrReject = function() {
-				$.each(reqs, function() {
+				jQuery.each(reqs, function() {
 					this && this.reject && this.reject();
 				});
 				getFile && getFile._xhrReject();
 			};
 			
-			$.each(files, function(i, f) {
+			jQuery.each(files, function(i, f) {
 				f.mime === 'directory'? dirs.push(f) : results.push(f);
 			});
 			
 			if (dirs.length) {
-				$.each(dirs, function(i, d) {
+				jQuery.each(dirs, function(i, d) {
 					reqs.push(fm.request({
 						data : {cmd  : 'open', target : d.hash},
 						preventDefault : true,
@@ -37,11 +37,11 @@
 					}));
 					phashes[i] = d.hash;
 				});
-				$.when.apply($, reqs).fail(function() {
+				jQuery.when.apply($, reqs).fail(function() {
 					dfd.reject();
 				}).done(function() {
 					var items = [];
-					$.each(arguments, function(i, r) {
+					jQuery.each(arguments, function(i, r) {
 						var files;
 						if (r.files) {
 							if (r.files.length) {
@@ -80,7 +80,7 @@
 			
 			fm.lockfiles({files : targets});
 			
-			dirs = $.map(files, function(f) {
+			dirs = jQuery.map(files, function(f) {
 				return f.mime === 'directory'? f.hash : null;
 			});
 			
@@ -108,7 +108,7 @@
 					dirTop = '';
 				
 				if (res.length) {
-					$.each(res, function(i, f) {
+					jQuery.each(res, function(i, f) {
 						var phash = f.phash,
 							pfile,
 							srcRoot, tPath;
@@ -118,7 +118,7 @@
 									if (found) {
 										// Keep items of other trash
 										others.push(f.hash);
-										return null; // continue $.each
+										return null; // continue jQuery.each
 									}
 									rHashes[srcRoot] = {};
 									found = true;
@@ -149,7 +149,7 @@
 							if (!pfile) {
 								phash = false;
 								// Detection method for search results
-								$.each(fm.trashes, function(ph) {
+								jQuery.each(fm.trashes, function(ph) {
 									var file = fm.file(ph),
 										filePath = fm.path(ph);
 									if ((!file.volumeid || f.hash.indexOf(file.volumeid) === 0) && fm.path(f.hash).indexOf(filePath) === 0) {
@@ -163,7 +163,7 @@
 						}
 					});
 					if (found) {
-						$.each(rHashes, function(src, dsts) {
+						jQuery.each(rHashes, function(src, dsts) {
 							var dirs = Object.keys(dsts),
 								cnt = dirs.length;
 							fm.request({
@@ -182,7 +182,7 @@
 										// wait until file cache made
 										fm.one('mkdirdone', function() {
 											var hasErr = false;
-											$.each(dsts, function(dir, files) {
+											jQuery.each(dsts, function(dir, files) {
 												if (hashes[dir]) {
 													if (files.length) {
 														if (fm.file(hashes[dir])) {
@@ -252,12 +252,12 @@
 
 	this.getstate = function(sel, e) {
 		sel = sel || fm.selected();
-		return sel.length && $.grep(sel, function(h) {var f = fm.file(h); return f && ! f.locked && ! fm.isRoot(f)? true : false; }).length == sel.length
+		return sel.length && jQuery.grep(sel, function(h) {var f = fm.file(h); return f && ! f.locked && ! fm.isRoot(f)? true : false; }).length == sel.length
 			? 0 : -1;
 	};
 	
 	this.exec = function(hashes, opts) {
-		var dfrd   = $.Deferred()
+		var dfrd   = jQuery.Deferred()
 				.fail(function(error) {
 					error && fm.error(error);
 				}),
@@ -267,7 +267,7 @@
 			return dfrd.reject();
 		}
 		
-		$.each(files, function(i, file) {
+		jQuery.each(files, function(i, file) {
 			if (fm.isRoot(file)) {
 				return !dfrd.reject(['errRestore', file.name]);
 			}

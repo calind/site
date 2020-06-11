@@ -104,7 +104,7 @@ elFinder.prototype.commands.rename = function() {
 					}
 					dfrd && dfrd.resolve(data);
 					if (!(cwdHash = fm.cwd().hash) || cwdHash === file.hash) {
-						fm.exec('open', $.map(data.added, function(f) {
+						fm.exec('open', jQuery.map(data.added, function(f) {
 							return (f.mime === 'directory')? f.hash : null;
 						})[0]);
 					}
@@ -151,23 +151,23 @@ elFinder.prototype.commands.rename = function() {
 			var sel = fm.selected(),
 				tplr = '<input name="type" type="radio" class="elfinder-tabstop">',
 				mkChk = function(node, label) {
-					return $('<label class="elfinder-rename-batch-checks">' + fm.i18n(label) + '</label>').prepend(node);
+					return jQuery('<label class="elfinder-rename-batch-checks">' + fm.i18n(label) + '</label>').prepend(node);
 				},
-				name = $('<input type="text" class="ui-corner-all elfinder-tabstop">'),
-				num  = $(tplr),
-				prefix  = $(tplr),
-				suffix  = $(tplr),
-				extention  = $(tplr),
-				checks = $('<div></div>').append(
+				name = jQuery('<input type="text" class="ui-corner-all elfinder-tabstop">'),
+				num  = jQuery(tplr),
+				prefix  = jQuery(tplr),
+				suffix  = jQuery(tplr),
+				extention  = jQuery(tplr),
+				checks = jQuery('<div></div>').append(
 					mkChk(num, 'plusNumber'),
 					mkChk(prefix, 'asPrefix'),
 					mkChk(suffix, 'asSuffix'),
 					mkChk(extention, 'changeExtention')
 				),
-				preview = $('<div class="elfinder-rename-batch-preview"></div>'),
-				node = $('<div class="elfinder-rename-batch"></div>').append(
-						$('<div class="elfinder-rename-batch-name"></div>').append(name),
-						$('<div class="elfinder-rename-batch-type"></div>').append(checks),
+				preview = jQuery('<div class="elfinder-rename-batch-preview"></div>'),
+				node = jQuery('<div class="elfinder-rename-batch"></div>').append(
+						jQuery('<div class="elfinder-rename-batch-name"></div>').append(name),
+						jQuery('<div class="elfinder-rename-batch-type"></div>').append(checks),
 						preview
 					),
 				opts = {
@@ -220,7 +220,7 @@ elFinder.prototype.commands.rename = function() {
 			opts.buttons[fm.i18n('btnCancel')] = function() {
 				dialog.elfinderdialog('close');
 			};
-			if ($.fn.checkboxradio) {
+			if (jQuery.fn.checkboxradio) {
 				radios.checkboxradio({
 					create: function(e, ui) {
 						if (this === num.get(0)) {
@@ -268,7 +268,7 @@ elFinder.prototype.commands.rename = function() {
 			isRoot = fm.isRoot(sel[0]);
 		}
 
-		state = (cnt === 1 && ((fm.cookieEnabled && isRoot) || !sel[0].locked) || (fm.api > 2.1030 && cnt === $.grep(sel, function(f) {
+		state = (cnt === 1 && ((fm.cookieEnabled && isRoot) || !sel[0].locked) || (fm.api > 2.1030 && cnt === jQuery.grep(sel, function(f) {
 			if (!brk && !f.locked && f.phash === phash && !fm.isRoot(f) && (mime === f.mime || ext === fm.splitFileExtention(f.name)[1].toLowerCase())) {
 				return true;
 			} else {
@@ -285,7 +285,7 @@ elFinder.prototype.commands.rename = function() {
 		if (state !== -1 && cnt > 1) {
 			self.extra = {
 				icon: 'preference',
-				node: $('<span></span>')
+				node: jQuery('<span></span>')
 					.attr({title: fm.i18n('batchRename')})
 					.on('click touchstart', function(e){
 						if (e.type === 'touchstart' && e.originalEvent.touches.length > 1) {
@@ -339,7 +339,7 @@ elFinder.prototype.commands.rename = function() {
 						.parent('td').css('overflow', '');
 				}
 			}, colwidth,
-			dfrd     = $.Deferred()
+			dfrd     = jQuery.Deferred()
 				.fail(function(error) {
 					var parent = input.parent(),
 						name   = fm.escape(file.i18 || file.name);
@@ -368,7 +368,7 @@ elFinder.prototype.commands.rename = function() {
 					fm.enable();
 				}),
 			blur = function(e) {
-				var name   = $.trim(input.val()),
+				var name   = jQuery.trim(input.val()),
 				splits = fm.splitFileExtention(name),
 				valid  = true,
 				req = function() {
@@ -447,7 +447,7 @@ elFinder.prototype.commands.rename = function() {
 					}
 				}
 			},
-			input = $(tarea? '<textarea></textarea>' : '<input type="text"/>')
+			input = jQuery(tarea? '<textarea></textarea>' : '<input type="text"/>')
 				.on('keyup text', function(){
 					if (tarea) {
 						this.style.height = '1px';
@@ -461,9 +461,9 @@ elFinder.prototype.commands.rename = function() {
 				})
 				.on('keydown', function(e) {
 					e.stopImmediatePropagation();
-					if (e.keyCode == $.ui.keyCode.ESCAPE) {
+					if (e.keyCode == jQuery.ui.keyCode.ESCAPE) {
 						dfrd.reject();
-					} else if (e.keyCode == $.ui.keyCode.ENTER) {
+					} else if (e.keyCode == jQuery.ui.keyCode.ENTER) {
 						e.preventDefault();
 						input.trigger('blur');
 					}
@@ -493,7 +493,7 @@ elFinder.prototype.commands.rename = function() {
 				input.trigger('focus').trigger('select');
 				input[0].setSelectionRange && input[0].setSelectionRange(0, name.length);
 			},
-			node = navbar? target.contents().filter(function(){ return this.nodeType==3 && $(this).parent().attr('id') === fm.navHash2Id(file.hash); })
+			node = navbar? target.contents().filter(function(){ return this.nodeType==3 && jQuery(this).parent().attr('id') === fm.navHash2Id(file.hash); })
 					: target.find(filename),
 			pnode = node.parent(),
 			overlay = fm.getUI('overlay'),
@@ -544,7 +544,7 @@ elFinder.prototype.commands.rename = function() {
 		}
 		
 		fm.one('select', function() {
-			input.parent().length && file && $.inArray(file.hash, fm.selected()) === -1 && input.trigger('blur');
+			input.parent().length && file && jQuery.inArray(file.hash, fm.selected()) === -1 && input.trigger('blur');
 		});
 		
 		input.trigger('keyup');
@@ -572,7 +572,7 @@ elFinder.prototype.commands.rename = function() {
 	}).remove(function(e) {
 		var rootNames;
 		if (e.data && e.data.removed && (rootNames = fm.storage('rootNames'))) {
-			$.each(e.data.removed, function(i, h) {
+			jQuery.each(e.data.removed, function(i, h) {
 				if (rootNames[h]) {
 					delete rootNames[h];
 				}

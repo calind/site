@@ -55,7 +55,7 @@ elFinder.prototype.commands.chmod = function() {
 	this.checkstate = function(sel) {
 		var cnt = sel.length;
 		if (!cnt) return false;
-		var chk = $.grep(sel, function(f) {
+		var chk = jQuery.grep(sel, function(f) {
 			return (f.isowner && f.perm && isPerm(f.perm) && (cnt == 1 || f.mime != 'directory')) ? true : false;
 		}).length;
 		return (cnt == chk)? true : false;
@@ -69,7 +69,7 @@ elFinder.prototype.commands.chmod = function() {
 			files   = this.files(hashes);
 		}
 		var fm  = this.fm,
-		dfrd    = $.Deferred().always(function() {
+		dfrd    = jQuery.Deferred().always(function() {
 			fm.enable();
 		}),
 		tpl     = this.tpl,
@@ -85,7 +85,7 @@ elFinder.prototype.commands.chmod = function() {
 			return buttons;
 		},
 		save = function() {
-			var perm = $.trim($('#'+id+'-perm').val()),
+			var perm = jQuery.trim(jQuery('#'+id+'-perm').val()),
 				reqData;
 			
 			if (!isPerm(perm)) return false;
@@ -110,13 +110,13 @@ elFinder.prototype.commands.chmod = function() {
 						cmd : 'chmod',
 						callback : function() {
 							var reqs = [];
-							$.each(prevVals, function(perm, hashes) {
+							jQuery.each(prevVals, function(perm, hashes) {
 								reqs.push(fm.request({
 									data : {cmd : 'chmod', targets : hashes, mode : perm},
 									notify : {type : 'undo', cnt : hashes.length}
 								}));
 							});
-							return $.when.apply(null, reqs);
+							return jQuery.when.apply(null, reqs);
 						}
 					};
 					data.redo = {
@@ -137,34 +137,34 @@ elFinder.prototype.commands.chmod = function() {
 			var _perm;
 			for (var i = 0; i < 3; i++){
 				_perm = 0;
-				if ($("#"+id+"-read-"+level[i]+'-perm').is(':checked')) {
+				if (jQuery("#"+id+"-read-"+level[i]+'-perm').is(':checked')) {
 					_perm = (_perm | 4);
 				}
-				if ($("#"+id+"-write-"+level[i]+'-perm').is(':checked')) {
+				if (jQuery("#"+id+"-write-"+level[i]+'-perm').is(':checked')) {
 					_perm = (_perm | 2);
 				}
-				if ($("#"+id+"-execute-"+level[i]+'-perm').is(':checked')) {
+				if (jQuery("#"+id+"-execute-"+level[i]+'-perm').is(':checked')) {
 					_perm = (_perm | 1);
 				}
 				perm += _perm.toString(8);
 			}
-			$('#'+id+'-perm').val(perm);
+			jQuery('#'+id+'-perm').val(perm);
 		},
 		setcheck = function(perm) {
 			var _perm;
 			for (var i = 0; i < 3; i++){
 				_perm = parseInt(perm.slice(i, i+1), 8);
-				$("#"+id+"-read-"+level[i]+'-perm').prop("checked", false);
-				$("#"+id+"-write-"+level[i]+'-perm').prop("checked", false);
-				$("#"+id+"-execute-"+level[i]+'-perm').prop("checked", false);
+				jQuery("#"+id+"-read-"+level[i]+'-perm').prop("checked", false);
+				jQuery("#"+id+"-write-"+level[i]+'-perm').prop("checked", false);
+				jQuery("#"+id+"-execute-"+level[i]+'-perm').prop("checked", false);
 				if ((_perm & 4) == 4) {
-					$("#"+id+"-read-"+level[i]+'-perm').prop("checked", true);
+					jQuery("#"+id+"-read-"+level[i]+'-perm').prop("checked", true);
 				}
 				if ((_perm & 2) == 2) {
-					$("#"+id+"-write-"+level[i]+'-perm').prop("checked", true);
+					jQuery("#"+id+"-write-"+level[i]+'-perm').prop("checked", true);
 				}
 				if ((_perm & 1) == 1) {
-					$("#"+id+"-execute-"+level[i]+'-perm').prop("checked", true);
+					jQuery("#"+id+"-execute-"+level[i]+'-perm').prop("checked", true);
 				}
 			}
 			setperm();
@@ -265,7 +265,7 @@ elFinder.prototype.commands.chmod = function() {
 			title : this.title,
 			width : 'auto',
 			buttons : buttons(),
-			close : function() { $(this).elfinderdialog('destroy'); }
+			close : function() { jQuery(this).elfinderdialog('destroy'); }
 		},
 		dialog = fm.getUI().find('#'+id),
 		prevVals = {},
@@ -273,7 +273,7 @@ elFinder.prototype.commands.chmod = function() {
 
 		if (dialog.length) {
 			dialog.elfinderdialog('toTop');
-			return $.Deferred().resolve();
+			return jQuery.Deferred().resolve();
 		}
 
 		view  = view.replace('{class}', cnt > 1 ? 'elfinder-cwd-icon-group' : fm.mime2class(file.mime));
@@ -293,25 +293,25 @@ elFinder.prototype.commands.chmod = function() {
 
 		// load thumbnail
 		if (tmb) {
-			$('<img/>')
+			jQuery('<img/>')
 				.on('load', function() { dialog.find('.elfinder-cwd-icon').addClass(tmb.className).css('background-image', "url('"+tmb.url+"')"); })
 				.attr('src', tmb.url);
 		}
 
-		$('#' + id + '-table-perm :checkbox').on('click', function(){setperm('perm');});
-		$('#' + id + '-perm').on('keydown', function(e) {
+		jQuery('#' + id + '-table-perm :checkbox').on('click', function(){setperm('perm');});
+		jQuery('#' + id + '-perm').on('keydown', function(e) {
 			var c = e.keyCode;
-			if (c == $.ui.keyCode.ENTER) {
+			if (c == jQuery.ui.keyCode.ENTER) {
 				e.stopPropagation();
 				save();
 				return;
 			}
 		}).on('focus', function(e){
-			$(this).trigger('select');
+			jQuery(this).trigger('select');
 		}).on('keyup', function(e) {
-			if ($(this).val().length == 3) {
-				$(this).trigger('select');
-				setcheck($(this).val());
+			if (jQuery(this).val().length == 3) {
+				jQuery(this).trigger('select');
+				setcheck(jQuery(this).val());
 			}
 		});
 		

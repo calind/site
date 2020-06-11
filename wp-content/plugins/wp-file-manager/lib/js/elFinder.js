@@ -27,14 +27,14 @@ var elFinder = function(elm, opts, bootCallback) {
 		 *
 		 * @type jQuery
 		 **/
-		node = $(elm),
+		node = jQuery(elm),
 		
 		/**
 		 * Object of events originally registered in this node
 		 * 
 		 * @type Object
 		 */
-		prevEvents = $.extend(true, {}, $._data(node.get(0), 'events')),
+		prevEvents = jQuery.extend(true, {}, jQuery._data(node.get(0), 'events')),
 		
 		/**
 		 * Store node contents.
@@ -42,14 +42,14 @@ var elFinder = function(elm, opts, bootCallback) {
 		 * @see this.destroy
 		 * @type jQuery
 		 **/
-		prevContent = $('<div></div>').append(node.contents()).attr('class', node.attr('class') || '').attr('style', node.attr('style') || ''),
+		prevContent = jQuery('<div></div>').append(node.contents()).attr('class', node.attr('class') || '').attr('style', node.attr('style') || ''),
 		
 		/**
 		 * Instance ID. Required to get/set cookie
 		 *
 		 * @type String
 		 **/
-		id = node.attr('id') || node.attr('id', 'elfauto' + $('.elfinder').length).attr('id'),
+		id = node.attr('id') || node.attr('id', 'elfauto' + jQuery('.elfinder').length).attr('id'),
 		
 		/**
 		 * Events namespace
@@ -251,7 +251,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		 * Element which is the reference of the height percentage
 		 *
 		 * @type Object|String
-		 * @default null | $(window) (if height is percentage)
+		 * @default null | jQuery(window) (if height is percentage)
 		 **/
 		heightBase = null,
 		
@@ -267,7 +267,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		 * @type String
 		 * @default ./sounds/
 		 **/
-		soundPath = 'sounds/',
+		soundPath = '../wp-content/plugins/wp-file-manager/lib/sounds/',
 		
 		/**
 		 * JSON.stringify of previous fm.sorters
@@ -287,7 +287,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		 */
 		diableUnloadCheck = false,
 
-		beeper = $(document.createElement('audio')).hide().appendTo('body')[0],
+		beeper = jQuery(document.createElement('audio')).hide().appendTo('body')[0],
 			
 		syncInterval,
 		autoSyncStop = 0,
@@ -363,7 +363,7 @@ var elFinder = function(elm, opts, bootCallback) {
 						}).done(function() {
 							var hd = self.storage('hide') || {items: {}};
 							if (Object.keys(hiddenFiles).length) {
-								$.each(hiddenFiles, function(h) {
+								jQuery.each(hiddenFiles, function(h) {
 									if (!hd.items[h]) {
 										delete hiddenFiles[h];
 									}
@@ -430,7 +430,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				setSorter = function(file) {
 					var f = file || {},
 						sorters = [];
-					$.each(self.sortRules, function(key) {
+					jQuery.each(self.sortRules, function(key) {
 						if (defsorter[key] || typeof f[key] !== 'undefined' || (key === 'mode' && typeof f.perm !== 'undefined')) {
 							sorters.push(key);
 						}
@@ -455,7 +455,7 @@ var elFinder = function(elm, opts, bootCallback) {
 						
 						if (f.phash && (type === 'add' || (type === 'change' && (!files[f.hash] || f.size !== files[f.hash])))) {
 							if (parents = self.parents(f.phash)) {
-								$.each(parents, function() {
+								jQuery.each(parents, function() {
 									changedParents[this] = true;
 								});
 							}
@@ -494,7 +494,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				}
 			}
 			// delete sizeInfo cache
-			$.each(Object.keys(changedParents), function() {
+			jQuery.each(Object.keys(changedParents), function() {
 				var target = files[this];
 				if (target && target.sizeInfo) {
 					delete target.sizeInfo;
@@ -522,12 +522,12 @@ var elFinder = function(elm, opts, bootCallback) {
 								delete self.roots[roots[hash]];
 							}
 							// restore stats of deleted root parent directory
-							$.each(self.leafRoots, function(phash, roots) {
+							jQuery.each(self.leafRoots, function(phash, roots) {
 								var idx, pdir;
-								if ((idx = $.inArray(hash, roots))!== -1) {
+								if ((idx = jQuery.inArray(hash, roots))!== -1) {
 									if (roots.length === 1) {
 										if ((pdir = Object.assign({}, files[phash])) && pdir._realStats) {
-											$.each(pdir._realStats, function(k, v) {
+											jQuery.each(pdir._realStats, function(k, v) {
 												pdir[k] = v;
 											});
 											remove(files[phash]._realStats);
@@ -540,14 +540,14 @@ var elFinder = function(elm, opts, bootCallback) {
 								}
 							});
 							if (self.searchStatus.state < 2) {
-								$.each(files, function(h, f) {
+								jQuery.each(files, function(h, f) {
 									f.phash == hash && rm(h);
 								});
 							}
 						}
 						if (file.phash) {
 							if (parents = self.parents(file.phash)) {
-								$.each(parents, function() {
+								jQuery.each(parents, function() {
 									changedParents[this] = true;
 								});
 							}
@@ -558,14 +558,14 @@ var elFinder = function(elm, opts, bootCallback) {
 				changedParents = {},
 				parents;
 		
-			$.each(self.roots, function(k, v) {
+			jQuery.each(self.roots, function(k, v) {
 				roots[v] = k;
 			});
 			while (l--) {
 				rm(removed[l]);
 			}
 			// delete sizeInfo cache
-			$.each(Object.keys(changedParents), function() {
+			jQuery.each(Object.keys(changedParents), function() {
 				var target = files[this];
 				if (target && target.sizeInfo) {
 					delete target.sizeInfo;
@@ -581,10 +581,10 @@ var elFinder = function(elm, opts, bootCallback) {
 		 * @deprecated should be use `cache(updatesArrayData, 'change');`
 		 */
 		change = function(changed) {
-			$.each(changed, function(i, file) {
+			jQuery.each(changed, function(i, file) {
 				var hash = file.hash;
 				if (files[hash]) {
-					$.each(Object.keys(files[hash]), function(i, v){
+					jQuery.each(Object.keys(files[hash]), function(i, v){
 						if (typeof file[v] === 'undefined') {
 							delete files[hash][v];
 						}
@@ -669,7 +669,7 @@ var elFinder = function(elm, opts, bootCallback) {
 
 			if (enabled) {
 
-				$.each(shortcuts, function(i, shortcut) {
+				jQuery.each(shortcuts, function(i, shortcut) {
 					if (shortcut.type    == e.type 
 					&& shortcut.keyCode  == code 
 					&& shortcut.shiftKey == e.shiftKey 
@@ -683,19 +683,19 @@ var elFinder = function(elm, opts, bootCallback) {
 				});
 				
 				// prevent tab out of elfinder
-				if (code == $.ui.keyCode.TAB && !$(e.target).is(':input')) {
+				if (code == jQuery.ui.keyCode.TAB && !jQuery(e.target).is(':input')) {
 					e.preventDefault();
 				}
 				
 				// cancel any actions by [Esc] key
-				if (e.type === 'keydown' && code == $.ui.keyCode.ESCAPE) {
+				if (e.type === 'keydown' && code == jQuery.ui.keyCode.ESCAPE) {
 					// copy or cut 
 					if (! node.find('.ui-widget:visible').length) {
 						self.clipboard().length && self.clipboard([]);
 					}
 					// dragging
-					if ($.ui.ddmanager) {
-						ddm = $.ui.ddmanager.current;
+					if (jQuery.ui.ddmanager) {
+						ddm = jQuery.ui.ddmanager.current;
 						ddm && ddm.helper && ddm.cancel();
 					}
 					// button menus
@@ -714,11 +714,11 @@ var elFinder = function(elm, opts, bootCallback) {
 			var pifm, ifms;
 			if (inFrame) {
 				try {
-					ifms = $('iframe', window.parent.document);
+					ifms = jQuery('iframe', window.parent.document);
 					if (ifms.length) {
-						$.each(ifms, function(i, ifm) {
+						jQuery.each(ifms, function(i, ifm) {
 							if (ifm.contentWindow === window) {
-								pifm = $(ifm);
+								pifm = jQuery(ifm);
 								return false;
 							}
 						});
@@ -747,7 +747,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	
 	// set UA.Angle, UA.Rotated for mobile devices
 	if (self.UA.Mobile) {
-		$(window).on('orientationchange.'+namespace, function() {
+		jQuery(window).on('orientationchange.'+namespace, function() {
 			var a = ((screen && screen.orientation && screen.orientation.angle) || window.orientation || 0) + 0;
 			if (a === -90) {
 				a = 270;
@@ -897,13 +897,13 @@ var elFinder = function(elm, opts, bootCallback) {
 	 *
 	 * @type Object
 	 **/
-	//this.options = $.extend(true, {}, this._options, opts);
+	//this.options = jQuery.extend(true, {}, this._options, opts);
 	this.options = Object.assign({}, this._options);
 	
 	// for old type configuration
 	if (opts.uiOptions) {
 		if (opts.uiOptions.toolbar && Array.isArray(opts.uiOptions.toolbar)) {
-			if ($.isPlainObject(opts.uiOptions.toolbar[opts.uiOptions.toolbar.length - 1])) {
+			if (jQuery.isPlainObject(opts.uiOptions.toolbar[opts.uiOptions.toolbar.length - 1])) {
 				self.options.uiOptions.toolbarExtra = Object.assign(self.options.uiOptions.toolbarExtra || {}, opts.uiOptions.toolbar.pop());
 			}
 		}
@@ -912,9 +912,9 @@ var elFinder = function(elm, opts, bootCallback) {
 	// Overwrite if opts value is an array
 	(function() {
 		var arrOv = function(obj, base) {
-			if ($.isPlainObject(obj)) {
-				$.each(obj, function(k, v) {
-					if ($.isPlainObject(v)) {
+			if (jQuery.isPlainObject(obj)) {
+				jQuery.each(obj, function(k, v) {
+					if (jQuery.isPlainObject(v)) {
 						if (!base[k]) {
 							base[k] = {};
 						}
@@ -981,7 +981,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		len = event.length;
 		for (i = 0; i < len; i++) {
 			if (l = listeners[event[i]]) {
-				ci = $.inArray(callback, l);
+				ci = jQuery.inArray(callback, l);
 				ci > -1 && l.splice(ci, 1);
 			}
 		}
@@ -1013,7 +1013,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			allowModify = true;
 		}
 		if (l = handlers.length) {
-			event = $.Event(type);
+			event = jQuery.Event(type);
 			if (data) {
 				data._getEvent = function() {
 					return event;
@@ -1029,7 +1029,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					continue;
 				}
 
-				// handler is $.Deferred(), call all functions upon completion
+				// handler is jQuery.Deferred(), call all functions upon completion
 				if (handlers[i].done) {
 					dones.push(handlers[i].done);
 					continue;
@@ -1076,7 +1076,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			}
 
 			if (this.toUnbindEvents[type] && this.toUnbindEvents[type].length) {
-				$.each(this.toUnbindEvents[type], function(i, v) {
+				jQuery.each(this.toUnbindEvents[type], function(i, v) {
 					self.unbind(v.type, v.callback);
 				});
 				delete this.toUnbindEvents[type];
@@ -1104,9 +1104,9 @@ var elFinder = function(elm, opts, bootCallback) {
 		} else {
 			baseUrl = '';
 			myTag = null;
-			$('head > script').each(function() {
+			jQuery('head > script').each(function() {
 				if (this.src && this.src.match(/js\/elfinder(?:-[a-z0-9_-]+)?\.(?:min|full)\.js$/i)) {
-					myTag = $(this);
+					myTag = jQuery(this);
 					return false;
 				}
 			});
@@ -1114,7 +1114,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				baseUrl = myTag.attr('src').replace(/js\/[^\/]+$/, '');
 				if (! baseUrl.match(/^(https?\/\/|\/)/)) {
 					// check <base> tag
-					if (base = $('head > base[href]').attr('href')) {
+					if (base = jQuery('head > base[href]').attr('href')) {
 						baseUrl = base.replace(/\/$/, '') + '/' + baseUrl; 
 					}
 				}
@@ -1142,7 +1142,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	if (this.options.cssAutoLoad) {
 		(function() {
 			var baseUrl = self.baseUrl,
-				myCss = $('head > link[href$="css/elfinder.min.css"],link[href$="css/elfinder.full.css"]:first').length,
+				myCss = jQuery('head > link[href$="css/elfinder.min.css"],link[href$="css/elfinder.full.css"]:first').length,
 				rmTag = function() {
 					if (node.data('cssautoloadHide')) {
 						node.data('cssautoloadHide').remove();
@@ -1190,8 +1190,8 @@ var elFinder = function(elm, opts, bootCallback) {
 			if (self.cssloaded === null) {
 				// hide elFinder node while css loading
 				node.addClass('elfinder')
-					.data('cssautoloadHide', $('<style>.elfinder{visibility:hidden;overflow:hidden}</style>'));
-				$('head').append(node.data('cssautoloadHide'));
+					.data('cssautoloadHide', jQuery('<style>.elfinder{visibility:hidden;overflow:hidden}</style>'));
+				jQuery('head').append(node.data('cssautoloadHide'));
 
 				// set default theme
 				if (!self.options.themes.default) {
@@ -1213,7 +1213,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					if (node.css('visibility') === 'hidden') {
 						// load CSS
 						self.loadCss([baseUrl+'css/elfinder.min.css'], {
-							dfd: $.Deferred().done(function() {
+							dfd: jQuery.Deferred().done(function() {
 								loaded();
 							}).fail(function() {
 								rmTag();
@@ -1269,7 +1269,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		disabled: []
 	};
 	
-	if (! inFrame && ! this.options.enableAlways && $('body').children().length === 2) { // only node and beeper
+	if (! inFrame && ! this.options.enableAlways && jQuery('body').children().length === 2) { // only node and beeper
 		this.options.enableAlways = true;
 	}
 	
@@ -1279,7 +1279,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	} else if (Array.isArray(this.options.debug)) {
 		(function() {
 			var d = {};
-			$.each(self.options.debug, function() {
+			jQuery.each(self.options.debug, function() {
 				d[this] = true;
 			});
 			self.options.debug = d;
@@ -1301,9 +1301,9 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @type Function
 	 */
 	this.noConflict = function() {
-		$.each(conflictChecks, function(i, p) {
-			if ($.fn[p] && typeof $.fn[p].noConflict === 'function') {
-				self.noConflicts[p] = $.fn[p].noConflict();
+		jQuery.each(conflictChecks, function(i, p) {
+			if (jQuery.fn[p] && typeof jQuery.fn[p].noConflict === 'function') {
+				self.noConflicts[p] = jQuery.fn[p].noConflict();
 			}
 		});
 	};
@@ -1347,10 +1347,10 @@ var elFinder = function(elm, opts, bootCallback) {
 			}
 		}
 		if (self.isCORS) {
-			if (!$.isPlainObject(self.options.customHeaders)) {
+			if (!jQuery.isPlainObject(self.options.customHeaders)) {
 				self.options.customHeaders = {};
 			}
-			if (!$.isPlainObject(self.options.xhrFields)) {
+			if (!jQuery.isPlainObject(self.options.xhrFields)) {
 				self.options.xhrFields = {};
 			}
 			self.options.requestType = 'post';
@@ -1376,7 +1376,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @type Object
 	 * @default {}
 	 */
-	this.optsCustomData = $.isPlainObject(this.options.customData) ? this.options.customData : {};
+	this.optsCustomData = jQuery.isPlainObject(this.options.customData) ? this.options.customData : {};
 
 	/**
 	 * Any data to send across every ajax request
@@ -1399,7 +1399,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @type Object
 	 * @default {}
 	*/
-	this.customHeaders = $.isPlainObject(this.options.customHeaders) ? this.options.customHeaders : {};
+	this.customHeaders = jQuery.isPlainObject(this.options.customHeaders) ? this.options.customHeaders : {};
 
 	/**
 	 * Any custom xhrFields to send across every ajax request
@@ -1407,7 +1407,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @type Object
 	 * @default {}
 	 */
-	this.xhrFields = $.isPlainObject(this.options.xhrFields) ? this.options.xhrFields : {};
+	this.xhrFields = jQuery.isPlainObject(this.options.xhrFields) ? this.options.xhrFields : {};
 
 	/**
 	 * Replace XMLHttpRequest.prototype.send to extended function for 3rd party libs XHR request etc.
@@ -1422,13 +1422,13 @@ var elFinder = function(elm, opts, bootCallback) {
 			var xhr = this;
 			// set request headers
 			if (self.customHeaders) {
-				$.each(self.customHeaders, function(key) {
+				jQuery.each(self.customHeaders, function(key) {
 					xhr.setRequestHeader(key, this);
 				});
 			}
 			// set xhrFields
 			if (self.xhrFields) {
-				$.each(self.xhrFields, function(key) {
+				jQuery.each(self.xhrFields, function(key) {
 					if (key in xhr) {
 						xhr[key] = this;
 					}
@@ -1563,15 +1563,15 @@ var elFinder = function(elm, opts, bootCallback) {
 		this.sortAlsoTreeview = !!this.sortAlsoTreeview;
 	}
 
-	this.sortRules = $.extend(true, {}, this._sortRules, this.options.sortRules);
+	this.sortRules = jQuery.extend(true, {}, this._sortRules, this.options.sortRules);
 	
-	$.each(this.sortRules, function(name, method) {
+	jQuery.each(this.sortRules, function(name, method) {
 		if (typeof method != 'function') {
 			delete self.sortRules[name];
 		} 
 	});
 	
-	this.compare = $.proxy(this.compare, this);
+	this.compare = jQuery.proxy(this.compare, this);
 	
 	/**
 	 * Delay in ms before open notification dialog
@@ -1603,8 +1603,8 @@ var elFinder = function(elm, opts, bootCallback) {
 		},
 		autoDisable: true, // elFinder original, see jquery.elfinder.js
 		drop : function(e, ui) {
-			var dst     = $(this),
-				targets = $.grep(ui.helper.data('files')||[], function(h) { return h? true : false; }),
+			var dst     = jQuery(this),
+				targets = jQuery.grep(ui.helper.data('files')||[], function(h) { return h? true : false; }),
 				result  = [],
 				dups    = [],
 				faults  = [],
@@ -1698,7 +1698,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		var dir, i;
 		
 		if (! fake) {
-			$.each(self.roots, function(id, rhash) {
+			jQuery.each(self.roots, function(id, rhash) {
 				if (hash.indexOf(id) === 0) {
 					dir = rhash;
 					return false;
@@ -1751,7 +1751,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		}
 		if (self.hasVolOptions && cwd !== target && (!(item = self.file(target)) || item.phash !== cwd)) {
 			res = '';
-			$.each(self.volOptions, function(id, opt) {
+			jQuery.each(self.volOptions, function(id, opt) {
 				if (target.indexOf(id) === 0) {
 					res = opt[name] || '';
 					return false;
@@ -1774,7 +1774,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		if (! Array.isArray(targets)) {
 			targets = [ targets ];
 		}
-		$.each(targets, function(i, h) {
+		jQuery.each(targets, function(i, h) {
 			var disCmds = self.option('disabledFlip', h);
 			if (disCmds) {
 				Object.assign(disabled, disCmds);
@@ -1805,7 +1805,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			if (!ownFiles[phash]) {
 				return {};
 			}
-			$.each(ownFiles[phash], function(h) {
+			jQuery.each(ownFiles[phash], function(h) {
 				if (files[h]) {
 					items[h] = files[h];
 				} else {
@@ -1868,7 +1868,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		} else {
 			asyncOpt = Object.assign({notify: {type : 'parents', cnt : 1, hideCnt : true}}, asyncOpt);
 			
-			var dfd    = $.Deferred(),
+			var dfd    = jQuery.Deferred(),
 				notify = asyncOpt.notify,
 				noreq  = false,
 				req    = function() {
@@ -1935,7 +1935,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			temp   = opts.temporary || false,
 			onetm  = (opts.onetime && self.option('onetimeUrl', hash)) || false,
 			absurl = opts.absurl || false,
-			dfrd   = (async || onetm)? $.Deferred() : null,
+			dfrd   = (async || onetm)? jQuery.Deferred() : null,
 			filter = function(url) {
 				if (url && absurl) {
 					url = self.convAbsUrl(url);
@@ -1955,7 +1955,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				}
 				
 				if (baseUrl) {
-					return filter(baseUrl + $.map(self.path2array(hash), function(n) { return encodeURIComponent(n); }).slice(1).join('/'));
+					return filter(baseUrl + jQuery.map(self.path2array(hash), function(n) { return encodeURIComponent(n); }).slice(1).join('/'));
 				}
 
 				var params = Object.assign({}, self.customData, {
@@ -1966,7 +1966,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					params.cmd = 'open';
 					params.current = file.phash;
 				}
-				return filter(self.options.url + (self.options.url.indexOf('?') === -1 ? '?' : '&') + $.param(params, true));
+				return filter(self.options.url + (self.options.url.indexOf('?') === -1 ? '?' : '&') + jQuery.param(params, true));
 			},
 			getBaseUrl = function() {
 				return self.option('url', (!self.isRoot(file) && file.phash) || file.hash);
@@ -2071,7 +2071,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					url = file.url;
 				}
 			} else if (cwdOptions.url && file.hash.indexOf(self.cwd().volumeid) === 0) {
-				url = cwdOptions.url + $.map(this.path2array(hash), function(n) { return encodeURIComponent(n); }).slice(1).join('/');
+				url = cwdOptions.url + jQuery.map(this.path2array(hash), function(n) { return encodeURIComponent(n); }).slice(1).join('/');
 			}
 			if (!download || this.isSameOrigin(url)) {
 				if (url) {
@@ -2126,7 +2126,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				url += '&download=1';
 			}
 			
-			$.each(this.customData, function(key, val) {
+			jQuery.each(this.customData, function(key, val) {
 				url += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(val);
 			});
 			if (callback) {
@@ -2151,7 +2151,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			cData  = {},
 			n      = 0;
 
-		if ($.isPlainObject(file)) {
+		if (jQuery.isPlainObject(file)) {
 			if (self.searchStatus.state && file.hash.indexOf(self.cwd().volumeid) !== 0) {
 				tmbUrl = self.option('tmbUrl', file.hash);
 				tmbCrop = self.option('tmbCrop', file.hash);
@@ -2180,7 +2180,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					}
 					if (Object.keys(cData).length) {
 						url += (url.match(/\?/) ? '&' : '?');
-						$.each(cData, function (key, val) {
+						jQuery.each(cData, function (key, val) {
 							url += ((n++ === 0)? '' : '&') + encodeURIComponent(key) + '=' + encodeURIComponent(val);
 						});
 					}
@@ -2207,7 +2207,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @return Array
 	 */
 	this.selectedFiles = function() {
-		return $.map(selected, function(hash) { return files[hash] ? Object.assign({}, files[hash]) : null; });
+		return jQuery.map(selected, function(hash) { return files[hash] ? Object.assign({}, files[hash]) : null; });
 	};
 	
 	/**
@@ -2277,12 +2277,12 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @todo
 	 * @example
 	 * @todo
-	 * @return $.Deferred
+	 * @return jQuery.Deferred
 	 */
 	this.request = function(opts) { 
 		var self     = this,
 			o        = this.options,
-			dfrd     = $.Deferred(),
+			dfrd     = jQuery.Deferred(),
 			// request ID
 			reqId    = (+ new Date()).toString(16) + Math.floor(1000 * Math.random()).toString(16), 
 			// request data
@@ -2393,7 +2393,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				}).then(function() {
 					// make toast message
 					if (data.toasts && Array.isArray(data.toasts)) {
-						$.each(data.toasts, function() {
+						jQuery.each(data.toasts, function() {
 							this.msg && self.toast(this);
 						});
 					}
@@ -2483,13 +2483,13 @@ var elFinder = function(elm, opts, bootCallback) {
 				
 				if (!response) {
 					return dfrd.reject({error :['errResponse', 'errDataEmpty']}, xhr, response);
-				} else if (!$.isPlainObject(response)) {
+				} else if (!jQuery.isPlainObject(response)) {
 					return dfrd.reject({error :['errResponse', 'errDataNotJSON']}, xhr, response);
 				} else if (response.error) {
 					if (isOpen) {
 						// check leafRoots
-						$.each(self.leafRoots, function(phash, roots) {
-							self.leafRoots[phash] = $.grep(roots, function(h) { return h !== data.target; });
+						jQuery.each(self.leafRoots, function(phash, roots) {
+							self.leafRoots[phash] = jQuery.grep(roots, function(h) { return h !== data.target; });
 						});
 					}
 					return dfrd.reject({error :response.error}, xhr, response);
@@ -2498,7 +2498,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				var resolve = function() {
 					var pushLeafRoots = function(name) {
 						if (self.leafRoots[data.target] && response[name]) {
-							$.each(self.leafRoots[data.target], function(i, h) {
+							jQuery.each(self.leafRoots[data.target], function(i, h) {
 								var root;
 								if (root = self.file(h)) {
 									response[name].push(root);
@@ -2508,7 +2508,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					},
 					setTextMimes = function() {
 						self.textMimes = {};
-						$.each(self.res('mimes', 'text'), function() {
+						jQuery.each(self.res('mimes', 'text'), function() {
 							self.textMimes[this.toLowerCase()] = true;
 						});
 					},
@@ -2572,7 +2572,7 @@ var elFinder = function(elm, opts, bootCallback) {
 									newItems = self.findCwdNodes(targets),
 									inCwdHashes = function() {
 										var cwdHash = self.cwd().hash;
-										return $.map(targets, function(f) { return (f.phash && cwdHash === f.phash)? f.hash : null; });
+										return jQuery.map(targets, function(f) { return (f.phash && cwdHash === f.phash)? f.hash : null; });
 									},
 									hashes   = inCwdHashes(),
 									makeToast  = function(t) {
@@ -2582,16 +2582,16 @@ var elFinder = function(elm, opts, bootCallback) {
 										if ((data || hashes.length) && t.action && (msg = t.action.msg) && (cmd = t.action.cmd) && (!t.action.cwdNot || t.action.cwdNot !== self.cwd().hash)) {
 											done = t.action.done;
 											data = t.action.data;
-											node = $('<div></div>')
+											node = jQuery('<div></div>')
 												.append(
-													$('<button type="button" class="ui-button ui-widget ui-state-default ui-corner-all elfinder-tabstop"><span class="ui-button-text">'
+													jQuery('<button type="button" class="ui-button ui-widget ui-state-default ui-corner-all elfinder-tabstop"><span class="ui-button-text">'
 														+self.i18n(msg)
 														+'</span></button>')
 													.on('mouseenter mouseleave', function(e) { 
-														$(this).toggleClass('ui-state-hover', e.type == 'mouseenter');
+														jQuery(this).toggleClass('ui-state-hover', e.type == 'mouseenter');
 													})
 													.on('click', function() {
-														self.exec(cmd, data || hashes, {_userAction: true, _currentType: 'toast', _currentNode: $(this) });
+														self.exec(cmd, data || hashes, {_userAction: true, _currentType: 'toast', _currentNode: jQuery(this) });
 														if (done) {
 															self.one(cmd+'done', function() {
 																if (typeof done === 'function') {
@@ -2613,18 +2613,18 @@ var elFinder = function(elm, opts, bootCallback) {
 									navigate.toast = {};
 								}
 								
-								!navigate.noselect && self.trigger('selectfiles', {files : self.searchStatus.state > 1 ? $.map(targets, function(f) { return f.hash; }) : hashes});
+								!navigate.noselect && self.trigger('selectfiles', {files : self.searchStatus.state > 1 ? jQuery.map(targets, function(f) { return f.hash; }) : hashes});
 								
 								if (newItems.length) {
 									if (!navigate.noscroll) {
 										newItems.first().trigger('scrolltoview', {blink : false});
 										self.resources.blink(newItems, 'lookme');
 									}
-									if ($.isPlainObject(navigate.toast.incwd)) {
+									if (jQuery.isPlainObject(navigate.toast.incwd)) {
 										self.toast(makeToast(navigate.toast.incwd));
 									}
 								} else {
-									if ($.isPlainObject(navigate.toast.inbuffer)) {
+									if (jQuery.isPlainObject(navigate.toast.inbuffer)) {
 										self.toast(makeToast(navigate.toast.inbuffer));
 									}
 								}
@@ -2711,7 +2711,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					// see notify : function - `cancel.reject(0);`
 					if (error === 0) {
 						if (requestQueue.length) {
-							requestQueue = $.grep(requestQueue, function(req) {
+							requestQueue = jQuery.grep(requestQueue, function(req) {
 								return (req('cmd') === cmd) ? false : true;
 							});
 						}
@@ -2764,7 +2764,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				}
 
 				// trigger abort autoSync for commands to add the item
-				if ($.inArray(cmd, (self.cmdsToAdd + ' autosync').split(' ')) !== -1) {
+				if (jQuery.inArray(cmd, (self.cmdsToAdd + ' autosync').split(' ')) !== -1) {
 					if (cmd !== 'autosync') {
 						self.autoSync('stop');
 						dfrd.always(function() {
@@ -2814,17 +2814,17 @@ var elFinder = function(elm, opts, bootCallback) {
 					// bind abort()
 					data.compare && self.bind(self.cmdsToAdd + ' autosync openxhrabort', abort);
 					dfrd.always(function() {
-						var ndx = $.inArray(xhr, queue);
+						var ndx = jQuery.inArray(xhr, queue);
 						data.compare && self.unbind(self.cmdsToAdd + ' autosync openxhrabort', abort);
 						ndx !== -1 && queue.splice(ndx, 1);
 					});
-				} else if ($.inArray(cmd, self.abortCmdsOnOpen) !== -1) {
+				} else if (jQuery.inArray(cmd, self.abortCmdsOnOpen) !== -1) {
 					// regist function queueAbort
 					xhr.queueAbort = queueAbort;
 					// add "open" xhr, only cwd xhr into queue
 					cwdQueue.unshift(xhr);
 					dfrd.always(function() {
-						var ndx = $.inArray(xhr, cwdQueue);
+						var ndx = jQuery.inArray(xhr, cwdQueue);
 						ndx !== -1 && cwdQueue.splice(ndx, 1);
 					});
 				}
@@ -2940,7 +2940,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @return void
 	 */
 	this.updateCache = function(data) {
-		if ($.isPlainObject(data)) {
+		if (jQuery.isPlainObject(data)) {
 			data.files && data.files.length && cache(data.files, 'files');
 			data.tree && data.tree.length && cache(data.tree, 'tree');
 			data.removed && data.removed.length && remove(data.removed);
@@ -2973,27 +2973,27 @@ var elFinder = function(elm, opts, bootCallback) {
 				}
 			};
 		
-		$.each(incoming, function(i, f) {
+		jQuery.each(incoming, function(i, f) {
 			raw[f.hash] = f;
 		});
 		
 		// make excludes object
 		if (excludeProps && excludeProps.length) {
 			excludes = {};
-			$.each(excludeProps, function() {
+			jQuery.each(excludeProps, function() {
 				excludes[this] = true;
 			});
 		}
 		
 		// find removed
-		$.each(files, function(hash, f) {
+		jQuery.each(files, function(hash, f) {
 			if (! raw[hash] && (! onlydir || f.phash === onlydir)) {
 				removed.push(hash);
 			}
 		});
 		
 		// compare files
-		$.each(raw, function(hash, file) {
+		jQuery.each(raw, function(hash, file) {
 			var origin  = files[hash],
 				orgKeys = {},
 				chkKeyLen;
@@ -3002,10 +3002,10 @@ var elFinder = function(elm, opts, bootCallback) {
 				added.push(file);
 			} else {
 				// make orgKeys object
-				$.each(Object.keys(origin), function() {
+				jQuery.each(Object.keys(origin), function() {
 					orgKeys[this] = true;
 				});
-				$.each(file, function(prop) {
+				jQuery.each(file, function(prop) {
 					delete orgKeys[prop];
 					if (! excludes || ! excludes[prop]) {
 						if (file[prop] !== origin[prop]) {
@@ -3018,7 +3018,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				chkKeyLen = Object.keys(orgKeys).length;
 				if (chkKeyLen !== 0) {
 					if (excludes) {
-						$.each(orgKeys, function(prop) {
+						jQuery.each(orgKeys, function(prop) {
 							if (excludes[prop]) {
 								--chkKeyLen;
 							}
@@ -3030,13 +3030,13 @@ var elFinder = function(elm, opts, bootCallback) {
 		});
 		
 		// parents of removed dirs mark as changed (required for tree correct work)
-		$.each(removed, function(i, hash) {
+		jQuery.each(removed, function(i, hash) {
 			var file  = files[hash], 
 				phash = file.phash;
 
 			if (phash 
 			&& file.mime == 'directory' 
-			&& $.inArray(phash, removed) === -1 
+			&& jQuery.inArray(phash, removed) === -1 
 			&& raw[phash] 
 			&& !isChanged(phash)) {
 				changed.push(raw[phash]);
@@ -3061,7 +3061,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			compare = function(){
 				var c = '', cnt = 0, mtime = 0;
 				if (onlydir && polling) {
-					$.each(files, function(h, f) {
+					jQuery.each(files, function(h, f) {
 						if (f.phash && f.phash === onlydir) {
 							++cnt;
 							mtime = Math.max(mtime, f.ts);
@@ -3072,7 +3072,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				return c;
 			},
 			comp  = compare(),
-			dfrd  = $.Deferred().always(function() { !reqFail && self.trigger('sync'); }),
+			dfrd  = jQuery.Deferred().always(function() { !reqFail && self.trigger('sync'); }),
 			opts = [this.request({
 				data           : {cmd : 'open', reload : 1, target : cwd, tree : (! onlydir && this.ui.tree) ? 1 : 0, compare : comp},
 				preventDefault : true
@@ -3108,17 +3108,17 @@ var elFinder = function(elm, opts, bootCallback) {
 				data           : {cmd : 'parents', target : cwd},
 				preventDefault : true
 			}));
-			$.each(exParents(), function(i, data) {
+			jQuery.each(exParents(), function(i, data) {
 				opts.push(self.request({
 					data           : {cmd : data.cmd, target : data.target},
 					preventDefault : true
 				}));
 			});
 		}
-		$.when.apply($, opts)
+		jQuery.when.apply($, opts)
 		.fail(function(error, xhr) {
 			reqFail = (xhr && xhr.status != 200);
-			if (! polling || $.inArray('errOpen', error) !== -1) {
+			if (! polling || jQuery.inArray('errOpen', error) !== -1) {
 				dfrd.reject(error);
 				self.parseError(error) && self.request({
 					data   : {cmd : 'open', target : (self.lastDir('') || self.root()), tree : 1, init : 1},
@@ -3207,7 +3207,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	this.shortcut = function(s) {
 		var patterns, pattern, code, i, parts;
 		
-		if (this.options.allowShortcuts && s.pattern && $.isFunction(s.callback)) {
+		if (this.options.allowShortcuts && s.pattern && jQuery.isFunction(s.callback)) {
 			patterns = s.pattern.toUpperCase().split(/\s+/);
 			
 			for (i= 0; i < patterns.length; i++) {
@@ -3215,14 +3215,14 @@ var elFinder = function(elm, opts, bootCallback) {
 				parts   = pattern.split('+');
 				code    = (code = parts.pop()).length == 1 
 					? (code > 0 ? code : code.charCodeAt(0))
-					: (code > 0 ? code : $.ui.keyCode[code]);
+					: (code > 0 ? code : jQuery.ui.keyCode[code]);
 
 				if (code && !shortcuts[pattern]) {
 					shortcuts[pattern] = {
 						keyCode     : code,
-						altKey      : $.inArray('ALT', parts)   != -1,
-						ctrlKey     : $.inArray('CTRL', parts)  != -1,
-						shiftKey    : $.inArray('SHIFT', parts) != -1,
+						altKey      : jQuery.inArray('ALT', parts)   != -1,
+						ctrlKey     : jQuery.inArray('CTRL', parts)  != -1,
+						shiftKey    : jQuery.inArray('SHIFT', parts) != -1,
 						type        : s.type || 'keydown',
 						callback    : s.callback,
 						description : s.description,
@@ -3242,7 +3242,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	this.shortcuts = function() {
 		var ret = [];
 		
-		$.each(shortcuts, function(i, s) {
+		jQuery.each(shortcuts, function(i, s) {
 			ret.push([s.pattern, self.i18n(s.description)]);
 		});
 		return ret;
@@ -3261,13 +3261,13 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @return Array
 	 */
 	this.clipboard = function(hashes, cut) {
-		var map = function() { return $.map(clipboard, function(f) { return f.hash; }); };
+		var map = function() { return jQuery.map(clipboard, function(f) { return f.hash; }); };
 
 		if (hashes !== void(0)) {
 			clipboard.length && this.trigger('unlockfiles', {files : map()});
 			remember = {};
 			
-			clipboard = $.map(hashes||[], function(hash) {
+			clipboard = jQuery.map(hashes||[], function(hash) {
 				var file = files[hash];
 				if (file) {
 					
@@ -3327,7 +3327,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @param  String|Array   usualy files hashes
 	 * @param  String|Array   command options
 	 * @param  String|void    hash for enabled check of own volume's disabled cmds
-	 * @return $.Deferred
+	 * @return jQuery.Deferred
 	 */		
 	this.exec = function(cmd, files, opts, dstHash) {
 		var dfrd, resType;
@@ -3344,7 +3344,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			this.autoSync('stop');
 		}
 		if (!dstHash && files) {
-			if ($.isArray(files)) {
+			if (jQuery.isArray(files)) {
 				if (files.length) {
 					dstHash = files[0];
 				}
@@ -3354,12 +3354,12 @@ var elFinder = function(elm, opts, bootCallback) {
 		}
 		dfrd = this._commands[cmd] && this.isCommandEnabled(cmd, dstHash) 
 			? this._commands[cmd].exec(files, opts) 
-			: $.Deferred().reject('errUnknownCmd');
+			: jQuery.Deferred().reject('errUnknownCmd');
 		
 		resType = typeof dfrd;
 		if (!(resType === 'object' && dfrd.promise)) {
-			self.debug('warning', '"cmd.exec()" should be returned "$.Deferred" but cmd "' + cmd + '" returned "' + resType + '"');
-			dfrd = $.Deferred().resolve();
+			self.debug('warning', '"cmd.exec()" should be returned "jQuery.Deferred" but cmd "' + cmd + '" returned "' + resType + '"');
+			dfrd = jQuery.Deferred().resolve();
 		}
 		
 		this.trigger('exec', { dfrd : dfrd, cmd : cmd, files : files, opts : opts, dstHash : dstHash });
@@ -3374,7 +3374,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @return jQuery
 	 */
 	this.dialog = function(content, options) {
-		var dialog = $('<div></div>').append(content).appendTo(node).elfinderdialog(options, self),
+		var dialog = jQuery('<div></div>').append(content).appendTo(node).elfinderdialog(options, self),
 			dnode  = dialog.closest('.ui-dialog'),
 			resize = function(){
 				! dialog.data('draged') && dialog.is(':visible') && dialog.elfinderdialog('posInit');
@@ -3395,7 +3395,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @return jQuery
 	 */
 	this.toast = function(options) {
-		return $('<div class="ui-front"></div>').appendTo(this.ui.toast).elfindertoast(options || {}, this);
+		return jQuery('<div class="ui-front"></div>').appendTo(this.ui.toast).elfindertoast(options || {}, this);
 	};
 	
 	/**
@@ -3405,7 +3405,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @return jQuery
 	 */
 	this.getUI = function(ui) {
-		return ui? (this.ui[ui] || $()) : node;
+		return ui? (this.ui[ui] || jQuery()) : node;
 	};
 	
 	/**
@@ -3452,7 +3452,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			if (mt = h.match(/^([0-9.]+)%$/)) {
 				// setup heightBase
 				if (! heightBase || ! heightBase.length) {
-					heightBase = $(window);
+					heightBase = jQuery(window);
 				}
 				if (! heightBase.data('marginToMyNode')) {
 					heightBase.data('marginToMyNode', getMargin());
@@ -3552,7 +3552,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					}
 				}
 			},
-			dfd  = $.Deferred(),
+			dfd  = jQuery.Deferred(),
 			callFunc = function() {
 				dfd.resolve(func.call(dfd));
 				busy(false);
@@ -3586,10 +3586,10 @@ var elFinder = function(elm, opts, bootCallback) {
 			selected = [];
 			listeners = {};
 			shortcuts = {};
-			$(window).off('.' + namespace);
-			$(document).off('.' + namespace);
+			jQuery(window).off('.' + namespace);
+			jQuery(document).off('.' + namespace);
 			self.trigger = function(){};
-			$(beeper).remove();
+			jQuery(beeper).remove();
 			node.off()
 				.removeData()
 				.empty()
@@ -3598,8 +3598,8 @@ var elFinder = function(elm, opts, bootCallback) {
 				.attr('style', prevContent.attr('style'));
 			delete node[0].elfinder;
 			// restore kept events
-			$.each(prevEvents, function(n, arr) {
-				$.each(arr, function(i, o) {
+			jQuery.each(prevEvents, function(n, arr) {
+				jQuery.each(arr, function(i, o) {
 					node.on(o.type + (o.namespace? '.'+o.namespace : ''), o.selector, o.handler);
 				});
 			});
@@ -3670,7 +3670,7 @@ var elFinder = function(elm, opts, bootCallback) {
 								var err = self.parseError(error);
 								if (err && xhr.status != 0) {
 									self.error(err);
-									if (Array.isArray(err) && $.inArray('errOpen', err) !== -1) {
+									if (Array.isArray(err) && jQuery.inArray('errOpen', err) !== -1) {
 										self.request({
 											data   : {cmd : 'open', target : (self.lastDir('') || self.root()), tree : 1, init : 1},
 											notify : {type : 'open', cnt : 1, hideCnt : true}
@@ -3723,7 +3723,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		var nodes = node.children('.ui-front').removeClass('elfinder-frontmost'),
 			lastnode = nodes.last();
 		nodes.css('z-index', '');
-		$(target).addClass('ui-front elfinder-frontmost').css('z-index', lastnode.css('z-index') + 1);
+		jQuery(target).addClass('ui-front elfinder-frontmost').css('z-index', lastnode.css('z-index') + 1);
 	};
 	
 	/**
@@ -3733,7 +3733,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 * @param      Boolean  nohide  Do not hide
 	 */
 	this.toHide =function(target, nohide) {
-		var tgt = $(target),
+		var tgt = jQuery(target),
 			last;
 
 		!nohide && tgt.hide();
@@ -3787,8 +3787,8 @@ var elFinder = function(elm, opts, bootCallback) {
 			checkDialog = function() {
 				var t = 0,
 					l = 0;
-				$.each(node.children('.ui-dialog,.ui-draggable'), function(i, d) {
-					var $d = $(d),
+				jQuery.each(node.children('.ui-dialog,.ui-draggable'), function(i, d) {
+					var $d = jQuery(d),
 						pos = $d.position();
 					
 					if (pos.top < 0) {
@@ -3853,32 +3853,32 @@ var elFinder = function(elm, opts, bootCallback) {
 					exitFull: function() {
 						var elm;
 						
-						$(window).off('resize.' + namespace, resize);
+						jQuery(window).off('resize.' + namespace, resize);
 						if (bodyOvf !== void(0)) {
-							$('body').css('overflow', bodyOvf);
+							jQuery('body').css('overflow', bodyOvf);
 						}
 						bodyOvf = void(0);
 						
 						if (orgStyle) {
 							elm = orgStyle.elm;
 							restoreStyle(elm);
-							$(elm).trigger('resize', {fullscreen: 'off'});
+							jQuery(elm).trigger('resize', {fullscreen: 'off'});
 						}
 						
-						$(window).trigger('resize');
+						jQuery(window).trigger('resize');
 					},
 					
 					toFull: function(elem) {
-						bodyOvf = $('body').css('overflow') || '';
-						$('body').css('overflow', 'hidden');
+						bodyOvf = jQuery('body').css('overflow') || '';
+						jQuery('body').css('overflow', 'hidden');
 						
-						$(elem).css(self.getMaximizeCss())
+						jQuery(elem).css(self.getMaximizeCss())
 							.addClass(cls)
 							.trigger('resize', {fullscreen: 'on'});
 						
 						checkDialog();
 						
-						$(window).on('resize.' + namespace, resize).trigger('resize');
+						jQuery(window).on('resize.' + namespace, resize).trigger('resize');
 						
 						return true;
 					}
@@ -3886,7 +3886,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			},
 			restoreStyle = function(elem) {
 				if (orgStyle && orgStyle.elm == elem) {
-					$(elem).removeClass(cls + ' ' + clsN).attr('style', orgStyle.style);
+					jQuery(elem).removeClass(cls + ' ' + clsN).attr('style', orgStyle.style);
 					orgStyle = null;
 				}
 			},
@@ -3896,7 +3896,7 @@ var elFinder = function(elm, opts, bootCallback) {
 					resizeTm && cancelAnimationFrame(resizeTm);
 					resizeTm = requestAnimationFrame(function() {
 						if (elm = funcObj.fullElm()) {
-							$(elm).trigger('resize', {fullscreen: 'on'});
+							jQuery(elm).trigger('resize', {fullscreen: 'on'});
 						}
 					});
 				}
@@ -3904,10 +3904,10 @@ var elFinder = function(elm, opts, bootCallback) {
 		
 		setFuncObj();
 
-		$(document).on('fullscreenchange.' + namespace + ' webkitfullscreenchange.' + namespace + ' mozfullscreenchange.' + namespace + ' MSFullscreenChange.' + namespace, function(e){
+		jQuery(document).on('fullscreenchange.' + namespace + ' webkitfullscreenchange.' + namespace + ' mozfullscreenchange.' + namespace + ' MSFullscreenChange.' + namespace, function(e){
 			if (self.UA.Fullscreen) {
 				var elm = funcObj.fullElm(),
-					win = $(window);
+					win = jQuery(window);
 				
 				resizeTm && cancelAnimationFrame(resizeTm);
 				if (elm === null) {
@@ -3915,10 +3915,10 @@ var elFinder = function(elm, opts, bootCallback) {
 					if (orgStyle) {
 						elm = orgStyle.elm;
 						restoreStyle(elm);
-						$(elm).trigger('resize', {fullscreen: 'off'});
+						jQuery(elm).trigger('resize', {fullscreen: 'off'});
 					}
 				} else {
-					$(elm).addClass(cls + ' ' + clsN)
+					jQuery(elm).addClass(cls + ' ' + clsN)
 						.attr('style', 'width:100%; height:100%; margin:0; padding:0;')
 						.trigger('resize', {fullscreen: 'on'});
 					win.on('resize.' + namespace, resize);
@@ -3936,7 +3936,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		 * @return Object | Null  DOM node object of current full scrren
 		 */
 		self.toggleFullscreen = function(target, full) {
-			var elm = $(target).get(0),
+			var elm = jQuery(target).get(0),
 				curElm = null;
 			
 			curElm = funcObj.fullElm();
@@ -3959,7 +3959,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			}
 			
 			setFuncObj();
-			orgStyle = {elm: elm, style: $(elm).attr('style')};
+			orgStyle = {elm: elm, style: jQuery(elm).attr('style')};
 			if (funcObj.toFull(elm) !== false) {
 				return elm;
 			} else {
@@ -3983,8 +3983,8 @@ var elFinder = function(elm, opts, bootCallback) {
 			}
 		},
 		exitMax = function(elm) {
-			$(window).off('resize.' + namespace, resize);
-			$('body').css('overflow', elm.data('bodyOvf'));
+			jQuery(window).off('resize.' + namespace, resize);
+			jQuery('body').css('overflow', elm.data('bodyOvf'));
 			elm.removeClass(cls)
 				.attr('style', elm.data('orgStyle'))
 				.removeData('bodyOvf')
@@ -3992,12 +3992,12 @@ var elFinder = function(elm, opts, bootCallback) {
 			elm.trigger('resize', {maximize: 'off'});
 		},
 		toMax = function(elm) {
-			elm.data('bodyOvf', $('body').css('overflow') || '')
+			elm.data('bodyOvf', jQuery('body').css('overflow') || '')
 				.data('orgStyle', elm.attr('style'))
 				.addClass(cls)
 				.css(self.getMaximizeCss());
-			$('body').css('overflow', 'hidden');
-			$(window).on('resize.' + namespace, {elm: elm}, resize);
+			jQuery('body').css('overflow', 'hidden');
+			jQuery(window).on('resize.' + namespace, {elm: elm}, resize);
 			elm.trigger('resize', {maximize: 'on'});
 		};
 		
@@ -4009,7 +4009,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		 * @return void
 		 */
 		self.toggleMaximize = function(target, max) {
-			var elm = $(target),
+			var elm = jQuery(target),
 				maximized = elm.hasClass(cls);
 			
 			if (maximized) {
@@ -4027,7 +4027,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	})();
 	
 	/*************  init stuffs  ****************/
-	Object.assign($.ui.keyCode, {
+	Object.assign(jQuery.ui.keyCode, {
 		'F1' : 112,
 		'F2' : 113,
 		'F3' : 114,
@@ -4089,19 +4089,19 @@ var elFinder = function(elm, opts, bootCallback) {
 					return opts._xhr;
 				};
 			}
-			return $.ajax(opts);
+			return jQuery.ajax(opts);
 		};
 	}
 	
 	if (this.transport.upload == 'iframe') {
-		this.transport.upload = $.proxy(this.uploads.iframe, this);
+		this.transport.upload = jQuery.proxy(this.uploads.iframe, this);
 	} else if (typeof(this.transport.upload) == 'function') {
 		this.dragUpload = !!this.options.dragUploadAllow;
 	} else if (this.xhrUpload && !!this.options.dragUploadAllow) {
-		this.transport.upload = $.proxy(this.uploads.xhr, this);
+		this.transport.upload = jQuery.proxy(this.uploads.xhr, this);
 		this.dragUpload = true;
 	} else {
-		this.transport.upload = $.proxy(this.uploads.iframe, this);
+		this.transport.upload = jQuery.proxy(this.uploads.iframe, this);
 	}
 
 	/**
@@ -4164,7 +4164,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 */
 	this.getContents = function(hash, responseType, requestOpts) {
 		var self = this,
-			dfd = $.Deferred(),
+			dfd = jQuery.Deferred(),
 			type = responseType || 'arraybuffer',
 			url, req;
 
@@ -4213,7 +4213,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 */
 	this.getBinaryByUrl = function(opts, callback, requestOpts) {
 		var self = this,
-			dfd = $.Deferred(),
+			dfd = jQuery.Deferred(),
 			url, req;
 
 		dfd.fail(function() {
@@ -4297,7 +4297,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		 * @return     Object  hashes with lib name as key
 		 */
 		self.getContentsHashes = function(target, needHashes, hashOpts, requestOpts) {
-			var dfd = $.Deferred(),
+			var dfd = jQuery.Deferred(),
 				needs = self.arrayFlip(needHashes || ['md5'], true),
 				libs = [],
 				jobs = [],
@@ -4316,7 +4316,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				req = self.getContents(target, 'arraybuffer', requestOpts).done(function(arrayBuffer) {
 					if (needs.md5 && hashLibs.SparkMD5) {
 						jobs.push((function() {
-							var job = $.Deferred();
+							var job = jQuery.Deferred();
 							try {
 								var wk = self.getWorker();
 								job.fail(function() {
@@ -4354,10 +4354,10 @@ var elFinder = function(elm, opts, bootCallback) {
 						})());
 					}
 					if (hashLibs.jsSHA) {
-						$.each(['1', '224', '256', '384', '512', '3-224', '3-256', '3-384', '3-512', 'ke128', 'ke256'], function(i, v) {
+						jQuery.each(['1', '224', '256', '384', '512', '3-224', '3-256', '3-384', '3-512', 'ke128', 'ke256'], function(i, v) {
 							if (needs['sha' + v]) {
 								jobs.push((function() {
-									var job = $.Deferred();
+									var job = jQuery.Deferred();
 									try {
 										var wk = self.getWorker();
 										job.fail(function() {
@@ -4397,7 +4397,7 @@ var elFinder = function(elm, opts, bootCallback) {
 						});
 					}
 					if (jobs.length) {
-						$.when.apply(null, jobs).always(function() {
+						jQuery.when.apply(null, jobs).always(function() {
 							dfd.resolve(res);
 						});
 					} else {
@@ -4422,7 +4422,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	 */
 	this.parseError = function(error) {
 		var arg = error;
-		if ($.isPlainObject(arg)) {
+		if (jQuery.isPlainObject(arg)) {
 			arg = arg.error;
 		}
 		return arg;
@@ -4447,12 +4447,12 @@ var elFinder = function(elm, opts, bootCallback) {
 	};
 	
 	// create bind/trigger aliases for build-in events
-	$.each(events, function(i, name) {
+	jQuery.each(events, function(i, name) {
 		self[name] = function() {
 			var arg = arguments[0];
 			return arguments.length == 1 && typeof(arg) == 'function'
 				? self.bind(name, arg)
-				: self.trigger(name, $.isPlainObject(arg) ? arg : {});
+				: self.trigger(name, jQuery.isPlainObject(arg) ? arg : {});
 		};
 	});
 
@@ -4476,7 +4476,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		.select(function(e) {
 			var cnt = 0,
 				unselects = [];
-			selected = $.grep(e.data.selected || e.data.value|| [], function(hash) {
+			selected = jQuery.grep(e.data.selected || e.data.value|| [], function(hash) {
 				if (unselects.length || (self.maxTargets && ++cnt > self.maxTargets)) {
 					unselects.push(hash);
 					return false;
@@ -4502,9 +4502,9 @@ var elFinder = function(elm, opts, bootCallback) {
 				last, counter;
 			
 			if (cnt < self.options.maxErrorDialogs) {
-				opts.buttons[self.i18n(self.i18n('btnClose'))] = function() { $(this).elfinderdialog('close'); };
+				opts.buttons[self.i18n(self.i18n('btnClose'))] = function() { jQuery(this).elfinderdialog('close'); };
 
-				if (e.data.opts && $.isPlainObject(e.data.opts)) {
+				if (e.data.opts && jQuery.isPlainObject(e.data.opts)) {
 					Object.assign(opts, e.data.opts);
 				}
 
@@ -4515,13 +4515,13 @@ var elFinder = function(elm, opts, bootCallback) {
 				if (counter.length) {
 					counter.data('cnt', parseInt(counter.data('cnt')) + 1).html(self.i18n(['moreErrors', counter.data('cnt')]));
 				} else {
-					counter = $('<span class="elfinder-error-counter">'+ self.i18n(['moreErrors', 1]) +'</span>').data('cnt', 1);
+					counter = jQuery('<span class="elfinder-error-counter">'+ self.i18n(['moreErrors', 1]) +'</span>').data('cnt', 1);
 					last.append('<br/>', counter);
 				}
 			}
 		})
 		.bind('tmb', function(e) {
-			$.each(e.data.images||[], function(hash, tmb) {
+			jQuery.each(e.data.images||[], function(hash, tmb) {
 				if (files[hash]) {
 					files[hash].tmb = tmb;
 				}
@@ -4546,7 +4546,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				if (!data.unshift) {
 					obj = self.mimesCanMakeEmpty;
 				}
-				$.each(data.mimes, function() {
+				jQuery.each(data.mimes, function() {
 					if (!obj[this]) {
 						obj[this] = self.mimeTypes[this];
 					}
@@ -4569,12 +4569,12 @@ var elFinder = function(elm, opts, bootCallback) {
 			var play  = beeper.canPlayType && beeper.canPlayType('audio/wav; codecs="1"'),
 				file = e.data && e.data.soundFile;
 
-			play && file && play != '' && play != 'no' && $(beeper).html('<source src="' + soundPath + file + '" type="audio/wav">')[0].play();
+			play && file && play != '' && play != 'no' && jQuery(beeper).html('<source src="' + soundPath + file + '" type="audio/wav">')[0].play();
 		});
 	}
 
 	// bind external event handlers
-	$.each(this.options.handlers, function(event, callback) {
+	jQuery.each(this.options.handlers, function(event, callback) {
 		self.bind(event, callback);
 	});
 
@@ -4612,7 +4612,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		this.options.commands = [];
 	}
 	
-	if ($.inArray('*', this.options.commands) !== -1) {
+	if (jQuery.inArray('*', this.options.commands) !== -1) {
 		this.options.commands = Object.keys(this.commands);
 	}
 	
@@ -4690,7 +4690,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	}
 	
 	if (this.options.heightBase) {
-		heightBase = $(this.options.heightBase);
+		heightBase = jQuery(this.options.heightBase);
 	}
 	
 	if (this.options.soundPath) {
@@ -4702,7 +4702,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	if (this.options.parrotHeaders && Array.isArray(this.options.parrotHeaders) && this.options.parrotHeaders.length) {
 		this.parrotHeaders = this.options.parrotHeaders;
 		// check sessionStorage
-		$.each(this.parrotHeaders, function(i, h) {
+		jQuery.each(this.parrotHeaders, function(i, h) {
 			var v = self.sessionStorage('core-ph:' + h);
 			if (v) {
 				self.customHeaders[h] = v;
@@ -4715,14 +4715,14 @@ var elFinder = function(elm, opts, bootCallback) {
 	self.one('opendone', function() {
 		var tm;
 		// attach events to document
-		$(document)
+		jQuery(document)
 			// disable elfinder on click outside elfinder
-			.on('click.'+namespace, function(e) { enabled && ! self.options.enableAlways && !$(e.target).closest(node).length && self.disable(); })
+			.on('click.'+namespace, function(e) { enabled && ! self.options.enableAlways && !jQuery(e.target).closest(node).length && self.disable(); })
 			// exec shortcuts
 			.on(keydown+' '+keypress+' '+keyup+' '+mousedown, execShortcut);
 		
 		// attach events to window
-		self.options.useBrowserHistory && $(window)
+		self.options.useBrowserHistory && jQuery(window)
 			.on('popstate.' + namespace, function(ev) {
 				var state = ev.originalEvent.state || {},
 					hasThash = state.thash? true : false,
@@ -4732,14 +4732,14 @@ var elFinder = function(elm, opts, bootCallback) {
 				if (!hasThash) {
 					state = { thash: self.cwd().hash };
 					// scroll to elFinder node
-					$('html,body').animate({ scrollTop: node.offset().top });
+					jQuery('html,body').animate({ scrollTop: node.offset().top });
 				}
 				if (dialog.length || input.length) {
 					history.pushState(state, null, location.pathname + location.search + '#elf_' + state.thash);
 					if (dialog.length) {
 						if (!dialog.hasClass(self.res('class', 'preventback'))) {
 							if (dialog.hasClass('elfinder-contextmenu')) {
-								$(document).trigger($.Event('keydown', { keyCode: $.ui.keyCode.ESCAPE, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
+								jQuery(document).trigger(jQuery.Event('keydown', { keyCode: jQuery.ui.keyCode.ESCAPE, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
 							} else if (dialog.hasClass('elfinder-dialog')) {
 								dialog.elfinderdialog('close');
 							} else {
@@ -4747,11 +4747,11 @@ var elFinder = function(elm, opts, bootCallback) {
 							}
 						}
 					} else {
-						input.trigger($.Event('keydown', { keyCode: $.ui.keyCode.ESCAPE, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
+						input.trigger(jQuery.Event('keydown', { keyCode: jQuery.ui.keyCode.ESCAPE, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
 					}
 				} else {
 					if (hasThash) {
-						!$.isEmptyObject(self.files()) && self.request({
+						!jQuery.isEmptyObject(self.files()) && self.request({
 							data   : {cmd  : 'open', target : state.thash, onhistory : 1},
 							notify : {type : 'open', cnt : 1, hideCnt : true},
 							syncOnFail : true
@@ -4772,7 +4772,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				}
 			});
 		
-		$(window).on('resize.' + namespace, function(e){
+		jQuery(window).on('resize.' + namespace, function(e){
 			if (e.target === this) {
 				tm && cancelAnimationFrame(tm);
 				tm = requestAnimationFrame(function() {
@@ -4790,13 +4790,13 @@ var elFinder = function(elm, opts, bootCallback) {
 			var msg, cnt;
 			if (!self.pauseUnloadCheck()) {
 				if (node.is(':visible')) {
-					if (self.ui.notify.children().length && $.inArray('hasNotifyDialog', self.options.windowCloseConfirm) !== -1) {
+					if (self.ui.notify.children().length && jQuery.inArray('hasNotifyDialog', self.options.windowCloseConfirm) !== -1) {
 						msg = self.i18n('ntfsmth');
-					} else if (node.find('.'+self.res('class', 'editing')).length && $.inArray('editingFile', self.options.windowCloseConfirm) !== -1) {
+					} else if (node.find('.'+self.res('class', 'editing')).length && jQuery.inArray('editingFile', self.options.windowCloseConfirm) !== -1) {
 						msg = self.i18n('editingFile');
-					} else if ((cnt = Object.keys(self.selected()).length) && $.inArray('hasSelectedItem', self.options.windowCloseConfirm) !== -1) {
+					} else if ((cnt = Object.keys(self.selected()).length) && jQuery.inArray('hasSelectedItem', self.options.windowCloseConfirm) !== -1) {
 						msg = self.i18n('hasSelected', ''+cnt);
-					} else if ((cnt = Object.keys(self.clipboard()).length) && $.inArray('hasClipboardData', self.options.windowCloseConfirm) !== -1) {
+					} else if ((cnt = Object.keys(self.clipboard()).length) && jQuery.inArray('hasClipboardData', self.options.windowCloseConfirm) !== -1) {
 						msg = self.i18n('hasClipboard', ''+cnt);
 					}
 					if (msg) {
@@ -4809,7 +4809,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		});
 
 		// bind window onmessage for CORS
-		$(window).on('message.' + namespace, function(e){
+		jQuery(window).on('message.' + namespace, function(e){
 			var res = e.originalEvent || null,
 				obj, data;
 			if (res && (self.convAbsUrl(self.options.url).indexOf(res.origin) === 0 || self.convAbsUrl(self.uploadURL).indexOf(res.origin) === 0)) {
@@ -4843,20 +4843,20 @@ var elFinder = function(elm, opts, bootCallback) {
 
 		// elFinder enable always
 		if (self.options.enableAlways) {
-			$(window).on('focus.' + namespace, function(e){
+			jQuery(window).on('focus.' + namespace, function(e){
 				(e.target === this) && self.enable();
 			});
 			if (inFrame) {
-				$(window.top).on('focus.' + namespace, function() {
+				jQuery(window.top).on('focus.' + namespace, function() {
 					if (self.enable() && (! parentIframe || parentIframe.is(':visible'))) {
 						requestAnimationFrame(function() {
-							$(window).trigger('focus');
+							jQuery(window).trigger('focus');
 						});
 					}
 				});
 			}
 		} else if (inFrame) {
-			$(window).on('blur.' + namespace, function(e){
+			jQuery(window).on('blur.' + namespace, function(e){
 				enabled && e.target === this && self.disable();
 			});
 		}
@@ -4864,20 +4864,20 @@ var elFinder = function(elm, opts, bootCallback) {
 		// return focus to the window on click (elFInder in the frame)
 		if (inFrame) {
 			node.on('click', function(e) {
-				$(window).trigger('focus');
+				jQuery(window).trigger('focus');
 			});
 		}
 		
 		// elFinder to enable by mouse over
 		if (self.options.enableByMouseOver) {
 			node.on('mouseenter touchstart', function(e) {
-				(inFrame) && $(window).trigger('focus');
+				(inFrame) && jQuery(window).trigger('focus');
 				! self.enabled() && self.enable();
 			});
 		}
 
 		// When the browser tab turn to foreground/background
-		$(window).on('visibilitychange.' + namespace, function(e) {
+		jQuery(window).on('visibilitychange.' + namespace, function(e) {
 			var background = document.hidden || document.webkitHidden || document.msHidden;
 			// AutoSync turn On/Off
 			if (self.options.syncStart) {
@@ -4893,14 +4893,14 @@ var elFinder = function(elm, opts, bootCallback) {
 	dfrdsBeforeBootup.push((function() {
 		var lang   = self.lang,
 			langJs = self.i18nBaseUrl + 'elfinder.' + lang + '.js',
-			dfd    = $.Deferred().done(function() {
+			dfd    = jQuery.Deferred().done(function() {
 				if (self.i18[lang]) {
 					self.lang = lang;
 				}
 				self.trigger('i18load');
 				i18n = self.lang === 'en' 
 					? self.i18['en'] 
-					: $.extend(true, {}, self.i18['en'], self.i18[self.lang]);
+					: jQuery.extend(true, {}, self.i18['en'], self.i18[self.lang]);
 			});
 		
 		if (!self.i18[lang]) {
@@ -4939,7 +4939,7 @@ var elFinder = function(elm, opts, bootCallback) {
 		self.messages = i18n.messages;
 		
 		// check jquery ui
-		if (!($.fn.selectable && $.fn.draggable && $.fn.droppable && $.fn.resizable && $.fn.button && $.fn.slider)) {
+		if (!(jQuery.fn.selectable && jQuery.fn.draggable && jQuery.fn.droppable && jQuery.fn.resizable && jQuery.fn.button && jQuery.fn.slider)) {
 			return alert(self.i18n('errJqui'));
 		}
 		
@@ -5046,7 +5046,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				scroll     : false,
 				start      : function(e, ui) {
 					var helper   = ui.helper,
-						targets  = $.grep(helper.data('files')||[], function(h) {
+						targets  = jQuery.grep(helper.data('files')||[], function(h) {
 							if (h) {
 								remember[h] = true;
 								return true;
@@ -5115,12 +5115,12 @@ var elFinder = function(elm, opts, bootCallback) {
 							helper.data('refreshPositions', 1).data('autoScr', null);
 						}
 					}
-					if (helper.data('refreshPositions') && $(this).elfUiWidgetInstance('draggable')) {
+					if (helper.data('refreshPositions') && jQuery(this).elfUiWidgetInstance('draggable')) {
 						if (helper.data('refreshPositions') > 0) {
-							$(this).draggable('option', { refreshPositions : true, elfRefresh : true });
+							jQuery(this).draggable('option', { refreshPositions : true, elfRefresh : true });
 							helper.data('refreshPositions', -1);
 						} else {
-							$(this).draggable('option', { refreshPositions : false, elfRefresh : false });
+							jQuery(this).draggable('option', { refreshPositions : false, elfRefresh : false });
 							helper.data('refreshPositions', null);
 						}
 					}
@@ -5129,12 +5129,12 @@ var elFinder = function(elm, opts, bootCallback) {
 					var helper = ui.helper,
 						files;
 					
-					$(document).off(keyEvt);
-					$(this).elfUiWidgetInstance('draggable') && $(this).draggable('option', { refreshPositions : false });
+					jQuery(document).off(keyEvt);
+					jQuery(this).elfUiWidgetInstance('draggable') && jQuery(this).draggable('option', { refreshPositions : false });
 					self.draggingUiHelper = null;
 					self.trigger('focus').trigger('dragstop');
 					if (! helper.data('droped')) {
-						files = $.grep(helper.data('files')||[], function(h) { return h? true : false ;});
+						files = jQuery.grep(helper.data('files')||[], function(h) { return h? true : false ;});
 						self.trigger('unlockfiles', {files : files});
 						self.trigger('selectfiles', {files : self.selected()});
 					}
@@ -5146,15 +5146,15 @@ var elFinder = function(elm, opts, bootCallback) {
 					helper.data('autoScrTm') && clearInterval(helper.data('autoScrTm'));
 				},
 				helper     : function(e, ui) {
-					var element = this.id ? $(this) : $(this).parents('[id]:first'),
-						helper  = $('<div class="elfinder-drag-helper"><span class="elfinder-drag-helper-icon-status"></span></div>'),
+					var element = this.id ? jQuery(this) : jQuery(this).parents('[id]:first'),
+						helper  = jQuery('<div class="elfinder-drag-helper"><span class="elfinder-drag-helper-icon-status"></span></div>'),
 						icon    = function(f) {
 							var mime = f.mime, i, tmb = self.tmb(f);
 							i = '<div class="elfinder-cwd-icon elfinder-cwd-icon-drag '+self.mime2class(mime)+' ui-corner-all"></div>';
 							if (tmb) {
-								i = $(i).addClass(tmb.className).css('background-image', "url('"+tmb.url+"')").get(0).outerHTML;
+								i = jQuery(i).addClass(tmb.className).css('background-image', "url('"+tmb.url+"')").get(0).outerHTML;
 							} else if (f.icon) {
-								i = $(i).css(self.getIconStyle(f, true)).get(0).outerHTML;
+								i = jQuery(i).css(self.getIconStyle(f, true)).get(0).outerHTML;
 							}
 							if (f.csscls) {
 								i = '<div class="'+f.csscls+'">' + i + '</div>';
@@ -5177,7 +5177,7 @@ var elFinder = function(elm, opts, bootCallback) {
 						helper.append(icon(files[hashes[l-1]]) + '<span class="elfinder-drag-num">'+l+'</span>');
 					}
 					
-					$(document).on(keyEvt, function(e){
+					jQuery(document).on(keyEvt, function(e){
 						var chk = (e.shiftKey||e.ctrlKey||e.metaKey);
 						if (ctr !== chk) {
 							ctr = chk;
@@ -5218,13 +5218,13 @@ var elFinder = function(elm, opts, bootCallback) {
 		}
 
 		// load commands
-		$.each(self.commands, function(name, cmd) {
+		jQuery.each(self.commands, function(name, cmd) {
 			var proto = Object.assign({}, cmd.prototype),
 				extendsCmd, opts;
-			if ($.isFunction(cmd) && !self._commands[name] && (cmd.prototype.forceLoad || $.inArray(name, self.options.commands) !== -1)) {
+			if (jQuery.isFunction(cmd) && !self._commands[name] && (cmd.prototype.forceLoad || jQuery.inArray(name, self.options.commands) !== -1)) {
 				extendsCmd = cmd.prototype.extendsCmd || '';
 				if (extendsCmd) {
-					if ($.isFunction(self.commands[extendsCmd])) {
+					if (jQuery.isFunction(self.commands[extendsCmd])) {
 						cmd.prototype = Object.assign({}, base, new self.commands[extendsCmd](), cmd.prototype);
 					} else {
 						return true;
@@ -5236,14 +5236,14 @@ var elFinder = function(elm, opts, bootCallback) {
 				cmd.prototype = proto;
 				opts = self.options.commandsOptions[name] || {};
 				if (extendsCmd && self.options.commandsOptions[extendsCmd]) {
-					opts = $.extend(true, {}, self.options.commandsOptions[extendsCmd], opts);
+					opts = jQuery.extend(true, {}, self.options.commandsOptions[extendsCmd], opts);
 				}
 				self._commands[name].setup(name, opts);
 				// setup linked commands
 				if (self._commands[name].linkedCmds.length) {
-					$.each(self._commands[name].linkedCmds, function(i, n) {
+					jQuery.each(self._commands[name].linkedCmds, function(i, n) {
 						var lcmd = self.commands[n];
-						if ($.isFunction(lcmd) && !self._commands[n]) {
+						if (jQuery.isFunction(lcmd) && !self._commands[n]) {
 							lcmd.prototype = base;
 							self._commands[n] = new lcmd();
 							self._commands[n].setup(n, self.options.commandsOptions[n]||{});
@@ -5260,20 +5260,20 @@ var elFinder = function(elm, opts, bootCallback) {
 		 **/
 		self.ui = {
 			// container for nav panel and current folder container
-			workzone : $('<div></div>').appendTo(node).elfinderworkzone(self),
+			workzone : jQuery('<div></div>').appendTo(node).elfinderworkzone(self),
 			// contaainer for folders tree / places
-			navbar : $('<div></div>').appendTo(node).elfindernavbar(self, self.options.uiOptions.navbar || {}),
+			navbar : jQuery('<div></div>').appendTo(node).elfindernavbar(self, self.options.uiOptions.navbar || {}),
 			// container for for preview etc at below the navbar
-			navdock : $('<div></div>').appendTo(node).elfindernavdock(self, self.options.uiOptions.navdock || {}),
+			navdock : jQuery('<div></div>').appendTo(node).elfindernavdock(self, self.options.uiOptions.navdock || {}),
 			// contextmenu
-			contextmenu : $('<div></div>').appendTo(node).elfindercontextmenu(self),
+			contextmenu : jQuery('<div></div>').appendTo(node).elfindercontextmenu(self),
 			// overlay
-			overlay : $('<div></div>').appendTo(node).elfinderoverlay({
+			overlay : jQuery('<div></div>').appendTo(node).elfinderoverlay({
 				show : function() { self.disable(); },
 				hide : function() { prevEnabled && self.enable(); }
 			}),
 			// current folder container
-			cwd : $('<div></div>').appendTo(node).elfindercwd(self, self.options.uiOptions.cwd || {}),
+			cwd : jQuery('<div></div>').appendTo(node).elfindercwd(self, self.options.uiOptions.cwd || {}),
 			// notification dialog window
 			notify : self.dialog('', {
 				cssClass      : 'elfinder-dialog-notify' + (self.options.notifyDialog.canClose? '' : ' elfinder-titlebar-button-hide'),
@@ -5288,22 +5288,22 @@ var elFinder = function(elm, opts, bootCallback) {
 				minHeight     : null,
 				minimize      : function() { self.ui.notify.trigger('minimize'); }
 			}),
-			statusbar : $('<div class="ui-widget-header ui-helper-clearfix ui-corner-bottom elfinder-statusbar"></div>').hide().appendTo(node),
-			toast : $('<div class="elfinder-toast"></div>').appendTo(node),
-			bottomtray : $('<div class="elfinder-bottomtray">').appendTo(node),
-			progressbar : $('<div class="elfinder-ui-progressbar">').appendTo(node)
+			statusbar : jQuery('<div class="ui-widget-header ui-helper-clearfix ui-corner-bottom elfinder-statusbar"></div>').hide().appendTo(node),
+			toast : jQuery('<div class="elfinder-toast"></div>').appendTo(node),
+			bottomtray : jQuery('<div class="elfinder-bottomtray">').appendTo(node),
+			progressbar : jQuery('<div class="elfinder-ui-progressbar">').appendTo(node)
 		};
 
 		self.trigger('uiready');
 
 		// load required ui
-		$.each(self.options.ui || [], function(i, ui) {
+		jQuery.each(self.options.ui || [], function(i, ui) {
 			var name = 'elfinder'+ui,
 				opts = self.options.uiOptions[ui] || {};
 	
-			if (!self.ui[ui] && $.fn[name]) {
+			if (!self.ui[ui] && jQuery.fn[name]) {
 				// regist to self.ui before make instance
-				self.ui[ui] = $('<'+(opts.tag || 'div')+'/>').appendTo(node);
+				self.ui[ui] = jQuery('<'+(opts.tag || 'div')+'/>').appendTo(node);
 				self.ui[ui][name](self, opts);
 			}
 		});
@@ -5469,7 +5469,7 @@ var elFinder = function(elm, opts, bootCallback) {
 			// add event listener for HTML5 DnD upload
 			(function() {
 				var isin = function(e) {
-					return (e.target.nodeName !== 'TEXTAREA' && e.target.nodeName !== 'INPUT' && $(e.target).closest('div.ui-dialog-content').length === 0);
+					return (e.target.nodeName !== 'TEXTAREA' && e.target.nodeName !== 'INPUT' && jQuery(e.target).closest('div.ui-dialog-content').length === 0);
 				},
 				ent       = 'native-drag-enter',
 				disable   = 'native-drag-disable',
@@ -5547,7 +5547,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				
 				node.on('dragenter', '.native-droppable', function(e){
 					if (e.originalEvent.dataTransfer) {
-						var $elm = $(e.currentTarget),
+						var $elm = jQuery(e.currentTarget),
 							id   = e.currentTarget.id || null,
 							cwd  = null,
 							elfFrom;
@@ -5555,7 +5555,7 @@ var elFinder = function(elm, opts, bootCallback) {
 							cwd = self.cwd();
 							$elm.data(disable, false);
 							try {
-								$.each(e.originalEvent.dataTransfer.types, function(i, v){
+								jQuery.each(e.originalEvent.dataTransfer.types, function(i, v){
 									if (v.substr(0, 13) === 'elfinderfrom:') {
 										elfFrom = v.substr(13).toLowerCase();
 									}
@@ -5574,7 +5574,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				})
 				.on('dragleave', '.native-droppable', function(e){
 					if (e.originalEvent.dataTransfer) {
-						var $elm = $(e.currentTarget);
+						var $elm = jQuery(e.currentTarget);
 						e.preventDefault();
 						e.stopPropagation();
 						if ($elm.data(ent)) {
@@ -5586,7 +5586,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				})
 				.on('dragover', '.native-droppable', function(e){
 					if (e.originalEvent.dataTransfer) {
-						var $elm = $(e.currentTarget);
+						var $elm = jQuery(e.currentTarget);
 						e.preventDefault();
 						e.stopPropagation();
 						e.originalEvent.dataTransfer.dropEffect = $elm.data(disable)? 'none' : 'copy';
@@ -5595,7 +5595,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				})
 				.on('drop', '.native-droppable', function(e){
 					if (e.originalEvent && e.originalEvent.dataTransfer) {
-						var $elm = $(e.currentTarget),
+						var $elm = jQuery(e.currentTarget),
 							id;
 						e.preventDefault();
 						e.stopPropagation();
@@ -5633,7 +5633,7 @@ var elFinder = function(elm, opts, bootCallback) {
 				self.trigger('fail').disable().lastDir('');
 				listeners = {};
 				shortcuts = {};
-				$(document).add(node).off('.'+namespace);
+				jQuery(document).add(node).off('.'+namespace);
 				self.trigger = function() { };
 			})
 			.done(function(data) {
@@ -5667,11 +5667,11 @@ var elFinder = function(elm, opts, bootCallback) {
 				self.trigger('opendone');
 				
 				if (inFrame && self.options.enableAlways) {
-					$(window).trigger('focus');
+					jQuery(window).trigger('focus');
 				}
 				
 				// check self.trashes
-				$.each(self.trashes, function(th) {
+				jQuery.each(self.trashes, function(th) {
 					var dir = self.file(th),
 						src;
 					if (! dir) {
@@ -5686,14 +5686,14 @@ var elFinder = function(elm, opts, bootCallback) {
 						preventDefault : true
 					}).done(function(data) {
 						if (data && data.files) {
-							$.each(data.files, function(i, dir) {
+							jQuery.each(data.files, function(i, dir) {
 								if (dir.mime === 'directory' && dir.write) {
 									delete toChkTh[dir.hash];
 								}
 							});
 						}
 					}).always(function() {
-						$.each(toChkTh, trashDisable);
+						jQuery.each(toChkTh, trashDisable);
 					});
 				}
 				// to enable / disable
@@ -5711,7 +5711,7 @@ var elFinder = function(elm, opts, bootCallback) {
 	}
 	
 	// call dfrdsBeforeBootup functions then boot up elFinder
-	$.when.apply(null, dfrdsBeforeBootup).done(function() {
+	jQuery.when.apply(null, dfrdsBeforeBootup).done(function() {
 		bootUp();
 	}).fail(function(error) {
 		self.error(error);
@@ -6012,11 +6012,11 @@ elFinder.prototype = {
 			}
 			return true;
 		},
-		open    : function(data) { return data && data.cwd && data.files && $.isPlainObject(data.cwd) && Array.isArray(data.files); },
+		open    : function(data) { return data && data.cwd && data.files && jQuery.isPlainObject(data.cwd) && Array.isArray(data.files); },
 		tree    : function(data) { return data && data.tree && Array.isArray(data.tree); },
 		parents : function(data) { return data && data.tree && Array.isArray(data.tree); },
-		tmb     : function(data) { return data && data.images && ($.isPlainObject(data.images) || Array.isArray(data.images)); },
-		upload  : function(data) { return data && ($.isPlainObject(data.added) || Array.isArray(data.added));},
+		tmb     : function(data) { return data && data.images && (jQuery.isPlainObject(data.images) || Array.isArray(data.images)); },
+		upload  : function(data) { return data && (jQuery.isPlainObject(data.added) || Array.isArray(data.added));},
 		search  : function(data) { return data && data.files && Array.isArray(data.files); }
 	},
 	
@@ -6038,7 +6038,7 @@ elFinder.prototype = {
 		var self = this,
 			data;
 		
-		if (!$.trim(text)) {
+		if (!jQuery.trim(text)) {
 			return {error : ['errResponse', 'errDataEmpty']};
 		}
 		
@@ -6052,7 +6052,7 @@ elFinder.prototype = {
 		if (!self.validResponse('upload', data)) {
 			return {error : (data.norError || ['errResponse'])};
 		}
-		data.removed = $.merge((data.removed || []), $.map(data.added || [], function(f) { return self.file(f.hash)? f.hash : null; }));
+		data.removed = jQuery.merge((data.removed || []), jQuery.map(data.added || [], function(f) { return self.file(f.hash)? f.hash : null; }));
 		return data;
 		
 	},
@@ -6071,7 +6071,7 @@ elFinder.prototype = {
 		
 		// check file/dir exists
 		checkExists: function(files, target, fm, isDir) {
-			var dfrd = $.Deferred(),
+			var dfrd = jQuery.Deferred(),
 				names, renames = [], hashes = {}, chkFiles = [],
 				cancel = function() {
 					var i = files.length;
@@ -6170,10 +6170,10 @@ elFinder.prototype = {
 						return;
 					}
 					
-					names = $.map(files, function(file, i) { return file.name && (!fm.UA.iOS || file.name !== 'image.jpg')? {i: i, name: file.name} : null ;});
+					names = jQuery.map(files, function(file, i) { return file.name && (!fm.UA.iOS || file.name !== 'image.jpg')? {i: i, name: file.name} : null ;});
 					
 					fm.request({
-						data : {cmd : 'ls', target : target, intersect : $.map(names, function(item) { return item.name;})},
+						data : {cmd : 'ls', target : target, intersect : jQuery.map(names, function(item) { return item.name;})},
 						notify : {type : 'preupload', cnt : 1, hideCnt : true},
 						preventDefault : true
 					})
@@ -6189,7 +6189,7 @@ elFinder.prototype = {
 											existed = data.list || [];
 										} else {
 											existedArr = [];
-											existed = $.map(data.list, function(n) {
+											existed = jQuery.map(data.list, function(n) {
 												if (typeof n === 'string') {
 													return n;
 												} else {
@@ -6203,13 +6203,13 @@ elFinder.prototype = {
 											}
 											hashes = data.list;
 										}
-										exists = $.grep(names, function(name){
-											return $.inArray(name.name, existed) !== -1 ? true : false ;
+										exists = jQuery.grep(names, function(name){
+											return jQuery.inArray(name.name, existed) !== -1 ? true : false ;
 										});
 										if (exists.length && existed.length && target == fm.cwd().hash) {
-											cwdItems = $.map(fm.files(target), function(file) { return file.name; } );
-											if ($.grep(existed, function(n) { 
-												return $.inArray(n, cwdItems) === -1? true : false;
+											cwdItems = jQuery.map(fm.files(target), function(file) { return file.name; } );
+											if (jQuery.grep(existed, function(n) { 
+												return jQuery.inArray(n, cwdItems) === -1? true : false;
 											}).length){
 												fm.sync();
 											}
@@ -6243,8 +6243,8 @@ elFinder.prototype = {
 			if (!!data.checked || data.type == 'files') {
 				return data.files;
 			} else if (data.type == 'data') {
-				var dfrd = $.Deferred(),
-				scanDfd = $.Deferred(),
+				var dfrd = jQuery.Deferred(),
+				scanDfd = jQuery.Deferred(),
 				files = [],
 				paths = [],
 				dirctorys = [],
@@ -6317,10 +6317,10 @@ elFinder.prototype = {
 					return scanDfd;
 				}, hasDirs;
 				
-				items = $.map(data.files.items, function(item){
+				items = jQuery.map(data.files.items, function(item){
 					return item.getAsEntry? item.getAsEntry() : item.webkitGetAsEntry();
 				});
-				$.each(items, function(i, item) {
+				jQuery.each(items, function(i, item) {
 					if (item.isDirectory) {
 						hasDirs = true;
 						return false;
@@ -6334,14 +6334,14 @@ elFinder.prototype = {
 								data.overwrite = 0;
 								renames = [];
 							}
-							items = $.grep(items, function(item){
+							items = jQuery.grep(items, function(item){
 								var i, bak, hash, dfd, hi;
 								if (item.isDirectory && renames.length) {
-									i = $.inArray(item.name, renames);
+									i = jQuery.inArray(item.name, renames);
 									if (i !== -1) {
 										renames.splice(i, 1);
 										bak = fm.uniqueName(item.name + fm.options.backupSuffix , null, '');
-										$.each(hashes, function(h, name) {
+										jQuery.each(hashes, function(h, name) {
 											if (item.name == name) {
 												hash = h;
 												return false;
@@ -6368,7 +6368,7 @@ elFinder.prototype = {
 								return !item._remove? true : false;
 							});
 						}
-						$.when.apply($, dfds).done(function(){
+						jQuery.when.apply($, dfds).done(function(){
 							var notifyto, msg,
 								id = +new Date();
 							
@@ -6414,11 +6414,11 @@ elFinder.prototype = {
 				var check = [];
 				var str = data.files[0];
 				if (data.type == 'html') {
-					var tmp = $("<html></html>").append($.parseHTML(str.replace(/ src=/ig, ' _elfsrc='))),
+					var tmp = jQuery("<html></html>").append(jQuery.parseHTML(str.replace(/ src=/ig, ' _elfsrc='))),
 						atag;
-					$('img[_elfsrc]', tmp).each(function(){
+					jQuery('img[_elfsrc]', tmp).each(function(){
 						var url, purl,
-						self = $(this),
+						self = jQuery(this),
 						pa = self.closest('a');
 						if (pa && pa.attr('href') && pa.attr('href').match(/\.(?:jpe?g|gif|bmp|png)/i)) {
 							purl = pa.attr('href');
@@ -6426,10 +6426,10 @@ elFinder.prototype = {
 						url = self.attr('_elfsrc');
 						if (url) {
 							if (purl) {
-								$.inArray(purl, ret) == -1 && ret.push(purl);
-								$.inArray(url, check) == -1 &&  check.push(url);
+								jQuery.inArray(purl, ret) == -1 && ret.push(purl);
+								jQuery.inArray(url, check) == -1 &&  check.push(url);
 							} else {
-								$.inArray(url, ret) == -1 && ret.push(url);
+								jQuery.inArray(url, ret) == -1 && ret.push(url);
 							}
 						}
 						// Probably it's clipboard data
@@ -6437,7 +6437,7 @@ elFinder.prototype = {
 							data.clipdata = true;
 						}
 					});
-					atag = $('a[href]', tmp);
+					atag = jQuery('a[href]', tmp);
 					atag.each(function(){
 						var text, loc,
 							parseUrl = function(url) {
@@ -6445,10 +6445,10 @@ elFinder.prototype = {
 								a.href = url;
 								return a;
 							};
-						if (text = $(this).text()) {
-							loc = parseUrl($(this).attr('href'));
-							if (loc.href && loc.href.match(/^(?:ht|f)tp/i) && (atag.length === 1 || ! loc.pathname.match(/(?:\.html?|\/[^\/.]*)$/i) || $.trim(text).match(/\.[a-z0-9-]{1,10}$/i))) {
-								if ($.inArray(loc.href, ret) == -1 && $.inArray(loc.href, check) == -1) ret.push(loc.href);
+						if (text = jQuery(this).text()) {
+							loc = parseUrl(jQuery(this).attr('href'));
+							if (loc.href && loc.href.match(/^(?:ht|f)tp/i) && (atag.length === 1 || ! loc.pathname.match(/(?:\.html?|\/[^\/.]*)$/i) || jQuery.trim(text).match(/\.[a-z0-9-]{1,10}$/i))) {
+								if (jQuery.inArray(loc.href, ret) == -1 && jQuery.inArray(loc.href, check) == -1) ret.push(loc.href);
 							}
 						}
 					});
@@ -6457,7 +6457,7 @@ elFinder.prototype = {
 					regex = /((?:ht|f)tps?:\/\/[-_.!~*\'()a-z0-9;/?:\@&=+\$,%#\*\[\]]+)/ig;
 					while (m = regex.exec(str)) {
 						url = m[1].replace(/&amp;/g, '&');
-						if ($.inArray(url, ret) == -1) ret.push(url);
+						if (jQuery.inArray(url, ret) == -1) ret.push(url);
 					}
 				}
 				return ret;
@@ -6483,7 +6483,7 @@ elFinder.prototype = {
 				retryMax    = 30, // 10 sec * 30 = 300 secs (Max 5 mins)
 				retry       = 0,
 				getFile     = function(files) {
-					var dfd = $.Deferred(),
+					var dfd = jQuery.Deferred(),
 						file;
 					if (files.promise) {
 						files.always(function(f) {
@@ -6494,7 +6494,7 @@ elFinder.prototype = {
 					}
 					return dfd;
 				},
-				dfrd   = $.Deferred()
+				dfrd   = jQuery.Deferred()
 					.fail(function(err) {
 						var error = self.parseError(err),
 							userAbort;
@@ -6558,7 +6558,7 @@ elFinder.prototype = {
 							self.trigger('upload', data, false);
 							self.trigger('uploaddone');
 							if (data.toasts && Array.isArray(data.toasts)) {
-								$.each(data.toasts, function() {
+								jQuery.each(data.toasts, function() {
 									this.msg && self.toast(this);
 								});
 							}
@@ -6573,7 +6573,7 @@ elFinder.prototype = {
 						self.abortXHR(xhr);
 						// unregist fnAbort function
 						node.off('uploadabort', fnAbort);
-						$(window).off('unload', fnAbort);
+						jQuery(window).off('unload', fnAbort);
 						notifyto && clearTimeout(notifyto);
 						notifyto1 && clearTimeout(notifyto1);
 						notifyto2 && clearTimeout(notifyto2);
@@ -6696,11 +6696,11 @@ elFinder.prototype = {
 				renames = (data.renames || null),
 				hashes = (data.hashes || null),
 				chunkMerge = false,
-				ntfUpload = $();
+				ntfUpload = jQuery();
 			
 			// regist fnAbort function
 			node.one('uploadabort', fnAbort);
-			$(window).one('unload.' + fm.namespace, fnAbort);
+			jQuery(window).one('unload.' + fm.namespace, fnAbort);
 			
 			!chunkMerge && (prev = loaded);
 			
@@ -6715,9 +6715,9 @@ elFinder.prototype = {
 					} else {
 						// ff bug while send zero sized file
 						// for safari - send directory
-						if (!isDataType && data.files && $.grep(data.files, function(f){return ! f.type && f.size === (self.UA.Safari? 1802 : 0)? true : false;}).length) {
+						if (!isDataType && data.files && jQuery.grep(data.files, function(f){return ! f.type && f.size === (self.UA.Safari? 1802 : 0)? true : false;}).length) {
 							dfrd.reject(['errAbort', 'errFolderUpload']);
-						} else if (data.input && $.grep(data.input.files, function(f){return ! f.type && f.size === (self.UA.Safari? 1802 : 0)? true : false;}).length) {
+						} else if (data.input && jQuery.grep(data.input.files, function(f){return ! f.type && f.size === (self.UA.Safari? 1802 : 0)? true : false;}).length) {
 							dfrd.reject(['errUploadNoFiles']);
 						} else {
 							doRetry();
@@ -6923,7 +6923,7 @@ elFinder.prototype = {
 									}
 								})
 								.always(function(e) {
-									if (e && e.added) added = $.merge(added, e.added);
+									if (e && e.added) added = jQuery.merge(added, e.added);
 									if (last <= ++done) {
 										fm.trigger('multiupload', {added: added});
 										notifyto && clearTimeout(notifyto);
@@ -7133,14 +7133,14 @@ elFinder.prototype = {
 				
 				// set request headers
 				if (fm.customHeaders) {
-					$.each(fm.customHeaders, function(key) {
+					jQuery.each(fm.customHeaders, function(key) {
 						xhr.setRequestHeader(key, this);
 					});
 				}
 				
 				// set xhrFields
 				if (fm.xhrFields) {
-					$.each(fm.xhrFields, function(key) {
+					jQuery.each(fm.xhrFields, function(key) {
 						if (key in xhr) {
 							xhr[key] = this;
 						}
@@ -7156,24 +7156,24 @@ elFinder.prototype = {
 				formData.append('cmd', 'upload');
 				formData.append(self.newAPI ? 'target' : 'current', target);
 				if (renames && renames.length) {
-					$.each(renames, function(i, v) {
+					jQuery.each(renames, function(i, v) {
 						formData.append('renames[]', v);
 					});
 					formData.append('suffix', fm.options.backupSuffix);
 				}
 				if (hashes) {
-					$.each(hashes, function(i, v) {
+					jQuery.each(hashes, function(i, v) {
 						formData.append('hashes['+ i +']', v);
 					});
 				}
-				$.each(self.customData, function(key, val) {
+				jQuery.each(self.customData, function(key, val) {
 					formData.append(key, val);
 				});
-				$.each(self.options.onlyMimes, function(i, mime) {
+				jQuery.each(self.options.onlyMimes, function(i, mime) {
 					formData.append('mimes[]', mime);
 				});
 				
-				$.each(files, function(i, file) {
+				jQuery.each(files, function(i, file) {
 					var name, relpath;
 					if (file._chunkmerged) {
 						formData.append('chunk', file._chunkmerged);
@@ -7222,7 +7222,7 @@ elFinder.prototype = {
 				});
 				
 				if (isDataType) {
-					$.each(paths, function(i, path) {
+					jQuery.each(paths, function(i, path) {
 						formData.append('upload_path[]', path);
 					});
 				}
@@ -7242,7 +7242,7 @@ elFinder.prototype = {
 				
 				// set extraData on current request
 				if (extraData) {
-					$.each(extraData, function(key, val) {
+					jQuery.each(extraData, function(key, val) {
 						formData.append(key, val);
 					});
 				}
@@ -7258,7 +7258,7 @@ elFinder.prototype = {
 						var mkdirs = [],
 							paths = [],
 							excludes = fm.options.folderUploadExclude[fm.OS] || null;
-						$.each(files, function(i, file) {
+						jQuery.each(files, function(i, file) {
 							var relPath = file.webkitRelativePath || file.relativePath || '',
 								idx, rootDir;
 							if (! relPath) {
@@ -7270,11 +7270,11 @@ elFinder.prototype = {
 							} else {
 								// add '/' as prefix to make same to folder uploading with DnD, see #2607
 								relPath = '/' + relPath.replace(/\/[^\/]*$/, '').replace(/^\//, '');
-								if (relPath && $.inArray(relPath, mkdirs) === -1) {
+								if (relPath && jQuery.inArray(relPath, mkdirs) === -1) {
 									mkdirs.push(relPath);
 									// checking the root directory to supports <input type="file" webkitdirectory> see #2378
 									idx = relPath.substr(1).indexOf('/');
-									if (idx !== -1 && (rootDir = relPath.substr(0, idx + 1)) && $.inArray(rootDir, mkdirs) === -1) {
+									if (idx !== -1 && (rootDir = relPath.substr(0, idx + 1)) && jQuery.inArray(rootDir, mkdirs) === -1) {
 										mkdirs.unshift(rootDir);
 									}
 								}
@@ -7285,32 +7285,32 @@ elFinder.prototype = {
 						hashes = {};
 						if (mkdirs.length) {
 							(function() {
-								var checkDirs = $.map(mkdirs, function(name) { return name.substr(1).indexOf('/') === -1 ? {name: name.substr(1)} : null;}),
+								var checkDirs = jQuery.map(mkdirs, function(name) { return name.substr(1).indexOf('/') === -1 ? {name: name.substr(1)} : null;}),
 									cancelDirs = [];
 								fm.uploads.checkExists(checkDirs, target, fm, true).done(
 									function(res, res2) {
 										var dfds = [], dfd, bak, hash;
 										if (fm.options.overwriteUploadConfirm && fm.option('uploadOverwrite', target)) {
-											cancelDirs = $.map(checkDirs, function(dir) { return dir._remove? dir.name : null ;} );
-											checkDirs = $.grep(checkDirs, function(dir) { return !dir._remove? true : false ;} );
+											cancelDirs = jQuery.map(checkDirs, function(dir) { return dir._remove? dir.name : null ;} );
+											checkDirs = jQuery.grep(checkDirs, function(dir) { return !dir._remove? true : false ;} );
 										}
 										if (cancelDirs.length) {
-											$.each(paths.concat(), function(i, path) {
-												if ($.inArray(path, cancelDirs) === 0) {
+											jQuery.each(paths.concat(), function(i, path) {
+												if (jQuery.inArray(path, cancelDirs) === 0) {
 													files[i]._remove = true;
 													paths[i] = void(0);
 												}
 											});
 										}
-										files = $.grep(files, function(file) { return file._remove? false : true; });
-										paths = $.grep(paths, function(path) { return path === void 0 ? false : true; });
+										files = jQuery.grep(files, function(file) { return file._remove? false : true; });
+										paths = jQuery.grep(paths, function(path) { return path === void 0 ? false : true; });
 										if (checkDirs.length) {
-											dfd = $.Deferred();
+											dfd = jQuery.Deferred();
 											if (res.length) {
-												$.each(res, function(i, existName) {
+												jQuery.each(res, function(i, existName) {
 													// backup
 													bak = fm.uniqueName(existName + fm.options.backupSuffix , null, '');
-													$.each(res2, function(h, name) {
+													jQuery.each(res2, function(h, name) {
 														if (res[0] == name) {
 															hash = h;
 															return false;
@@ -7338,7 +7338,7 @@ elFinder.prototype = {
 												dfds.push(null);
 											}
 											
-											$.when.apply($, dfds).done(function() {
+											jQuery.when.apply($, dfds).done(function() {
 												// ensure directories
 												fm.request({
 													data   : {cmd : 'mkdir', target : target, dirs : mkdirs},
@@ -7359,7 +7359,7 @@ elFinder.prototype = {
 													if (!data.hashes) {
 														data.hashes = {};
 													}
-													paths = $.map(paths.concat(), function(p, i) {
+													paths = jQuery.map(paths.concat(), function(p, i) {
 														if (p === '/') {
 															return target;
 														} else {
@@ -7373,7 +7373,7 @@ elFinder.prototype = {
 														}
 													});
 													if (rm) {
-														files = $.grep(files, function(file) { return file._remove? false : true; });
+														files = jQuery.grep(files, function(file) { return file._remove? false : true; });
 													}
 												})
 												.always(function(data) {
@@ -7401,7 +7401,7 @@ elFinder.prototype = {
 										} else {
 											renames = res;
 										}
-										files = $.grep(files, function(file){return !file._remove? true : false ;});
+										files = jQuery.grep(files, function(file){return !file._remove? true : false ;});
 									}
 									cnt = files.length;
 									if (cnt > 0) {
@@ -7451,7 +7451,7 @@ elFinder.prototype = {
 									if (!data.hashes) {
 										data.hashes = {};
 									}
-									result[1] = $.map(result[1], function(p, i) {
+									result[1] = jQuery.map(result[1], function(p, i) {
 										result[0][i]._relativePath = p.replace(/^\//, '');
 										p = p.replace(/\/[^\/]*$/, '');
 										if (p === '') {
@@ -7467,7 +7467,7 @@ elFinder.prototype = {
 										}
 									});
 									if (rm) {
-										result[0] = $.grep(result[0], function(file) { return file._remove? false : true; });
+										result[0] = jQuery.grep(result[0], function(file) { return file._remove? false : true; });
 									}
 								})
 								.always(function(data) {
@@ -7479,7 +7479,7 @@ elFinder.prototype = {
 								});
 								return;
 							} else {
-								result[1] = $.map(result[1], function() { return target; });
+								result[1] = jQuery.map(result[1], function() { return target; });
 							}
 							renames = result[2];
 							hashes = result[3];
@@ -7501,12 +7501,12 @@ elFinder.prototype = {
 			var self   = fm ? fm : this,
 				input  = data.input? data.input : false,
 				files  = !input ? self.uploads.checkFile(data, self) : false,
-				dfrd   = $.Deferred()
+				dfrd   = jQuery.Deferred()
 					.fail(function(error) {
 						error && self.error(error);
 					}),
 				name = 'iframe-'+fm.namespace+(++self.iframeCnt),
-				form = $('<form action="'+self.uploadURL+'" method="post" enctype="multipart/form-data" encoding="multipart/form-data" target="'+name+'" style="display:none"><input type="hidden" name="cmd" value="upload" /></form>'),
+				form = jQuery('<form action="'+self.uploadURL+'" method="post" enctype="multipart/form-data" encoding="multipart/form-data" target="'+name+'" style="display:none"><input type="hidden" name="cmd" value="upload" /></form>'),
 				msie = this.UA.IE,
 				// clear timeouts, close notification dialog, remove form/iframe
 				onload = function() {
@@ -7515,12 +7515,12 @@ elFinder.prototype = {
 					notify   && self.notify({type : 'upload', cnt : -cnt});
 					
 					setTimeout(function() {
-						msie && $('<iframe src="javascript:false;"></iframe>').appendTo(form);
+						msie && jQuery('<iframe src="javascript:false;"></iframe>').appendTo(form);
 						form.remove();
 						iframe.remove();
 					}, 100);
 				},
-				iframe = $('<iframe src="'+(msie ? 'javascript:false;' : 'about:blank')+'" name="'+name+'" style="position:absolute;left:-1000px;top:-1000px" ></iframe>')
+				iframe = jQuery('<iframe src="'+(msie ? 'javascript:false;' : 'about:blank')+'" name="'+name+'" style="position:absolute;left:-1000px;top:-1000px" ></iframe>')
 					.on('load', function() {
 						iframe.off('load')
 							.on('load', function() {
@@ -7553,14 +7553,14 @@ elFinder.prototype = {
 				cnt, notify, notifyto, abortto;
 
 			if (files && files.length) {
-				$.each(files, function(i, val) {
+				jQuery.each(files, function(i, val) {
 					form.append('<input type="hidden" name="upload[]" value="'+val+'"/>');
 				});
 				cnt = 1;
-			} else if (input && $(input).is(':file') && $(input).val()) {
+			} else if (input && jQuery(input).is(':file') && jQuery(input).val()) {
 				if (fm.options.overwriteUploadConfirm && fm.option('uploadOverwrite', target)) {
-					names = input.files? input.files : [{ name: $(input).val().replace(/^(?:.+[\\\/])?([^\\\/]+)$/, '$1') }];
-					//names = $.map(names, function(file){return file.name? { name: file.name } : null ;});
+					names = input.files? input.files : [{ name: jQuery(input).val().replace(/^(?:.+[\\\/])?([^\\\/]+)$/, '$1') }];
+					//names = jQuery.map(names, function(file){return file.name? { name: file.name } : null ;});
 					dfds.push(self.uploads.checkExists(names, target, self).done(
 						function(res, res2){
 							hashes = res2;
@@ -7568,7 +7568,7 @@ elFinder.prototype = {
 								data.overwrite = 0;
 							} else{
 								renames = res;
-								cnt = $.grep(names, function(file){return !file._remove? true : false ;}).length;
+								cnt = jQuery.grep(names, function(file){return !file._remove? true : false ;}).length;
 								if (cnt != names.length) {
 									cnt = 0;
 								}
@@ -7582,23 +7582,23 @@ elFinder.prototype = {
 				return dfrd.reject();
 			}
 			
-			$.when.apply($, dfds).done(function() {
+			jQuery.when.apply($, dfds).done(function() {
 				if (cnt < 1) {
 					return dfrd.reject();
 				}
 				form.append('<input type="hidden" name="'+(self.newAPI ? 'target' : 'current')+'" value="'+target+'"/>')
 					.append('<input type="hidden" name="html" value="1"/>')
 					.append('<input type="hidden" name="node" value="'+self.id+'"/>')
-					.append($(input).attr('name', 'upload[]'));
+					.append(jQuery(input).attr('name', 'upload[]'));
 				
 				if (renames.length > 0) {
-					$.each(renames, function(i, rename) {
+					jQuery.each(renames, function(i, rename) {
 						form.append('<input type="hidden" name="renames[]" value="'+self.escape(rename)+'"/>');
 					});
 					form.append('<input type="hidden" name="suffix" value="'+fm.options.backupSuffix+'"/>');
 				}
 				if (hashes) {
-					$.each(renames, function(i, v) {
+					jQuery.each(renames, function(i, v) {
 						form.append('<input type="hidden" name="['+i+']" value="'+self.escape(v)+'"/>');
 					});
 				}
@@ -7607,11 +7607,11 @@ elFinder.prototype = {
 					form.append('<input type="hidden" name="overwrite" value="0"/>');
 				}
 				
-				$.each(self.options.onlyMimes||[], function(i, mime) {
+				jQuery.each(self.options.onlyMimes||[], function(i, mime) {
 					form.append('<input type="hidden" name="mimes[]" value="'+self.escape(mime)+'"/>');
 				});
 				
-				$.each(self.customData, function(key, val) {
+				jQuery.each(self.customData, function(key, val) {
 					form.append('<input type="hidden" name="'+key+'" value="'+self.escape(val)+'"/>');
 				});
 				
@@ -7672,12 +7672,12 @@ elFinder.prototype = {
 		if (typeof(key) === 'undefined') {
 			precnt = prefix.length;
 			sufcnt = suffix.length * -1;
-			$.each(s, function(key) {
+			jQuery.each(s, function(key) {
 				if (key.substr(0, precnt) === prefix && key.substr(sufcnt) === suffix) {
 					clrs.push(key);
 				}
 			});
-			$.each(clrs, function(i, key) {
+			jQuery.each(clrs, function(i, key) {
 				s.removeItem(key);
 			});
 			return true;
@@ -7787,7 +7787,7 @@ elFinder.prototype = {
 				c = document.cookie.split(';');
 				name += '=';
 				for (i=0; i<c.length; i++) {
-					c[i] = $.trim(c[i]);
+					c[i] = jQuery.trim(c[i]);
 					if (c[i].substring(0, name.length) == name) {
 						retval = decodeURIComponent(c[i].substring(name.length));
 						if (retval.substr(0,1) === '{' || retval.substr(0,1) === '[') {
@@ -7861,7 +7861,7 @@ elFinder.prototype = {
 	 * 
 	 * @type jQuery
 	 */
-	_node : $('<span></c.length;>'),
+	_node : jQuery('<span></c.length;>'),
 	
 	/**
 	 * Replace not html-safe symbols to html entities
@@ -7902,12 +7902,12 @@ elFinder.prototype = {
 				// Disable command to replace with other command
 				var disabled;
 				if (opts.uiCmdMap) {
-					if ($.isPlainObject(opts.uiCmdMap) && Object.keys(opts.uiCmdMap).length) {
+					if (jQuery.isPlainObject(opts.uiCmdMap) && Object.keys(opts.uiCmdMap).length) {
 						if (!opts.disabledFlip) {
 							opts.disabledFlip = {};
 						}
 						disabled = opts.disabledFlip;
-						$.each(opts.uiCmdMap, function(f, t) {
+						jQuery.each(opts.uiCmdMap, function(f, t) {
 							if (t === 'hidden' && !disabled[f]) {
 								opts.disabled.push(f);
 								opts.disabledFlip[f] = true;
@@ -7926,7 +7926,7 @@ elFinder.prototype = {
 						}
 						return type;
 					};
-				$.each(self.optionProperties, function(k, empty) {
+				jQuery.each(self.optionProperties, function(k, empty) {
 					if (empty !== void(0)) {
 						if (opts[k] && getType(opts[k]) !== getType(empty)) {
 							opts[k] = empty;
@@ -7935,7 +7935,7 @@ elFinder.prototype = {
 				});
 				if (opts.disabled) {
 					opts.disabledFlip = self.arrayFlip(opts.disabled, true);
-					$.each(self.options.disabledCmdsRels, function(com, rels) {
+					jQuery.each(self.options.disabledCmdsRels, function(com, rels) {
 						var m, flg;
 						if (opts.disabledFlip[com]) {
 							flg = true;
@@ -7945,7 +7945,7 @@ elFinder.prototype = {
 							}
 						}
 						if (flg) {
-							$.each(rels, function(i, rel) {
+							jQuery.each(rels, function(i, rel) {
 								if (!opts.disabledFlip[rel]) {
 									opts.disabledFlip[rel] = true;
 									opts.disabled.push(rel);
@@ -7995,7 +7995,7 @@ elFinder.prototype = {
 									if (! self.leafRoots[file.phash]) {
 										self.leafRoots[file.phash] = [ file.hash ];
 									} else {
-										if ($.inArray(file.hash, self.leafRoots[file.phash]) === -1) {
+										if (jQuery.inArray(file.hash, self.leafRoots[file.phash]) === -1) {
 											self.leafRoots[file.phash].push(file.hash);
 										}
 									}
@@ -8043,7 +8043,7 @@ elFinder.prototype = {
 								}
 								
 								// set immediate properties
-								$.each(self.optionProperties, function(k) {
+								jQuery.each(self.optionProperties, function(k) {
 									if (targetOptions[k]) {
 										file[k] = targetOptions[k];
 									}
@@ -8129,9 +8129,9 @@ elFinder.prototype = {
 			},
 			getDescendants = function(hashes) {
 				var res = [];
-				$.each(self.files(), function(h, f) {
-					$.each(self.parents(h), function(i, ph) {
-						if ($.inArray(ph, hashes) !== -1 && $.inArray(h, hashes) === -1) {
+				jQuery.each(self.files(), function(h, f) {
+					jQuery.each(self.parents(h), function(i, ph) {
+						if (jQuery.inArray(ph, hashes) !== -1 && jQuery.inArray(h, hashes) === -1) {
 							res.push(h);
 							return false;
 						}
@@ -8140,7 +8140,7 @@ elFinder.prototype = {
 				return res;
 			},
 			applyLeafRootStats = function(dataArr, type) {
-				$.each(dataArr, function(i, f) {
+				jQuery.each(dataArr, function(i, f) {
 					var pfile, done;
 					if (self.leafRoots[f.hash]) {
 						self.applyLeafRootStats(f);
@@ -8152,7 +8152,7 @@ elFinder.prototype = {
 						if (!data.changed) {
 							data.changed = [pfile];
 						} else {
-							$.each(data.changed, function(i, f) {
+							jQuery.each(data.changed, function(i, f) {
 								if (f.hash === pfile.hash) {
 									data.changed[i] = pfile;
 									done = true;
@@ -8174,9 +8174,9 @@ elFinder.prototype = {
 			self.prevCustomData = data.customData;
 			try {
 				cData = JSON.parse(data.customData);
-				if ($.isPlainObject(cData)) {
+				if (jQuery.isPlainObject(cData)) {
 					self.prevCustomData = cData;
-					$.each(Object.keys(cData), function(i, key) {
+					jQuery.each(Object.keys(cData), function(i, key) {
 						if (cData[key] === null) {
 							delete cData[key];
 							delete self.optsCustomData[key];
@@ -8199,16 +8199,16 @@ elFinder.prototype = {
 			data.cwd = filter(data.cwd, true, 'cwd');
 		}
 		if (data.files) {
-			data.files = $.grep(data.files, filter);
+			data.files = jQuery.grep(data.files, filter);
 		} 
 		if (data.tree) {
-			data.tree = $.grep(data.tree, filter);
+			data.tree = jQuery.grep(data.tree, filter);
 		}
 		if (data.added) {
-			data.added = $.grep(data.added, filter);
+			data.added = jQuery.grep(data.added, filter);
 		}
 		if (data.changed) {
-			data.changed = $.grep(data.changed, filter);
+			data.changed = jQuery.grep(data.changed, filter);
 		}
 		if (data.removed && data.removed.length && self.searchStatus.state === 2) {
 			data.removed = data.removed.concat(getDescendants(data.removed));
@@ -8500,7 +8500,7 @@ elFinder.prototype = {
 						}
 						setProgressbar();
 					};
-				notify._esc && $(document).off('keydown', notify._esc);
+				notify._esc && jQuery(document).off('keydown', notify._esc);
 				if (notify.data('cur') < 100) {
 					prog.animate({
 						width : '100%'
@@ -8532,7 +8532,7 @@ elFinder.prototype = {
 				if (ntfs.length) {
 					ntfs.each(function() {
 						cnt++;
-						val += Math.min($(this).data('cur'), 100);
+						val += Math.min(jQuery(this).data('cur'), 100);
 					});
 					w = cnt? Math.floor(val / (cnt * 100) * 100) + '%' : 0;
 					self.ui.progressbar.width(w);
@@ -8552,7 +8552,7 @@ elFinder.prototype = {
 		}
 		
 		if (!notify.length) {
-			notify = $(ntpl.replace(/\{type\}/g, type).replace(/\{msg\}/g, msg));
+			notify = jQuery(ntpl.replace(/\{type\}/g, type).replace(/\{msg\}/g, msg));
 			if (hiddens[type]) {
 				notify.hide();
 			} else {
@@ -8570,9 +8570,9 @@ elFinder.prototype = {
 			}
 
 			if (cancel) {
-				button = $('<span class="elfinder-notify-button ui-icon ui-icon-close" title="'+this.i18n('btnCancel')+'"></span>')
+				button = jQuery('<span class="elfinder-notify-button ui-icon ui-icon-close" title="'+this.i18n('btnCancel')+'"></span>')
 					.on('mouseenter mouseleave', function(e) { 
-						$(this).toggleClass(clhover, e.type === 'mouseenter');
+						jQuery(this).toggleClass(clhover, e.type === 'mouseenter');
 					});
 				notify.children('div.elfinder-notify-cancel').append(button);
 			}
@@ -8585,9 +8585,9 @@ elFinder.prototype = {
 		
 		if (cnt > 0) {
 			if (cancel && button.length) {
-				if ($.isFunction(cancel) || (typeof cancel === 'object' && cancel.promise)) {
+				if (jQuery.isFunction(cancel) || (typeof cancel === 'object' && cancel.promise)) {
 					notify._esc = function(e) {
-						if (e.type == 'keydown' && e.keyCode != $.ui.keyCode.ESCAPE) {
+						if (e.type == 'keydown' && e.keyCode != jQuery.ui.keyCode.ESCAPE) {
 							return;
 						}
 						e.preventDefault();
@@ -8602,7 +8602,7 @@ elFinder.prototype = {
 					button.on('click', function(e) {
 						notify._esc(e);
 					});
-					$(document).on('keydown.' + this.namespace, notify._esc);
+					jQuery(document).on('keydown.' + this.namespace, notify._esc);
 				}
 			}
 			
@@ -8688,7 +8688,7 @@ elFinder.prototype = {
 				buttons   : {},
 				close     : function() { 
 					!complete && opts.cancel.callback();
-					$(this).elfinderdialog('destroy');
+					jQuery(this).elfinderdialog('destroy');
 				}
 			},
 			apply = this.i18n('apllyAll'),
@@ -8700,7 +8700,7 @@ elFinder.prototype = {
 		options.buttons[this.i18n(opts.accept.label)] = function() {
 			opts.accept.callback(!!(checkbox && checkbox.prop('checked')));
 			complete = true;
-			$(this).elfinderdialog('close');
+			jQuery(this).elfinderdialog('close');
 		};
 		options.buttons[this.i18n(opts.accept.label)]._cssClass = 'elfinder-confirm-accept';
 		
@@ -8708,18 +8708,18 @@ elFinder.prototype = {
 			options.buttons[this.i18n(opts.reject.label)] = function() {
 				opts.reject.callback(!!(checkbox && checkbox.prop('checked')));
 				complete = true;
-				$(this).elfinderdialog('close');
+				jQuery(this).elfinderdialog('close');
 			};
 			options.buttons[this.i18n(opts.reject.label)]._cssClass = 'elfinder-confirm-reject';
 		}
 		
 		if (opts.buttons && opts.buttons.length > 0) {
 			btnNum = 1;
-			$.each(opts.buttons, function(i, v){
+			jQuery.each(opts.buttons, function(i, v){
 				options.buttons[self.i18n(v.label)] = function() {
 					v.callback(!!(checkbox && checkbox.prop('checked')));
 					complete = true;
-					$(this).elfinderdialog('close');
+					jQuery(this).elfinderdialog('close');
 				};
 				options.buttons[self.i18n(v.label)]._cssClass = 'elfinder-confirm-extbtn' + (btnNum++);
 				if (v.cssClass) {
@@ -8729,20 +8729,20 @@ elFinder.prototype = {
 		}
 		
 		options.buttons[this.i18n(opts.cancel.label)] = function() {
-			$(this).elfinderdialog('close');
+			jQuery(this).elfinderdialog('close');
 		};
 		options.buttons[this.i18n(opts.cancel.label)]._cssClass = 'elfinder-confirm-cancel';
 		
 		if (opts.all) {
 			options.create = function() {
-				var base = $('<div class="elfinder-dialog-confirm-applyall"></div>');
-				checkbox = $('<input type="checkbox" />');
-				$(this).next().find('.ui-dialog-buttonset')
-					.prepend(base.append($('<label>'+apply+'</label>').prepend(checkbox)));
+				var base = jQuery('<div class="elfinder-dialog-confirm-applyall"></div>');
+				checkbox = jQuery('<input type="checkbox" />');
+				jQuery(this).next().find('.ui-dialog-buttonset')
+					.prepend(base.append(jQuery('<label>'+apply+'</label>').prepend(checkbox)));
 			};
 		}
 		
-		if (opts.optionsCallback && $.isFunction(opts.optionsCallback)) {
+		if (opts.optionsCallback && jQuery.isFunction(opts.optionsCallback)) {
 			opts.optionsCallback(options);
 		}
 		
@@ -8833,7 +8833,7 @@ elFinder.prototype = {
 		
 		for (i = 0; i < input.length; i++) {
 			// dont translate placeholders
-			if ($.inArray(i, ignore) !== -1) {
+			if (jQuery.inArray(i, ignore) !== -1) {
 				continue;
 			}
 			m = input[i];
@@ -8862,7 +8862,7 @@ elFinder.prototype = {
 			input[i] = m;
 		}
 
-		return $.grep(input, function(m, i) { return $.inArray(i, ignore) === -1 ? true : false; }).join('<br>');
+		return jQuery.grep(input, function(m, i) { return jQuery.inArray(i, ignore) === -1 ? true : false; }).join('<br>');
 	},
 	
 	/**
@@ -8882,7 +8882,7 @@ elFinder.prototype = {
 			i = 0;
 		if (file.icon) {
 			style = 'style="';
-			$.each(template, function(k, v) {
+			jQuery.each(template, function(k, v) {
 				if (i++ === 0) {
 					v = v.replace('{url}', self.escape(file.icon));
 				}
@@ -9147,7 +9147,7 @@ elFinder.prototype = {
 		if (!style) {
 			style = this.options.fileModeStyle.toLowerCase();
 		}
-		p = $.trim(p);
+		p = jQuery.trim(p);
 		if (p.match(/[rwxs-]{9}$/i)) {
 			str = p = p.substr(-9);
 			if (style == 'string') {
@@ -9231,7 +9231,7 @@ elFinder.prototype = {
 	 * @return void
 	 */
 	registRawStringDecoder : function(rawStringDecoder) {
-		if ($.isFunction(rawStringDecoder)) {
+		if (jQuery.isFunction(rawStringDecoder)) {
 			this.decodeRawString = this.options.rawStringDecoder = rawStringDecoder;
 		}
 	},
@@ -9254,7 +9254,7 @@ elFinder.prototype = {
 				if (typeof checker === 'string' && checker.toLowerCase() === 'all') {
 					ret = true;
 				} else if (Array.isArray(checker) && checker.length) {
-					$.each(checker, function(i, v) {
+					jQuery.each(checker, function(i, v) {
 						v = v.toLowerCase();
 						if (v === 'all' || mime.indexOf(v) === 0) {
 							ret = true;
@@ -9264,7 +9264,7 @@ elFinder.prototype = {
 				}
 				return ret;
 			};
-		if (mime && $.isPlainObject(mimeChecker)) {
+		if (mime && jQuery.isPlainObject(mimeChecker)) {
 			mime = mime.toLowerCase();
 			allow = check(mimeChecker.allow);
 			deny = check(mimeChecker.deny);
@@ -9313,13 +9313,13 @@ elFinder.prototype = {
 	 * @return Object  jQuery.Deferred
 	 */
 	reloadContents : function(url) {
-		var dfd = $.Deferred(),
+		var dfd = jQuery.Deferred(),
 			ifm;
 		try {
-			ifm = $('<iframe width="1" height="1" scrolling="no" frameborder="no" style="position:absolute; top:-1px; left:-1px" crossorigin="use-credentials">')
+			ifm = jQuery('<iframe width="1" height="1" scrolling="no" frameborder="no" style="position:absolute; top:-1px; left:-1px" crossorigin="use-credentials">')
 				.attr('src', url)
 				.one('load', function() {
-					var ifm = $(this);
+					var ifm = jQuery(this);
 					try {
 						this.contentDocument.location.reload(true);
 						ifm.one('load', function() {
@@ -9362,15 +9362,15 @@ elFinder.prototype = {
 			}, (noOffline === null? (opt || {}) : {noOffline : noOffline})),
 			addFolders = function(fm, bro, folders) {
 				var self = this,
-					cnt  = Object.keys($.isPlainObject(folders)? folders : {}).length,
+					cnt  = Object.keys(jQuery.isPlainObject(folders)? folders : {}).length,
 					select;
 				
 				bro.next().remove();
 				if (cnt) {
-					select = $('<select class="ui-corner-all elfinder-tabstop" style="max-width:200px;">').append(
-						$($.map(folders, function(n,i){return '<option value="'+fm.escape((i+'').trim())+'">'+fm.escape(n)+'</option>';}).join(''))
+					select = jQuery('<select class="ui-corner-all elfinder-tabstop" style="max-width:200px;">').append(
+						jQuery(jQuery.map(folders, function(n,i){return '<option value="'+fm.escape((i+'').trim())+'">'+fm.escape(n)+'</option>';}).join(''))
 					).on('change click', function(e){
-						var node = $(this),
+						var node = jQuery(this),
 							path = node.val(),
 							spn;
 						self.inputs.path.val(path);
@@ -9395,32 +9395,32 @@ elFinder.prototype = {
 							}
 						}
 					});
-					bro.after($('<div></div>').append(select))
+					bro.after(jQuery('<div></div>').append(select))
 						.closest('.ui-dialog').trigger('tabstopsInit');
 					select.trigger('focus');
 				}
 			},
 			spinner = function() {
-				return $('<div class="elfinder-netmount-spinner"></div>').append('<span class="elfinder-spinner"></span>');
+				return jQuery('<div class="elfinder-netmount-spinner"></div>').append('<span class="elfinder-spinner"></span>');
 			},
 			xhr;
 		return {
 			vars : {},
 			name : name,
 			inputs: {
-				offline  : $('<input type="checkbox"/>').on('change', function() {
-					$(this).parents('table.elfinder-netmount-tb').find('select:first').trigger('change', 'reset');
+				offline  : jQuery('<input type="checkbox"/>').on('change', function() {
+					jQuery(this).parents('table.elfinder-netmount-tb').find('select:first').trigger('change', 'reset');
 				}),
-				host     : $('<span><span class="elfinder-spinner"></span></span><input type="hidden"/>'),
-				path     : $('<input type="text" value="'+opts.root+'"/>'),
-				user     : $('<input type="hidden"/>'),
-				pass     : $('<input type="hidden"/>'),
-				mnt2res  : $('<input type="hidden"/>')
+				host     : jQuery('<span><span class="elfinder-spinner"></span></span><input type="hidden"/>'),
+				path     : jQuery('<input type="text" value="'+opts.root+'"/>'),
+				user     : jQuery('<input type="hidden"/>'),
+				pass     : jQuery('<input type="hidden"/>'),
+				mnt2res  : jQuery('<input type="hidden"/>')
 			},
 			select: function(fm, ev, d){
 				var f = this.inputs,
 					oline = f.offline,
-					f0 = $(f.host[0]),
+					f0 = jQuery(f.host[0]),
 					data = d || null;
 				this.vars.mbtn = f.host.closest('.ui-dialog').children('.ui-dialog-buttonpane:first').find('button.elfinder-btncnt-0');
 				if (! f0.data('inrequest')
@@ -9432,7 +9432,7 @@ elFinder.prototype = {
 					if (oline.parent().children().length === 1) {
 						f.path.parent().prev().html(fm.i18n(opts.pathI18n));
 						oline.attr('title', fm.i18n('offlineAccess'));
-						oline.uniqueId().after($('<label></label>').attr('for', oline.attr('id')).html(' '+fm.i18n('offlineAccess')));
+						oline.uniqueId().after(jQuery('<label></label>').attr('for', oline.attr('id')).html(' '+fm.i18n('offlineAccess')));
 					}
 					f0.data('inrequest', true).empty().addClass('elfinder-spinner')
 						.parent().find('span.elfinder-button-icon').remove();
@@ -9447,13 +9447,13 @@ elFinder.prototype = {
 					oline.closest('tr')[(opts.noOffline || f.user.val())? 'hide':'show']();
 					f0.data('funcexpup') && f0.data('funcexpup')();
 				}
-				this.vars.mbtn[$(f.host[1]).val()? 'show':'hide']();
+				this.vars.mbtn[jQuery(f.host[1]).val()? 'show':'hide']();
 			},
 			done: function(fm, data){
 				var f = this.inputs,
 					p = this.protocol,
-					f0 = $(f.host[0]),
-					f1 = $(f.host[1]),
+					f0 = jQuery(f.host[0]),
+					f1 = jQuery(f.host[1]),
 					expires = '&nbsp;',
 					vars = this.vars,
 					chk = function() {
@@ -9467,7 +9467,7 @@ elFinder.prototype = {
 				opts.noOffline && f.offline.closest('tr').hide();
 				if (data.mode == 'makebtn') {
 					f0.removeClass('elfinder-spinner').removeData('expires').removeData('funcexpup');
-					btn = f.host.find('input').on('mouseenter mouseleave', function(){$(this).toggleClass('ui-state-hover');});
+					btn = f.host.find('input').on('mouseenter mouseleave', function(){jQuery(this).toggleClass('ui-state-hover');});
 					if (data.url) {
 						btn.on('click', function() {
 							vars.tm && clearTimeout(vars.tm);
@@ -9523,7 +9523,7 @@ elFinder.prototype = {
 						p.trigger('change', 'reset');
 						return;
 					}
-					f0.parent().append($('<span class="elfinder-button-icon elfinder-button-icon-reload" title="'+fm.i18n('reAuth')+'">')
+					f0.parent().append(jQuery('<span class="elfinder-button-icon elfinder-button-icon-reload" title="'+fm.i18n('reAuth')+'">')
 						.on('click', function() {
 							f1.val('reauth');
 							p.trigger('change', 'reset');
@@ -9543,7 +9543,7 @@ elFinder.prototype = {
 				f0.removeData('inrequest');
 			},
 			fail: function(fm, err){
-				$(this.inputs.host[0]).removeData('inrequest');
+				jQuery(this.inputs.host[0]).removeData('inrequest');
 				this.protocol.trigger('change', 'reset');
 			},
 			integrateInfo: opts.integrate
@@ -9560,11 +9560,11 @@ elFinder.prototype = {
 		var self    = this,
 			cwd     = this.getUI('cwd'),
 			cwdHash = this.cwd().hash,
-			newItem = $();
+			newItem = jQuery();
 		
 		opts = opts || {};
 		
-		$.each(files, function(i, f) {
+		jQuery.each(files, function(i, f) {
 			if (f.phash === cwdHash || self.searchStatus.state > 1) {
 				newItem = newItem.add(self.cwdHash2Elm(f.hash));
 				if (opts.firstOnly) {
@@ -9647,7 +9647,7 @@ elFinder.prototype = {
 	 * @return     Object  jQuery element object
 	 */
 	navHash2Elm : function(hash) {
-		return $(document.getElementById(this.navHash2Id(hash)));
+		return jQuery(document.getElementById(this.navHash2Id(hash)));
 	},
 
 	/**
@@ -9657,7 +9657,7 @@ elFinder.prototype = {
 	 * @return     Object  jQuery element object
 	 */
 	cwdHash2Elm : function(hash) {
-		return $(document.getElementById(this.cwdHash2Id(hash)));
+		return jQuery(document.getElementById(this.cwdHash2Id(hash)));
 	},
 
 	isInWindow : function(elem, nochkHide) {
@@ -9685,7 +9685,7 @@ elFinder.prototype = {
 			self.zIndex = ni;
 		} else {
 			node.parents().each(function(i, n) {
-				var z = $(n).css('z-index');
+				var z = jQuery(n).css('z-index');
 				if (z !== 'auto' && z !== 'inherit' && (z = parseInt(z))) {
 					self.zIndex = z;
 					return false;
@@ -9699,7 +9699,7 @@ elFinder.prototype = {
 	 * 
 	 * @param  Array    urls      to load JavaScript file URLs
 	 * @param  Function callback  call back function on script loaded
-	 * @param  Object   opts      Additional options to $.ajax OR {loadType: 'tag'} to load by script tag
+	 * @param  Object   opts      Additional options to jQuery.ajax OR {loadType: 'tag'} to load by script tag
 	 * @param  Object   check     { obj: (Object)ParentObject, name: (String)"Attribute name", timeout: (Integer)milliseconds }
 	 * @return elFinder
 	 */
@@ -9716,14 +9716,14 @@ elFinder.prototype = {
 		} else {
 			success = function() {
 				var cnt, fi, hasError;
-				$.each(results, function(i, status) {
+				jQuery.each(results, function(i, status) {
 					if (status !== 'success' && status !== 'notmodified') {
 						hasError = true;
 						return false;
 					}
 				});
 				if (!hasError) {
-					if ($.isFunction(callback)) {
+					if (jQuery.isFunction(callback)) {
 						if (check) {
 							if (typeof check.obj[check.name] === 'undefined') {
 								cnt = check.timeout? (check.timeout / 10) : 1;
@@ -9741,18 +9741,18 @@ elFinder.prototype = {
 						}
 					}
 				} else {
-					if (opts.error && $.isFunction(opts.error)) {
+					if (opts.error && jQuery.isFunction(opts.error)) {
 						opts.error({ loadResults: results });
 					}
 				}
 			};
 
 			if (opts.loadType === 'tag') {
-				$('head > script').each(function() {
+				jQuery('head > script').each(function() {
 					scripts[this.src] = this;
 				});
 				cnt = urls.length;
-				$.each(urls, function(i, url) {
+				jQuery.each(urls, function(i, url) {
 					var done = false,
 						script;
 					
@@ -9762,7 +9762,7 @@ elFinder.prototype = {
 					} else {
 						script = document.createElement('script');
 						script.charset = opts.charset || 'UTF-8';
-						$('head').append(script);
+						jQuery('head').append(script);
 						script.onload = script.onreadystatechange = function() {
 							if ( !done && (!this.readyState ||
 									this.readyState === 'loaded' || this.readyState === 'complete') ) {
@@ -9779,14 +9779,14 @@ elFinder.prototype = {
 					}
 				});
 			} else {
-				opts = $.isPlainObject(opts)? Object.assign(defOpts, opts) : defOpts;
+				opts = jQuery.isPlainObject(opts)? Object.assign(defOpts, opts) : defOpts;
 				cnt = 0;
 				(function appendScript(d, status) {
 					if (d !== void(0)) {
 						results[cnt++] = status;
 					}
 					if (urls.length) {
-						$.ajax(Object.assign({}, opts, {
+						jQuery.ajax(Object.assign({}, opts, {
 							url: urls.shift(),
 							success: appendScript,
 							error: appendScript
@@ -9821,13 +9821,13 @@ elFinder.prototype = {
 				dfds = [];
 			}
 		}
-		$.each(urls, function(i, url) {
+		jQuery.each(urls, function(i, url) {
 			var link, df;
 			url = self.convAbsUrl(url).replace(/^https?:/i, '');
 			if (dfds) {
-				dfds[i] = $.Deferred();
+				dfds[i] = jQuery.Deferred();
 			}
-			if (! $('head > link[href="' + self.escape(url) + '"]').length) {
+			if (! jQuery('head > link[href="' + self.escape(url) + '"]').length) {
 				link = document.createElement('link');
 				link.type = 'text/css';
 				link.rel = 'stylesheet';
@@ -9843,13 +9843,13 @@ elFinder.prototype = {
 						dfds[i].reject();
 					};
 				}
-				$('head').append(link);
+				jQuery('head').append(link);
 			} else {
 				dfds && dfds[i].resolve();
 			}
 		});
 		if (dfds) {
-			$.when.apply(null, dfds).done(function() {
+			jQuery.when.apply(null, dfds).done(function() {
 				opts.dfd.resolve();
 			}).fail(function() {
 				opts.dfd.reject();
@@ -9865,10 +9865,10 @@ elFinder.prototype = {
 	 * @param arr  Array
 	 * @param opts Object
 	 * 
-	 * @return Object $.Deferred that has an extended method _abort()
+	 * @return Object jQuery.Deferred that has an extended method _abort()
 	 */
 	asyncJob : function(func, arr, opts) {
-		var dfrd = $.Deferred(),
+		var dfrd = jQuery.Deferred(),
 			abortFlg = false,
 			parms = Object.assign({
 				interval : 0,
@@ -9935,8 +9935,8 @@ elFinder.prototype = {
 		var self = this,
 			reqs = [],
 			tgtlen = targets.length,
-			dfrd = $.Deferred().fail(function() {
-				$.each(reqs, function(i, req) {
+			dfrd = jQuery.Deferred().fail(function() {
+				jQuery.each(reqs, function(i, req) {
 					if (req) {
 						req.syncOnFail && req.syncOnFail(false);
 						req.reject();
@@ -9946,7 +9946,7 @@ elFinder.prototype = {
 			getLeafRoots = function(file) {
 				var targets = [];
 				if (file.mime === 'directory') {
-					$.each(self.leafRoots, function(hash, roots) {
+					jQuery.each(self.leafRoots, function(hash, roots) {
 						var phash;
 						if (hash === file.hash) {
 							targets.push.apply(targets, roots);
@@ -9964,7 +9964,7 @@ elFinder.prototype = {
 				return targets;
 			},
 			checkPhash = function(hash) {
-				var dfd = $.Deferred(),
+				var dfd = jQuery.Deferred(),
 					dir = self.file(hash),
 					target = dir? dir.phash : hash;
 				if (target && ! self.file(target)) {
@@ -9987,11 +9987,11 @@ elFinder.prototype = {
 				return dfd;
 			},
 			cache = function() {
-				var dfd = $.Deferred(),
+				var dfd = jQuery.Deferred(),
 					cnt = Object.keys(self.leafRoots).length;
 				
 				if (cnt > 0) {
-					$.each(self.leafRoots, function(hash) {
+					jQuery.each(self.leafRoots, function(hash) {
 						checkPhash(hash).done(function() {
 							--cnt;
 							if (cnt < 1) {
@@ -10009,16 +10009,16 @@ elFinder.prototype = {
 		cache().done(function() {
 			var files = [], grps = {}, dfds = [], cache = [], singles = {};
 			
-			$.each(targets, function() {
+			jQuery.each(targets, function() {
 				files.push.apply(files, getLeafRoots(self.file(this)));
 			});
 			targets.push.apply(targets, files);
 			
-			$.each(targets, function() {
+			jQuery.each(targets, function() {
 				var root = self.root(this),
 					file = self.file(this);
 				if (file && (file.sizeInfo || file.mime !== 'directory')) {
-					cache.push($.Deferred().resolve(file.sizeInfo? file.sizeInfo : {size: file.size, dirCnt: 0, fileCnt : 1}));
+					cache.push(jQuery.Deferred().resolve(file.sizeInfo? file.sizeInfo : {size: file.size, dirCnt: 0, fileCnt : 1}));
 				} else {
 					if (! grps[root]) {
 						grps[root] = [ this.toString() ];
@@ -10028,7 +10028,7 @@ elFinder.prototype = {
 				}
 			});
 			
-			$.each(grps, function() {
+			jQuery.each(grps, function() {
 				var idx = dfds.length;
 				if (this.length === 1) {
 					singles[idx] = this[0];
@@ -10041,14 +10041,14 @@ elFinder.prototype = {
 			reqs.push.apply(reqs, dfds);
 			dfds.push.apply(dfds, cache);
 			
-			$.when.apply($, dfds).fail(function() {
+			jQuery.when.apply($, dfds).fail(function() {
 				dfrd.reject();
 			}).done(function() {
 				var cache = function(h, data) {
 						var file;
 						if (file = self.file(h)) {
 							file.sizeInfo = { isCache: true };
-							$.each(['size', 'dirCnt', 'fileCnt'], function() {
+							jQuery.each(['size', 'dirCnt', 'fileCnt'], function() {
 								file.sizeInfo[this] = data[this] || 0;
 							});
 							file.size = parseInt(file.sizeInfo.size);
@@ -10070,8 +10070,8 @@ elFinder.prototype = {
 					if (!data.isCache) {
 						if (singles[i] && (file = self.file(singles[i]))) {
 							cache(singles[i], data);
-						} else if (data.sizes && $.isPlainObject(data.sizes)) {
-							$.each(data.sizes, function(h, sizeInfo) {
+						} else if (data.sizes && jQuery.isPlainObject(data.sizes)) {
+							jQuery.each(data.sizes, function(h, sizeInfo) {
 								cache(h, sizeInfo);
 							});
 						}
@@ -10180,13 +10180,13 @@ elFinder.prototype = {
 	 */
 	getTheme : function(themeid) {
 		var self = this,
-			dfd = $.Deferred(),
+			dfd = jQuery.Deferred(),
 			absUrl = function(url, base) {
 				if (!base) {
 					base = self.convAbsUrl(self.baseUrl);
 				}
 				if (Array.isArray(url)) {
-					return $.map(url, function(v) {
+					return jQuery.map(url, function(v) {
 						return absUrl(v, base);
 					});
 				} else {
@@ -10198,7 +10198,7 @@ elFinder.prototype = {
 			if (typeof themeObj === 'string') {
 				url = absUrl(themeObj);
 				if (m = url.match(/^(.+\/)[^/]+\.json$/i)) {
-					$.getJSON(url).done(function(data) {
+					jQuery.getJSON(url).done(function(data) {
 						themeObj = data;
 						themeObj.id = themeid;
 						if (themeObj.cssurls) {
@@ -10215,7 +10215,7 @@ elFinder.prototype = {
 						cssurls: [url]
 					});
 				}
-			} else if ($.isPlainObject(themeObj) && themeObj.cssurls) {
+			} else if (jQuery.isPlainObject(themeObj) && themeObj.cssurls) {
 				themeObj.id = themeid;
 				themeObj.cssurls = absUrl(themeObj.cssurls);
 				if (!Array.isArray(themeObj.cssurls)) {
@@ -10246,10 +10246,10 @@ elFinder.prototype = {
 			if (self.options.themes[themeid] && (!self.theme || self.theme.id !== themeid)) {
 				self.getTheme(themeid).done(function(themeObj) {
 					if (themeObj.cssurls) {
-						$('head>link.elfinder-theme-ext').remove();
+						jQuery('head>link.elfinder-theme-ext').remove();
 						self.loadCss(themeObj.cssurls, {
 							className: 'elfinder-theme-ext',
-							dfd: $.Deferred().done(function() {
+							dfd: jQuery.Deferred().done(function() {
 								self.theme = themeObj;
 								self.trigger && self.trigger('themechange');
 							})
@@ -10257,7 +10257,7 @@ elFinder.prototype = {
 					}
 				});
 			} else if (themeid === 'default' && self.theme && self.theme.id !== 'default') {
-				$('head>link.elfinder-theme-ext').remove();
+				jQuery('head>link.elfinder-theme-ext').remove();
 				self.theme = null;
 				self.trigger && self.trigger('themechange');
 			}
@@ -10297,7 +10297,7 @@ elFinder.prototype = {
 			change = true;
 		}
 		// set ts
-		$.each(self.leafRoots[dir.hash], function() {
+		jQuery.each(self.leafRoots[dir.hash], function() {
 			var f = self.file(this);
 			if (f && f.ts && (dir.ts || 0) < f.ts) {
 				dir.ts = f.ts;
@@ -10347,7 +10347,7 @@ elFinder.prototype = {
 	setCustomHeaderByXhr : function(xhr) {
 		var self = this;
 		if (xhr.getResponseHeader && self.parrotHeaders && self.parrotHeaders.length) {
-			$.each(self.parrotHeaders, function(i, h) {
+			jQuery.each(self.parrotHeaders, function(i, h) {
 				var val = xhr.getResponseHeader(h);
 				if (val) {
 					self.customHeaders[h] = val;
@@ -10398,7 +10398,7 @@ elFinder.prototype = {
 	arrayFlip : function (trans, val) {
 		var key,
 			tmpArr = {},
-			isArr = $.isArray(trans);
+			isArr = jQuery.isArray(trans);
 		for (key in trans) {
 			if (isArr || trans.hasOwnProperty(key)) {
 				tmpArr[trans[key]] = val || key;
@@ -10472,8 +10472,8 @@ elFinder.prototype = {
 		} else if (type === 'backend-warning') {
 			showlog = true;
 			if (tb) {
-				tbOpts = $.isPlainObject(tb)? tb : {};
-				$.each(Array.isArray(m)? m : [ m ], function(i, m) {
+				tbOpts = jQuery.isPlainObject(tb)? tb : {};
+				jQuery.each(Array.isArray(m)? m : [ m ], function(i, m) {
 					self.toast(Object.assign({
 						mode : 'warning',
 						msg: m

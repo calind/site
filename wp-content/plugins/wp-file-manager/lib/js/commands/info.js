@@ -55,7 +55,7 @@
     "perm",
   ];
   if (this.options.custom && Object.keys(this.options.custom).length) {
-    $.each(this.options.custom, function (name, details) {
+    jQuery.each(this.options.custom, function (name, details) {
       details.label && this.items.push(details.label);
     });
   }
@@ -85,7 +85,7 @@
   ];
 
   this.init = function () {
-    $.each(msg, function (k, v) {
+    jQuery.each(msg, function (k, v) {
       msg[k] = fm.i18n(v);
     });
   };
@@ -115,11 +115,11 @@
         title: fm.i18n("selectionInfo"),
         width: "auto",
         close: function () {
-          $(this).elfinderdialog("destroy");
+          jQuery(this).elfinderdialog("destroy");
           if (reqDfrd && reqDfrd.state() === "pending") {
             reqDfrd.reject();
           }
-          $.grep(reqs, function (r) {
+          jQuery.grep(reqs, function (r) {
             r && r.state() === "pending" && r.reject();
           });
         },
@@ -135,7 +135,7 @@
       id =
         fm.namespace +
         "-info-" +
-        $.map(files, function (f) {
+        jQuery.map(files, function (f) {
           return f.hash;
         }).join("-"),
       dialog = fm.getUI().find("#" + id),
@@ -159,12 +159,12 @@
     }
 
     if (!cnt) {
-      return $.Deferred().reject();
+      return jQuery.Deferred().reject();
     }
 
     if (dialog.length) {
       dialog.elfinderdialog("toTop");
-      return $.Deferred().resolve();
+      return jQuery.Deferred().resolve();
     }
 
     hideItems = fm.storage("infohides") || fm.arrayFlip(o.hideItems, true);
@@ -372,7 +372,7 @@
         (!o.showHashMaxsize || file.size <= o.showHashMaxsize)
       ) {
         getHashAlgorisms = [];
-        $.each(fm.storage("hashchekcer") || o.showHashAlgorisms, function (
+        jQuery.each(fm.storage("hashchekcer") || o.showHashAlgorisms, function (
           i,
           n
         ) {
@@ -397,21 +397,21 @@
         });
 
         if (getHashAlgorisms.length) {
-          hashProg = $('<div class="elfinder-quicklook-info-progress"></div>');
+          hashProg = jQuery('<div class="elfinder-quicklook-info-progress"></div>');
           reqs.push(
             fm
               .getContentsHashes(file.hash, getHashAlgorisms, o.showHashOpts, {
                 progressBar: hashProg,
               })
               .progress(function (hashes) {
-                $.each(getHashAlgorisms, function (i, n) {
+                jQuery.each(getHashAlgorisms, function (i, n) {
                   if (hashes[n]) {
                     replSpinner(hashes[n], n, hashClass);
                   }
                 });
               })
               .always(function () {
-                $.each(getHashAlgorisms, function (i, n) {
+                jQuery.each(getHashAlgorisms, function (i, n) {
                   replSpinner(msg.unknown, n);
                 });
               })
@@ -421,11 +421,11 @@
 
       // Add custom info fields
       if (o.custom) {
-        $.each(o.custom, function (name, details) {
+        jQuery.each(o.custom, function (name, details) {
           if (
             !hideItems[details.label] &&
             (!details.mimes ||
-              $.grep(details.mimes, function (m) {
+              jQuery.grep(details.mimes, function (m) {
                 return file.mime === m || file.mime.indexOf(m + "/") === 0
                   ? true
                   : false;
@@ -450,12 +450,12 @@
       title = tpl.groupTitle
         .replace("{items}", msg.items)
         .replace("{num}", cnt);
-      dcnt = $.grep(files, function (f) {
+      dcnt = jQuery.grep(files, function (f) {
         return f.mime == "directory" ? true : false;
       }).length;
       if (!dcnt) {
         size = 0;
-        $.each(files, function (h, f) {
+        jQuery.each(files, function (h, f) {
           var s = parseInt(f.size);
 
           if (s >= 0 && size >= 0) {
@@ -470,7 +470,7 @@
             row.replace(l, msg.size).replace(v, fm.formatSize(size))
           );
       } else {
-        rdcnt = $.grep(files, function (f) {
+        rdcnt = jQuery.grep(files, function (f) {
           return f.mime === "directory" && (!f.phash || f.isroot)
             ? true
             : false;
@@ -481,7 +481,7 @@
             v,
             rdcnt === cnt || dcnt === cnt
               ? msg[rdcnt ? "roots" : "folders"]
-              : $.map(
+              : jQuery.map(
                   { roots: rdcnt, folders: dcnt, files: cnt - rdcnt - dcnt },
                   function (c, t) {
                     return c ? msg[t] + " " + c : null;
@@ -500,7 +500,7 @@
                   .replace("{name}", "size")
               )
           );
-        count = $.map(files, function (f) {
+        count = jQuery.map(files, function (f) {
           return f.hash;
         });
       }
@@ -512,7 +512,7 @@
 
     dialog = self.fmDialog(view, opts);
     dialog.attr("id", id).one("mousedown", ".elfinder-info-path", function () {
-      $(this).html(applyZWSP($(this).html(), true));
+      jQuery(this).html(applyZWSP(jQuery(this).html(), true));
     });
 
     if (getHashAlgorisms.length) {
@@ -521,7 +521,7 @@
       );
     }
 
-    if (fm.UA.Mobile && $.fn.tooltip) {
+    if (fm.UA.Mobile && jQuery.fn.tooltip) {
       dialog.children(".ui-dialog-content .elfinder-info-title").tooltip({
         classes: {
           "ui-tooltip": "elfinder-ui-tooltip ui-widget-shadow",
@@ -533,7 +533,7 @@
 
     if (file && file.url == "1") {
       dialog.on("click", "." + spclass + "-url", function () {
-        $(this)
+        jQuery(this)
           .parent()
           .html(
             tpl.spinner
@@ -568,7 +568,7 @@
 
     // load thumbnail
     if (tmb) {
-      $("<img/>")
+      jQuery("<img/>")
         .on("load", function () {
           dialog
             .find(".elfinder-cwd-icon")
@@ -592,7 +592,7 @@
 
     // call custom actions
     if (customActions.length) {
-      $.each(customActions, function (i, action) {
+      jQuery.each(customActions, function (i, action) {
         try {
           action(file, fm, dialog);
         } catch (e) {
@@ -601,6 +601,6 @@
       });
     }
 
-    return $.Deferred().resolve();
+    return jQuery.Deferred().resolve();
   };
 }).prototype = { forceLoad: true }; // this is required command

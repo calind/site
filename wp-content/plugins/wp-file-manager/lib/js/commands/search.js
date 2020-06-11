@@ -25,7 +25,7 @@ elFinder.prototype.commands.search = function() {
 	 * Send search request to backend.
 	 *
 	 * @param  String  search string
-	 * @return $.Deferred
+	 * @return jQuery.Deferred
 	 **/
 	this.exec = function(q, target, mime, type) {
 		var fm = this.fm,
@@ -48,12 +48,12 @@ elFinder.prototype.commands.search = function() {
 			}
 			target = target? target : '';
 			if (mime) {
-				mime = $.trim(mime).replace(',', ' ').split(' ');
+				mime = jQuery.trim(mime).replace(',', ' ').split(' ');
 				if (onlyMimes.length) {
-					mime = $.map(mime, function(m){ 
-						m = $.trim(m);
-						return m && ($.inArray(m, onlyMimes) !== -1
-									|| $.grep(onlyMimes, function(om) { return m.indexOf(om) === 0? true : false; }).length
+					mime = jQuery.map(mime, function(m){ 
+						m = jQuery.trim(m);
+						return m && (jQuery.inArray(m, onlyMimes) !== -1
+									|| jQuery.grep(onlyMimes, function(om) { return m.indexOf(om) === 0? true : false; }).length
 									)? m : null;
 					});
 				}
@@ -66,7 +66,7 @@ elFinder.prototype.commands.search = function() {
 			if (! onlyMimes.length || mime.length) {
 				if (target === '' && fm.api >= 2.1) {
 					rootCnt = Object.keys(fm.roots).length;
-					$.each(fm.roots, function(id, hash) {
+					jQuery.each(fm.roots, function(id, hash) {
 						reqDef.push(fm.request({
 							data   : setType({cmd : 'search', q : q, target : hash, mimes : mime}),
 							notify : {type : 'search', cnt : 1, hideCnt : (rootCnt > 1? false : true)},
@@ -82,11 +82,11 @@ elFinder.prototype.commands.search = function() {
 						preventDone : true
 					}));
 					if (target !== '' && fm.api >= 2.1 && Object.keys(fm.leafRoots).length) {
-						$.each(fm.leafRoots, function(hash, roots) {
+						jQuery.each(fm.leafRoots, function(hash, roots) {
 							phash = hash;
 							while(phash) {
 								if (target === phash) {
-									$.each(roots, function() {
+									jQuery.each(roots, function() {
 										var f = fm.file(this);
 										f && f.volumeid && targetVolids.push(f.volumeid);
 										reqDef.push(fm.request({
@@ -103,12 +103,12 @@ elFinder.prototype.commands.search = function() {
 					}
 				}
 			} else {
-				reqDef = [$.Deferred().resolve({files: []})];
+				reqDef = [jQuery.Deferred().resolve({files: []})];
 			}
 			
 			fm.searchStatus.mixed = (reqDef.length > 1)? targetVolids : false;
 			
-			return $.when.apply($, reqDef).done(function(data) {
+			return jQuery.when.apply($, reqDef).done(function(data) {
 				var argLen = arguments.length,
 					i;
 				
@@ -142,7 +142,7 @@ elFinder.prototype.commands.search = function() {
 			});
 		}
 		fm.getUI('toolbar').find('.'+fm.res('class', 'searchbtn')+' :text').trigger('focus');
-		return $.Deferred().reject();
+		return jQuery.Deferred().reject();
 	};
 
 };

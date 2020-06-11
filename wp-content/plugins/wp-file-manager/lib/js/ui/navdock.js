@@ -3,10 +3,10 @@
  *
  * @author Naoki Sawada
  **/
-$.fn.elfindernavdock = function(fm, opts) {
+jQuery.fn.elfindernavdock = function(fm, opts) {
 	"use strict";
 	this.not('.elfinder-navdock').each(function() {
-		var self = $(this).hide().addClass('ui-state-default elfinder-navdock touch-punch'),
+		var self = jQuery(this).hide().addClass('ui-state-default elfinder-navdock touch-punch'),
 			node = self.parent(),
 			wz   = node.children('.elfinder-workzone').append(self),
 			resize = function(to, h) {
@@ -19,14 +19,14 @@ $.fn.elfindernavdock = function(fm, opts) {
 					ovf = self.css('overflow');
 					self.css('overflow', 'hidden');
 					self.height(to);
-					$.each(sizeSyncs, function(id, n) {
+					jQuery.each(sizeSyncs, function(id, n) {
 						n.height(n.height() + calc).trigger('resize.' + fm.namespace);
 					});
 					fm.trigger('wzresize');
 					self.css('overflow', ovf);
 				}
 			},
-			handle = $('<div class="ui-front ui-resizable-handle ui-resizable-n"></div>').appendTo(self),
+			handle = jQuery('<div class="ui-front ui-resizable-handle ui-resizable-n"></div>').appendTo(self),
 			sizeSyncs = {},
 			resizeFn = [],
 			initMaxHeight = (parseInt(opts.initMaxHeight) || 50) / 100,
@@ -73,9 +73,9 @@ $.fn.elfindernavdock = function(fm, opts) {
 			
 			return self;
 		}).data('removeNode', function(nodeId, appendTo) {
-			var cNode = $('#'+nodeId);
+			var cNode = jQuery('#'+nodeId);
 			delete sizeSyncs[nodeId];
-			self.height(self.height() - $('#'+nodeId).outerHeight(true));
+			self.height(self.height() - jQuery('#'+nodeId).outerHeight(true));
 			if (appendTo) {
 				if (appendTo === 'detach') {
 					cNode = cNode.detach();

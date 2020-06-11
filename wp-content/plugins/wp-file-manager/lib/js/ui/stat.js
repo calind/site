@@ -4,13 +4,13 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfinderstat = function(fm) {
+jQuery.fn.elfinderstat = function(fm) {
 	"use strict";
 	return this.each(function() {
-		var size       = $(this).addClass('elfinder-stat-size'),
-			sel        = $('<div class="elfinder-stat-selected"></div>')
+		var size       = jQuery(this).addClass('elfinder-stat-size'),
+			sel        = jQuery('<div class="elfinder-stat-selected"></div>')
 				.on('click', 'a', function(e) {
-					var hash = $(this).data('hash');
+					var hash = jQuery(this).data('hash');
 					e.preventDefault();
 					fm.exec('opendir', [ hash ]);
 				}),
@@ -28,7 +28,7 @@ $.fn.elfinderstat = function(fm) {
 					s = cwd.size;
 					calc = false;
 				}
-				$.each(files, function(i, file) {
+				jQuery.each(files, function(i, file) {
 					c++;
 					if (calc) {
 						s += parseInt(file.size) || 0;
@@ -62,7 +62,7 @@ $.fn.elfinderstat = function(fm) {
 					dirs.push(fm.escape(file.i18 || file.name));
 					sel.html(dirs.join('/') + (s > 0 ? ', '+fm.formatSize(s) : ''));
 				} else if (files.length) {
-					$.each(files, function(i, file) {
+					jQuery.each(files, function(i, file) {
 						c++;
 						s += parseInt(file.size)||0;
 					});
@@ -75,7 +75,7 @@ $.fn.elfinderstat = function(fm) {
 			};
 
 		fm.getUI('statusbar').prepend(size).append(sel).show();
-		if (fm.UA.Mobile && $.fn.tooltip) {
+		if (fm.UA.Mobile && jQuery.fn.tooltip) {
 			fm.getUI('statusbar').tooltip({
 				classes: {
 					'ui-tooltip': 'elfinder-ui-tooltip ui-widget-shadow'
@@ -87,12 +87,12 @@ $.fn.elfinderstat = function(fm) {
 		
 		fm
 		.bind('cwdhasheschange', function(e) {
-			setstat($.map(e.data, function(h) { return fm.file(h); }));
+			setstat(jQuery.map(e.data, function(h) { return fm.file(h); }));
 		})
 		.change(function(e) {
 			var files = e.data.changed || [],
 				cwdHash = fm.cwd().hash;
-			$.each(files, function() {
+			jQuery.each(files, function() {
 				if (this.hash === cwdHash) {
 					if (this.size) {
 						size.children('.elfinder-stat-size').addClass('elfinder-stat-size-recursive').html(fm.i18n('sum')+': '+fm.formatSize(this.size));

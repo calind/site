@@ -4,10 +4,10 @@
  * @author Naoki Sawada
  **/
 
-$.fn.elfinderfullscreenbutton = function(cmd) {
+jQuery.fn.elfinderfullscreenbutton = function(cmd) {
 	"use strict";
 	return this.each(function() {
-		var button = $(this).elfinderbutton(cmd),
+		var button = jQuery(this).elfinderbutton(cmd),
 			icon   = button.children('.elfinder-button-icon'),
 			tm;
 		cmd.change(function() {

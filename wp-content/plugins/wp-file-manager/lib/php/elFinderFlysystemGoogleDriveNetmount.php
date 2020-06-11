@@ -148,7 +148,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends ExtDriver
 
                     $html = '<input id="elf-volumedriver-googledrive-host-btn" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="{msg:btnApprove}" type="button">';
                     $html .= '<script>
-                        $("#' . $options['id'] . '").elfinder("instance").trigger("netmount", {protocol: "googledrive", mode: "makebtn", url: "' . $url . '"});
+                        jQuery("#' . $options['id'] . '").elfinder("instance").trigger("netmount", {protocol: "googledrive", mode: "makebtn", url: "' . $url . '"});
                     </script>';
                     if (empty($options['pass']) && $options['host'] !== '1') {
                         $options['pass'] = 'return';
@@ -210,7 +210,7 @@ class elFinderVolumeFlysystemGoogleDriveNetmount extends ExtDriver
                     $options['pass'] = 'return';
                     $html = 'Google.com';
                     $html .= '<script>
-                        $("#' . $options['id'] . '").elfinder("instance").trigger("netmount", ' . $json . ');
+                        jQuery("#' . $options['id'] . '").elfinder("instance").trigger("netmount", ' . $json . ');
                     </script>';
                     $this->session->set('GoogleDriveAuthParams', $options);
                     return array('exit' => true, 'body' => $html);

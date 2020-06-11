@@ -23,7 +23,7 @@ elFinder.prototype.commands.download = function () {
           mixed = fm.searchStatus.mixed;
         } else if (fm.leafRoots[fm.cwd().hash]) {
           volumeid = fm.cwd().volumeid;
-          $.each(hashes, function (i, h) {
+          jQuery.each(hashes, function (i, h) {
             if (h.indexOf(volumeid) !== 0) {
               mixed = true;
               return false;
@@ -35,7 +35,7 @@ elFinder.prototype.commands.download = function () {
 
       if (mixed) {
         mixedCmd = czipdl ? "zipdl" : "download";
-        hashes = $.grep(hashes, function (h) {
+        hashes = jQuery.grep(hashes, function (h) {
           var f = fm.file(h),
             res =
               !f ||
@@ -57,7 +57,7 @@ elFinder.prototype.commands.download = function () {
         }
       }
 
-      return $.grep(self.files(hashes), function (f) {
+      return jQuery.grep(self.files(hashes), function (f) {
         var res = !f.read || (!zipOn && f.mime == "directory") ? false : true;
         if (inExec && !res) {
           fm.cwdHash2Elm(f.hash).trigger("unselect");
@@ -102,7 +102,7 @@ elFinder.prototype.commands.download = function () {
         var link = file.url || fm.url(file.hash);
         return {
           icon: "link",
-          node: $("<a></a>")
+          node: jQuery("<a></a>")
             .attr({ href: link, target: "_blank", title: fm.i18n("link") })
             .text(file.name)
             .on(
@@ -124,7 +124,7 @@ elFinder.prototype.commands.download = function () {
                     fm.mime2class(mime) +
                     ' ui-corner-all"></div>';
                   if (tmb) {
-                    i = $(i)
+                    i = jQuery(i)
                       .addClass(tmb.className)
                       .css("background-image", "url('" + tmb.url + "')")
                       .get(0).outerHTML;
@@ -133,9 +133,9 @@ elFinder.prototype.commands.download = function () {
                 };
                 dt.effectAllowed = "copyLink";
                 if (dt.setDragImage) {
-                  helper = $('<div class="elfinder-drag-helper html5-native">')
+                  helper = jQuery('<div class="elfinder-drag-helper html5-native">')
                     .append(icon(file))
-                    .appendTo($(document.body));
+                    .appendTo(jQuery(document.body));
                   dt.setDragImage(helper.get(0), 50, 47);
                 }
                 if (!fm.UA.IE) {
@@ -164,7 +164,7 @@ elFinder.prototype.commands.download = function () {
           var node;
           self.extra = {
             icon: "link",
-            node: $("<a></a>")
+            node: jQuery("<a></a>")
               .attr({
                 href: "#",
                 title: fm.i18n("getLink"),
@@ -223,7 +223,7 @@ elFinder.prototype.commands.download = function () {
       fm = this.fm,
       base = fm.options.url,
       files = filter(hashes, true),
-      dfrd = $.Deferred(),
+      dfrd = jQuery.Deferred(),
       iframes = "",
       cdata = "",
       targets = {},
@@ -232,7 +232,7 @@ elFinder.prototype.commands.download = function () {
       linkdl = false,
       getTask = function (hashes) {
         return function () {
-          var dfd = $.Deferred(),
+          var dfd = jQuery.Deferred(),
             root = fm.file(fm.root(hashes[0])),
             single = hashes.length === 1,
             volName = root ? root.i18 || root.name : null,
@@ -244,7 +244,7 @@ elFinder.prototype.commands.download = function () {
               dlName = dir.i18 || dir.name;
             }
           } else {
-            $.each(hashes, function () {
+            jQuery.each(hashes, function () {
               var d = fm.file(this);
               if (d && (!phash || phash === d.phash)) {
                 phash = d.phash;
@@ -283,7 +283,7 @@ elFinder.prototype.commands.download = function () {
                 m,
                 uniq = "dlw" + +new Date(),
                 zipdlFn = function (url) {
-                  dllink = $("<a></a>")
+                  dllink = jQuery("<a></a>")
                     .attr("href", url)
                     .attr("download", fm.escape(dlName))
                     .on("click", function () {
@@ -330,13 +330,13 @@ elFinder.prototype.commands.download = function () {
                     fm.options.url +
                     (fm.options.url.indexOf("?") === -1 ? "?" : "&") +
                     "cmd=zipdl&download=1";
-                  $.each([hashes[0], zipdl.file, dlName, zipdl.mime], function (
+                  jQuery.each([hashes[0], zipdl.file, dlName, zipdl.mime], function (
                     key,
                     val
                   ) {
                     url += "&targets%5B%5D=" + encodeURIComponent(val);
                   });
-                  $.each(fm.customData, function (key, val) {
+                  jQuery.each(fm.customData, function (key, val) {
                     url +=
                       "&" +
                       encodeURIComponent(key) +
@@ -359,7 +359,7 @@ elFinder.prototype.commands.download = function () {
                     zipdlFn(url);
                   }
                 } else {
-                  form = $(
+                  form = jQuery(
                     '<form action="' +
                       fm.options.url +
                       '" method="post" target="' +
@@ -368,7 +368,7 @@ elFinder.prototype.commands.download = function () {
                   )
                     .append('<input type="hidden" name="cmd" value="zipdl"/>')
                     .append('<input type="hidden" name="download" value="1"/>');
-                  $.each([hashes[0], zipdl.file, dlName, zipdl.mime], function (
+                  jQuery.each([hashes[0], zipdl.file, dlName, zipdl.mime], function (
                     key,
                     val
                   ) {
@@ -378,7 +378,7 @@ elFinder.prototype.commands.download = function () {
                         '"/>'
                     );
                   });
-                  $.each(fm.customData, function (key, val) {
+                  jQuery.each(fm.customData, function (key, val) {
                     form.append(
                       '<input type="hidden" name="' +
                         key +
@@ -388,7 +388,7 @@ elFinder.prototype.commands.download = function () {
                     );
                   });
                   form.attr("target", uniq).appendTo("body");
-                  iframe = $(
+                  iframe = jQuery(
                     '<iframe style="display:none" name="' + uniq + '">'
                   )
                     .appendTo("body")
@@ -474,10 +474,10 @@ elFinder.prototype.commands.download = function () {
       return dfrd.reject();
     }
 
-    fileCnt = $.grep(files, function (f) {
+    fileCnt = jQuery.grep(files, function (f) {
       return f.mime === "directory" ? false : true;
     }).length;
-    link = $("<a>").hide().appendTo("body");
+    link = jQuery("<a>").hide().appendTo("body");
     html5dl = typeof link.get(0).download === "string";
 
     if (
@@ -488,7 +488,7 @@ elFinder.prototype.commands.download = function () {
       linkdl = !html5dl && fm.UA.Mobile;
       if (mixed) {
         targets = {};
-        $.each(files, function (i, f) {
+        jQuery.each(files, function (i, f) {
           var p = f.hash.split("_", 2);
           if (!targets[p[0]]) {
             targets[p[0]] = [f.hash];
@@ -501,14 +501,14 @@ elFinder.prototype.commands.download = function () {
         }
       } else {
         targets = [
-          $.map(files, function (f) {
+          jQuery.map(files, function (f) {
             return f.hash;
           }),
         ];
       }
       dfrd = fm
         .sequence(
-          $.map(targets, function (t) {
+          jQuery.map(targets, function (t) {
             return getTask(t);
           })
         )
@@ -518,7 +518,7 @@ elFinder.prototype.commands.download = function () {
       return dfrd;
     } else {
       reqids = [];
-      getUrlDfrd = $.Deferred().done(function (urls) {
+      getUrlDfrd = jQuery.Deferred().done(function (urls) {
         for (i = 0; i < urls.length; i++) {
           url = urls[i];
           if (
@@ -537,7 +537,7 @@ elFinder.prototype.commands.download = function () {
                     ? void 0
                     : function () {
                         if (reqids.length) {
-                          $.each(reqids, function () {
+                          jQuery.each(reqids, function () {
                             fm.request({
                               data: {
                                 cmd: "abort",
@@ -580,12 +580,12 @@ elFinder.prototype.commands.download = function () {
           }
         }
         link.remove();
-        $(iframes)
+        jQuery(iframes)
           .appendTo("body")
           .ready(function () {
             setTimeout(function () {
-              $(iframes).each(function () {
-                $("#" + $(this).attr("id")).remove();
+              jQuery(iframes).each(function () {
+                jQuery("#" + jQuery(this).attr("id")).remove();
               });
             }, 20000 + 10000 * i); // give 20 sec + 10 sec for each file to be saved
           });

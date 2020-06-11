@@ -17,16 +17,16 @@ elFinder.prototype.commands.cut = function() {
 		var sel = this.files(select),
 			cnt = sel.length;
 		
-		return cnt && $.grep(sel, function(f) { return f.read && ! f.locked && ! fm.isRoot(f) ? true : false; }).length == cnt ? 0 : -1;
+		return cnt && jQuery.grep(sel, function(f) { return f.read && ! f.locked && ! fm.isRoot(f) ? true : false; }).length == cnt ? 0 : -1;
 	};
 	
 	this.exec = function(hashes) {
-		var dfrd = $.Deferred()
+		var dfrd = jQuery.Deferred()
 				.fail(function(error) {
 					fm.error(error);
 				});
 
-		$.each(this.files(hashes), function(i, file) {
+		jQuery.each(this.files(hashes), function(i, file) {
 			if (!(file.read && ! file.locked && ! fm.isRoot(file)) ) {
 				return !dfrd.reject(['errCopy', file.name, 'errPerm']);
 			}

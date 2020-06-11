@@ -3,10 +3,10 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfindernavbar = function(fm, opts) {
+jQuery.fn.elfindernavbar = function(fm, opts) {
 	"use strict";
 	this.not('.elfinder-navbar').each(function() {
-		var nav    = $(this).hide().addClass('ui-state-default elfinder-navbar'),
+		var nav    = jQuery(this).hide().addClass('ui-state-default elfinder-navbar'),
 			parent = nav.css('overflow', 'hidden').parent(),
 			wz     = parent.children('.elfinder-workzone').append(nav),
 			ltr    = fm.direction == 'ltr',
@@ -52,7 +52,7 @@ $.fn.elfindernavbar = function(fm, opts) {
 		if (fm.UA.Touch) {
 			autoHide = fm.storage('autoHide') || {};
 			if (typeof autoHide.navbar === 'undefined') {
-				autoHide.navbar = (opts.autoHideUA && opts.autoHideUA.length > 0 && $.grep(opts.autoHideUA, function(v){ return fm.UA[v]? true : false; }).length);
+				autoHide.navbar = (opts.autoHideUA && opts.autoHideUA.length > 0 && jQuery.grep(opts.autoHideUA, function(v){ return fm.UA[v]? true : false; }).length);
 				fm.storage('autoHide', autoHide);
 			}
 			
@@ -66,7 +66,7 @@ $.fn.elfindernavbar = function(fm, opts) {
 			
 			fm.bind('load', function() {
 				if (nav.children().length) {
-					swipeHandle = $('<div class="elfinder-navbar-swipe-handle"></div>').hide().appendTo(wz);
+					swipeHandle = jQuery('<div class="elfinder-navbar-swipe-handle"></div>').hide().appendTo(wz);
 					if (swipeHandle.css('pointer-events') !== 'none') {
 						swipeHandle.remove();
 						swipeHandle = null;
@@ -100,7 +100,7 @@ $.fn.elfindernavbar = function(fm, opts) {
 				autoHide.navbar = (mode !== 'show');
 				fm.storage('autoHide', Object.assign(fm.storage('autoHide'), {navbar: autoHide.navbar}));
 			}).on('touchstart', function(e) {
-				if ($(this)['scroll' + (fm.direction === 'ltr'? 'Right' : 'Left')]() > 5) {
+				if (jQuery(this)['scroll' + (fm.direction === 'ltr'? 'Right' : 'Left')]() > 5) {
 					e.originalEvent._preventSwipeX = true;
 				}
 			});
@@ -120,7 +120,7 @@ $.fn.elfindernavbar = function(fm, opts) {
 					}
 				})
 				.on('resize scroll', function(e) {
-					var $this = $(this),
+					var $this = jQuery(this),
 						tm = $this.data('posinit');
 					e.preventDefault();
 					e.stopPropagation();
@@ -159,7 +159,7 @@ $.fn.elfindernavbar = function(fm, opts) {
 						fm.trigger('wzresize');
 					};
 					nav.data('defWidth', nav.width());
-					$(window).on('resize.' + fm.namespace, set);
+					jQuery(window).on('resize.' + fm.namespace, set);
 					set();
 				});
 			}

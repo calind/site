@@ -66,20 +66,20 @@ elFinder.prototype.commands.upload = function() {
 								newItem.trigger('scrolltoview');
 							} else {
 								if (targetDir.hash !== cwdHash) {
-									node = $('<div></div>').append(
-										$('<button type="button" class="ui-button ui-widget ui-state-default ui-corner-all elfinder-tabstop"><span class="ui-button-text">'+fm.i18n('cmdopendir')+'</span></button>')
+									node = jQuery('<div></div>').append(
+										jQuery('<button type="button" class="ui-button ui-widget ui-state-default ui-corner-all elfinder-tabstop"><span class="ui-button-text">'+fm.i18n('cmdopendir')+'</span></button>')
 										.on('mouseenter mouseleave', function(e) { 
-											$(this).toggleClass('ui-state-hover', e.type == 'mouseenter');
+											jQuery(this).toggleClass('ui-state-hover', e.type == 'mouseenter');
 										}).on('click', function() {
 											fm.exec('open', check).done(function() {
 												fm.one('opendone', function() {
-													fm.trigger('selectfiles', {files : $.map(data.added, function(f) {return f.hash;})});
+													fm.trigger('selectfiles', {files : jQuery.map(data.added, function(f) {return f.hash;})});
 												});
 											});
 										})
 									);
 								} else {
-									fm.trigger('selectfiles', {files : $.map(data.added, function(f) {return f.hash;})});
+									fm.trigger('selectfiles', {files : jQuery.map(data.added, function(f) {return f.hash;})});
 								}
 								fm.toast({msg: fm.i18n(['complete', fm.i18n('cmdupload')]), extNode: node});
 							}
@@ -98,20 +98,20 @@ elFinder.prototype.commands.upload = function() {
 			},
 			getSelector = function() {
 				var hash = targetDir.hash,
-					dirs = $.map(fm.files(hash), function(f) {
+					dirs = jQuery.map(fm.files(hash), function(f) {
 						return (f.mime === 'directory' && f.write)? f : null; 
 					});
 				
 				if (! dirs.length) {
-					return $();
+					return jQuery();
 				}
 				
-				return $('<div class="elfinder-upload-dirselect elfinder-tabstop" title="' + fm.i18n('folders') + '"></div>')
+				return jQuery('<div class="elfinder-upload-dirselect elfinder-tabstop" title="' + fm.i18n('folders') + '"></div>')
 				.on('click', function(e) {
 					e.stopPropagation();
 					e.preventDefault();
 					dirs = fm.sortFiles(dirs);
-					var $this  = $(this),
+					var $this  = jQuery(this),
 						cwd    = fm.cwd(),
 						base   = dialog.closest('div.ui-dialog'),
 						getRaw = function(f, icon) {
@@ -133,14 +133,14 @@ elFinder.prototype.commands.upload = function() {
 							};
 						},
 						raw = [ getRaw(targetDir, 'opendir'), '|' ];
-					$.each(dirs, function(i, f) {
+					jQuery.each(dirs, function(i, f) {
 						raw.push(getRaw(f, 'dir'));
 					});
 					$this.trigger('blur');
 					fm.trigger('contextmenu', {
 						raw: raw,
-						x: e.pageX || $(this).offset().left,
-						y: e.pageY || $(this).offset().top,
+						x: e.pageX || jQuery(this).offset().left,
+						y: e.pageY || jQuery(this).offset().top,
 						prevNode: base,
 						fitHeight: true
 					});
@@ -148,7 +148,7 @@ elFinder.prototype.commands.upload = function() {
 			},
 			inputButton = function(type, caption) {
 				var button,
-					input = $('<input type="file" ' + type + '/>')
+					input = jQuery('<input type="file" ' + type + '/>')
 					.on('click', function() {
 						// for IE's bug
 						if (fm.UA.IE) {
@@ -166,11 +166,11 @@ elFinder.prototype.commands.upload = function() {
 					.on('dragover', function(e) {
 						e.originalEvent.dataTransfer.dropEffect = 'copy';
 					}),
-					form = $('<form></form>').append(input).on('click', function(e) {
+					form = jQuery('<form></form>').append(input).on('click', function(e) {
 						e.stopPropagation();
 					});
 
-				return $('<div class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only elfinder-tabstop elfinder-focus"><span class="ui-button-text">'+fm.i18n(caption)+'</span></div>')
+				return jQuery('<div class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only elfinder-tabstop elfinder-focus"><span class="ui-button-text">'+fm.i18n(caption)+'</span></div>')
 					.append(form)
 					.on('click', function(e) {
 						e.stopPropagation();
@@ -178,10 +178,10 @@ elFinder.prototype.commands.upload = function() {
 						input.trigger('click');
 					})
 					.on('mouseenter mouseleave', function(e) {
-						$(this).toggleClass(hover, e.type === 'mouseenter');
+						jQuery(this).toggleClass(hover, e.type === 'mouseenter');
 					});
 			},
-			dfrd = $.Deferred(),
+			dfrd = jQuery.Deferred(),
 			dialog, dropbox, pastebox, dropUpload, paste, dirs, spinner, uidialog;
 		
 		dropUpload = function(e) {
@@ -212,7 +212,7 @@ elFinder.prototype.commands.upload = function() {
 				if (kind === 'file' && (trf.items[0].getAsEntry || trf.items[0].webkitGetAsEntry)) {
 					file = trf;
 					type = 'data';
-				} else if (kind !== 'string' && trf.files && trf.files.length && $.inArray('Text', trf.types) === -1) {
+				} else if (kind !== 'string' && trf.files && trf.files.length && jQuery.inArray('Text', trf.types) === -1) {
 					file = trf.files;
 					type = 'files';
 				} else {
@@ -281,16 +281,16 @@ elFinder.prototype.commands.upload = function() {
 				var type = 'text',
 					src;
 				if (my.innerHTML) {
-					$(my).find('img').each(function(i, v){
+					jQuery(my).find('img').each(function(i, v){
 						if (v.src.match(/^webkit-fake-url:\/\//)) {
 							// For Safari's bug.
 							// ref. https://bugs.webkit.org/show_bug.cgi?id=49141
 							//      https://dev.ckeditor.com/ticket/13029
-							$(v).remove();
+							jQuery(v).remove();
 						}
 					});
 					
-					if ($(my).find('a,img').length) {
+					if (jQuery(my).find('a,img').length) {
 						type = 'html';
 					}
 					src = my.innerHTML;
@@ -300,7 +300,7 @@ elFinder.prototype.commands.upload = function() {
 			});
 		};
 		
-		dialog = $('<div class="elfinder-upload-dialog-wrapper"></div>')
+		dialog = jQuery('<div class="elfinder-upload-dialog-wrapper"></div>')
 			.append(inputButton('multiple', 'selectForUpload'));
 		
 		if (! fm.UA.Mobile && (function(input) {
@@ -313,7 +313,7 @@ elFinder.prototype.commands.upload = function() {
 			if (targetDir.hash === cwdHash || fm.navHash2Elm(targetDir.hash).hasClass('elfinder-subtree-loaded')) {
 				getSelector().appendTo(dialog);
 			} else {
-				spinner = $('<div class="elfinder-upload-dirselect" title="' + fm.i18n('nowLoading') + '"></div>')
+				spinner = jQuery('<div class="elfinder-upload-dirselect" title="' + fm.i18n('nowLoading') + '"></div>')
 					.append('<span class="elfinder-button-icon elfinder-button-icon-spinner" ></span>')
 					.appendTo(dialog);
 				fm.request({cmd : 'tree', target : targetDir.hash})
@@ -330,37 +330,37 @@ elFinder.prototype.commands.upload = function() {
 		}
 		
 		if (fm.dragUpload) {
-			dropbox = $('<div class="ui-corner-all elfinder-upload-dropbox elfinder-tabstop" contenteditable="true" data-ph="'+fm.i18n('dropPasteFiles')+'"></div>')
+			dropbox = jQuery('<div class="ui-corner-all elfinder-upload-dropbox elfinder-tabstop" contenteditable="true" data-ph="'+fm.i18n('dropPasteFiles')+'"></div>')
 				.on('paste', function(e){
 					paste(e);
 				})
 				.on('mousedown click', function(){
-					$(this).trigger('focus');
+					jQuery(this).trigger('focus');
 				})
 				.on('focus', function(){
 					this.innerHTML = '';
 				})
 				.on('mouseover', function(){
-					$(this).addClass(hover);
+					jQuery(this).addClass(hover);
 				})
 				.on('mouseout', function(){
-					$(this).removeClass(hover);
+					jQuery(this).removeClass(hover);
 				})
 				.on('dragenter', function(e) {
 					e.stopPropagation();
 				  	e.preventDefault();
-				  	$(this).addClass(hover);
+				  	jQuery(this).addClass(hover);
 				})
 				.on('dragleave', function(e) {
 					e.stopPropagation();
 				  	e.preventDefault();
-				  	$(this).removeClass(hover);
+				  	jQuery(this).removeClass(hover);
 				})
 				.on('dragover', function(e) {
 					e.stopPropagation();
 				  	e.preventDefault();
 					e.originalEvent.dataTransfer.dropEffect = 'copy';
-					$(this).addClass(hover);
+					jQuery(this).addClass(hover);
 				})
 				.on('drop', function(e) {
 					dialog.elfinderdialog('close');
@@ -371,21 +371,21 @@ elFinder.prototype.commands.upload = function() {
 				.after('<div class="elfinder-upload-dialog-or">'+fm.i18n('or')+'</div>')[0];
 			
 		} else {
-			pastebox = $('<div class="ui-corner-all elfinder-upload-dropbox" contenteditable="true">'+fm.i18n('dropFilesBrowser')+'</div>')
+			pastebox = jQuery('<div class="ui-corner-all elfinder-upload-dropbox" contenteditable="true">'+fm.i18n('dropFilesBrowser')+'</div>')
 				.on('paste drop', function(e){
 					paste(e);
 				})
 				.on('mousedown click', function(){
-					$(this).trigger('focus');
+					jQuery(this).trigger('focus');
 				})
 				.on('focus', function(){
 					this.innerHTML = '';
 				})
 				.on('dragenter mouseover', function(){
-					$(this).addClass(hover);
+					jQuery(this).addClass(hover);
 				})
 				.on('dragleave mouseout', function(){
-					$(this).removeClass(hover);
+					jQuery(this).removeClass(hover);
 				})
 				.prependTo(dialog)
 				.after('<div class="elfinder-upload-dialog-or">'+fm.i18n('or')+'</div>')[0];

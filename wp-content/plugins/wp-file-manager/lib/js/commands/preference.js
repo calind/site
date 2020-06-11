@@ -9,13 +9,13 @@ elFinder.prototype.commands.preference = function() {
 		fm      = this.fm,
 		r       = 'replace',
 		tab     = '<li class="' + fm.res('class', 'tabstab') + ' elfinder-preference-tab-{id}"><a href="#'+fm.namespace+'-preference-{id}" id="'+fm.namespace+'-preference-tab-{id}" class="ui-tabs-anchor {class}">{title}</a></li>',
-		base    = $('<div class="ui-tabs ui-widget ui-widget-content ui-corner-all elfinder-preference">'), 
-		ul      = $('<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-top">'),
-		tabs    = $('<div class="elfinder-preference-tabs ui-tabs-panel ui-widget-content ui-corner-bottom"></div>'),
+		base    = jQuery('<div class="ui-tabs ui-widget ui-widget-content ui-corner-all elfinder-preference">'), 
+		ul      = jQuery('<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-top">'),
+		tabs    = jQuery('<div class="elfinder-preference-tabs ui-tabs-panel ui-widget-content ui-corner-bottom"></div>'),
 		sep     = '<div class="elfinder-preference-separator"></div>',
-		selfUrl = $('base').length? document.location.href.replace(/#.*$/, '') : '',
+		selfUrl = jQuery('base').length? document.location.href.replace(/#.*$/, '') : '',
 		selectTab = function(tab) {
-			$('#'+fm.namespace+'-preference-tab-'+tab).trigger('mouseover').trigger('click');
+			jQuery('#'+fm.namespace+'-preference-tab-'+tab).trigger('mouseover').trigger('click');
 			openTab = tab;
 		},
 		clTabActive = fm.res('class', 'tabsactive'),
@@ -46,10 +46,10 @@ elFinder.prototype.commands.preference = function() {
 			}
 
 			forms.language && (forms.language = (function() {
-				var langSel = $('<select></select>').on('change', function() {
-						var lang = $(this).val();
+				var langSel = jQuery('<select></select>').on('change', function() {
+						var lang = jQuery(this).val();
 						fm.storage('lang', lang);
-						$('#'+fm.id).elfinder('reload');
+						jQuery('#'+fm.id).elfinder('reload');
 					}),
 					optTags = [],
 					langs = self.options.langs || {
@@ -92,9 +92,9 @@ elFinder.prototype.commands.preference = function() {
 						zh_TW: '正體中文'
 					};
 				if (!fm.cookieEnabled) {
-					return $();
+					return jQuery();
 				}
-				$.each(langs, function(lang, name) {
+				jQuery.each(langs, function(lang, name) {
 					optTags.push('<option value="'+lang+'">'+name+'</option>');
 				});
 				return langSel.append(optTags.join('')).val(fm.lang);
@@ -105,8 +105,8 @@ elFinder.prototype.commands.preference = function() {
 				if (cnt === 0 || (cnt === 1 && fm.options.themes.default)) {
 					return null;
 				}
-				var themeSel = $('<select></select>').on('change', function() {
-						var theme = $(this).val();
+				var themeSel = jQuery('<select></select>').on('change', function() {
+						var theme = jQuery(this).val();
 						fm.changeTheme(theme).storage('theme', theme);
 					}),
 					optTags = [],
@@ -118,20 +118,20 @@ elFinder.prototype.commands.preference = function() {
 					items = ['image', 'description', 'author', 'email', 'license'],
 					render = function(key, data) {
 					},
-					defBtn = $('<button class="ui-button ui-corner-all ui-widget elfinder-preference-theme-default"></button>').text(fm.i18n('default')).on('click', function(e) {
+					defBtn = jQuery('<button class="ui-button ui-corner-all ui-widget elfinder-preference-theme-default"></button>').text(fm.i18n('default')).on('click', function(e) {
 						themeSel.val('default').trigger('change');
 					}),
-					list = $('<div class="elfinder-reference-hide-taball"></div>').on('click', 'button', function() {
-							var val = $(this).data('themeid');
+					list = jQuery('<div class="elfinder-reference-hide-taball"></div>').on('click', 'button', function() {
+							var val = jQuery(this).data('themeid');
 							themeSel.val(val).trigger('change');
 					});
 
 				if (!fm.options.themes.default) {
 					themeSel.append('<option value="default">'+fm.i18n('default')+'</option>');
 				}
-				$.each(fm.options.themes, function(id, val) {
-					var opt = $('<option class="elfinder-theme-option-'+id+'" value="'+id+'">'+fm.i18n(id)+'</option>'),
-						dsc = $('<fieldset class="ui-widget ui-widget-content ui-corner-all elfinder-theme-list-'+id+'"><legend>'+fm.i18n(id)+'</legend><div><span class="elfinder-spinner"></span></div></fieldset>'),
+				jQuery.each(fm.options.themes, function(id, val) {
+					var opt = jQuery('<option class="elfinder-theme-option-'+id+'" value="'+id+'">'+fm.i18n(id)+'</option>'),
+						dsc = jQuery('<fieldset class="ui-widget ui-widget-content ui-corner-all elfinder-theme-list-'+id+'"><legend>'+fm.i18n(id)+'</legend><div><span class="elfinder-spinner"></span></div></fieldset>'),
 						tm;
 					themeSel.append(opt);
 					list.append(dsc);
@@ -141,19 +141,19 @@ elFinder.prototype.commands.preference = function() {
 					fm.getTheme(id).always(function() {
 						tm && clearTimeout(tm);
 					}).done(function(data) {
-						var link, val = $(), dl = $('<dl></dl>');
+						var link, val = jQuery(), dl = jQuery('<dl></dl>');
 						link = data.link? tpl.link.replace(/\$1/g, data.link).replace(/\$3/g, fm.i18n('website')) : '$2';
 						if (data.name) {
 							opt.html(fm.i18n(data.name));
 						}
 						dsc.children('legend').html(link.replace(/\$2/g, fm.i18n(data.name) || id));
-						$.each(items, function(i, key) {
+						jQuery.each(items, function(i, key) {
 							var t = tpl[key] || tpl.data,
 								elm;
 							if (data[key]) {
 								elm = t.replace(/\$0/g, fm.escape(key)).replace(/\$1/g, fm.i18n(key)).replace(/\$2/g, fm.i18n(data[key]));
 								if (key === 'image' && data.link) {
-									elm = $(elm).on('click', function() {
+									elm = jQuery(elm).on('click', function() {
 										themeSel.val(id).trigger('change');
 									}).attr('title', fm.i18n('select'));
 								}
@@ -161,22 +161,22 @@ elFinder.prototype.commands.preference = function() {
 							}
 						});
 						val = val.add(dl);
-						val = val.add($('<div class="elfinder-preference-theme-btn"></div>').append($('<button class="ui-button ui-corner-all ui-widget"></button>').data('themeid', id).html(fm.i18n('select'))));
+						val = val.add(jQuery('<div class="elfinder-preference-theme-btn"></div>').append(jQuery('<button class="ui-button ui-corner-all ui-widget"></button>').data('themeid', id).html(fm.i18n('select'))));
 						dsc.find('span.elfinder-spinner').replaceWith(val);
 					}).fail(function() {
 						dsc.find('span.elfinder-spinner').replaceWith(fm.i18n(['errRead', id]));
 					});
 				});
-				return $('<div></div>').append(themeSel.val(fm.theme && fm.theme.id? fm.theme.id : 'default'), defBtn, list);
+				return jQuery('<div></div>').append(themeSel.val(fm.theme && fm.theme.id? fm.theme.id : 'default'), defBtn, list);
 			})());
 
 			forms.toolbarPref && (forms.toolbarPref = (function() {
-				var pnls = $.map(fm.options.uiOptions.toolbar, function(v) {
-						return $.isArray(v)? v : null;
+				var pnls = jQuery.map(fm.options.uiOptions.toolbar, function(v) {
+						return jQuery.isArray(v)? v : null;
 					}),
 					tags = [],
 					hides = fm.storage('toolbarhides') || {};
-				$.each(pnls, function() {
+				jQuery.each(pnls, function() {
 					var cmd = this,
 						name = fm.i18n('cmd'+cmd);
 					if (name === 'cmd'+cmd) {
@@ -184,9 +184,9 @@ elFinder.prototype.commands.preference = function() {
 					}
 					tags.push('<span class="elfinder-preference-toolbar-item"><label><input type="checkbox" value="'+cmd+'" '+(hides[cmd]? '' : 'checked')+'/>'+name+'</label></span>');
 				});
-				return $(tags.join(' ')).on('change', 'input', function() {
-					var v = $(this).val(),
-						o = $(this).is(':checked');
+				return jQuery(tags.join(' ')).on('change', 'input', function() {
+					var v = jQuery(this).val(),
+						o = jQuery(this).is(':checked');
 					if (!o && !hides[v]) {
 						hides[v] = true;
 					} else if (o && hides[v]) {
@@ -200,7 +200,7 @@ elFinder.prototype.commands.preference = function() {
 			forms.iconSize && (forms.iconSize = (function() {
 				var max = fm.options.uiOptions.cwd.iconsView.sizeMax || 3,
 					size = fm.storage('iconsize') || fm.options.uiOptions.cwd.iconsView.size || 0,
-					sld = $('<div class="touch-punch"></div>').slider({
+					sld = jQuery('<div class="touch-punch"></div>').slider({
 						classes: {
 							'ui-slider-handle': 'elfinder-tabstop',
 						},
@@ -223,14 +223,14 @@ elFinder.prototype.commands.preference = function() {
 				var cols = fm.options.uiOptions.cwd.listView.columns,
 					tags = [],
 					hides = fm.storage('columnhides') || {};
-				$.each(cols, function() {
+				jQuery.each(cols, function() {
 					var key = this,
 						name = fm.getColumnName(key);
 					tags.push('<span class="elfinder-preference-column-item"><label><input type="checkbox" value="'+key+'" '+(hides[key]? '' : 'checked')+'/>'+name+'</label></span>');
 				});
-				return $(tags.join(' ')).on('change', 'input', function() {
-					var v = $(this).val(),
-						o = $(this).is(':checked');
+				return jQuery(tags.join(' ')).on('change', 'input', function() {
+					var v = jQuery(this).val(),
+						o = jQuery(this).is(':checked');
 					if (!o && !hides[v]) {
 						hides[v] = true;
 					} else if (o && hides[v]) {
@@ -242,19 +242,19 @@ elFinder.prototype.commands.preference = function() {
 			})());
 			
 			forms.selectAction && (forms.selectAction = (function() {
-				var actSel = $('<select></select>').on('change', function() {
-						var act = $(this).val();
+				var actSel = jQuery('<select></select>').on('change', function() {
+						var act = jQuery(this).val();
 						fm.storage('selectAction', act === 'default'? null : act);
 					}),
 					optTags = [],
 					acts = self.options.selectActions,
 					defAct = fm.getCommand('open').options.selectAction || 'open';
 				
-				if ($.inArray(defAct, acts) === -1) {
+				if (jQuery.inArray(defAct, acts) === -1) {
 					acts.unshift(defAct);
 				}
-				$.each(acts, function(i, act) {
-					var names = $.map(act.split('/'), function(cmd) {
+				jQuery.each(acts, function(i, act) {
+					var names = jQuery.map(act.split('/'), function(cmd) {
 						var name = fm.i18n('cmd'+cmd);
 						if (name === 'cmd'+cmd) {
 							name = fm.i18n(cmd);
@@ -272,15 +272,15 @@ elFinder.prototype.commands.preference = function() {
 						var tags = [];
 						// re-assign hides
 						hides = fm.getCommand('edit').getMkfileHides();
-						$.each(fm.mimesCanMakeEmpty, function(mime, type) {
+						jQuery.each(fm.mimesCanMakeEmpty, function(mime, type) {
 							var name = fm.getCommand('mkfile').getTypeName(mime, type);
 							tags.push('<span class="elfinder-preference-column-item" title="'+fm.escape(name)+'"><label><input type="checkbox" value="'+mime+'" '+(hides[mime]? '' : 'checked')+'/>'+type+'</label></span>');
 						});
 						return tags.join(' ');
 					},
-					elm = $('<div></div>').on('change', 'input', function() {
-						var v = $(this).val(),
-							o = $(this).is(':checked');
+					elm = jQuery('<div></div>').on('change', 'input', function() {
+						var v = jQuery(this).val(),
+							o = jQuery(this).is(':checked');
 						if (!o && !hides[v]) {
 							hides[v] = true;
 						} else if (o && hides[v]) {
@@ -289,12 +289,12 @@ elFinder.prototype.commands.preference = function() {
 						fm.storage('mkfileHides', hides);
 						fm.trigger('canMakeEmptyFile');
 					}).append(getTag()),
-					add = $('<div></div>').append(
-						$('<input type="text" placeholder="'+fm.i18n('typeOfTextfile')+'"/>').on('keydown', function(e) {
-							(e.keyCode === $.ui.keyCode.ENTER) && $(this).next().trigger('click');
+					add = jQuery('<div></div>').append(
+						jQuery('<input type="text" placeholder="'+fm.i18n('typeOfTextfile')+'"/>').on('keydown', function(e) {
+							(e.keyCode === jQuery.ui.keyCode.ENTER) && jQuery(this).next().trigger('click');
 						}),
-						$('<button class="ui-button"></button>').html(fm.i18n('add')).on('click', function() {
-							var input = $(this).prev(),
+						jQuery('<button class="ui-button"></button>').html(fm.i18n('add')).on('click', function() {
+							var input = jQuery(this).prev(),
 								val = input.val(),
 								uiToast = fm.getUI('toast'),
 								err = function() {
@@ -333,7 +333,7 @@ elFinder.prototype.commands.preference = function() {
 								}
 							});
 						}),
-						$('<button class="ui-button"></button>').html(fm.i18n('reset')).on('click', function() {
+						jQuery('<button class="ui-button"></button>').html(fm.i18n('reset')).on('click', function() {
 							fm.one('canMakeEmptyFile', {done: function() {
 								elm.empty().append(getTag());
 							}});
@@ -346,28 +346,28 @@ elFinder.prototype.commands.preference = function() {
 						elm.empty().append(getTag());
 					}
 				}});
-				return $('<div></div>').append(elm, add);
+				return jQuery('<div></div>').append(elm, add);
 			})());
 
-			forms.useStoredEditor && (forms.useStoredEditor = $('<input type="checkbox"/>').prop('checked', (function() {
+			forms.useStoredEditor && (forms.useStoredEditor = jQuery('<input type="checkbox"/>').prop('checked', (function() {
 				var s = fm.storage('useStoredEditor');
 				return s? (s > 0) : fm.options.commandsOptions.edit.useStoredEditor;
 			})()).on('change', function(e) {
-				fm.storage('useStoredEditor', $(this).is(':checked')? 1 : -1);
+				fm.storage('useStoredEditor', jQuery(this).is(':checked')? 1 : -1);
 			}));
 
-			forms.editorMaximized && (forms.editorMaximized = $('<input type="checkbox"/>').prop('checked', (function() {
+			forms.editorMaximized && (forms.editorMaximized = jQuery('<input type="checkbox"/>').prop('checked', (function() {
 				var s = fm.storage('editorMaximized');
 				return s? (s > 0) : fm.options.commandsOptions.edit.editorMaximized;
 			})()).on('change', function(e) {
-				fm.storage('editorMaximized', $(this).is(':checked')? 1 : -1);
+				fm.storage('editorMaximized', jQuery(this).is(':checked')? 1 : -1);
 			}));
 
-			forms.useFullscreen && (forms.useFullscreen = $('<input type="checkbox"/>').prop('checked', (function() {
+			forms.useFullscreen && (forms.useFullscreen = jQuery('<input type="checkbox"/>').prop('checked', (function() {
 				var s = fm.storage('useFullscreen');
 				return s? (s > 0) : fm.options.commandsOptions.fullscreen.mode === 'screen';
 			})()).on('change', function(e) {
-				fm.storage('useFullscreen', $(this).is(':checked')? 1 : -1);
+				fm.storage('useFullscreen', jQuery(this).is(':checked')? 1 : -1);
 			}));
 
 			if (forms.showHidden) {
@@ -377,7 +377,7 @@ elFinder.prototype.commands.preference = function() {
 								t = [],
 								v;
 							if (s && s.items) {
-								$.each(s.items, function(h, n) {
+								jQuery.each(s.items, function(h, n) {
 									t.push(fm.escape(n));
 								});
 							}
@@ -386,30 +386,30 @@ elFinder.prototype.commands.preference = function() {
 							forms.showHidden.attr('title',v);
 							useTooltip && forms.showHidden.tooltip('option', 'content', v.replace(/\n/g, '<br>')).tooltip('close');
 						},
-						chk = $('<input type="checkbox"/>').prop('checked', (function() {
+						chk = jQuery('<input type="checkbox"/>').prop('checked', (function() {
 							var s = fm.storage('hide');
 							return s && s.show;
 						})()).on('change', function(e) {
 							var o = {};
-							o[$(this).is(':checked')? 'show' : 'hide'] = true;
+							o[jQuery(this).is(':checked')? 'show' : 'hide'] = true;
 							fm.exec('hide', void(0), o);
 						}),
-						btn = $('<button class="ui-button ui-corner-all ui-widget"></button>').append(fm.i18n('reset')).on('click', function() {
+						btn = jQuery('<button class="ui-button ui-corner-all ui-widget"></button>').append(fm.i18n('reset')).on('click', function() {
 							fm.exec('hide', void(0), {reset: true});
-							$(this).parent().find('input:first').prop('checked', false);
+							jQuery(this).parent().find('input:first').prop('checked', false);
 							setTitle();
 						}),
-						elms = $().add(chk).add(btn),
+						elms = jQuery().add(chk).add(btn),
 						useTooltip;
 					
-					forms.showHidden = $('<div></div>').append(chk, btn);
+					forms.showHidden = jQuery('<div></div>').append(chk, btn);
 					fm.bind('hide', function(e) {
 						var d = e.data;
 						if (!d.opts || (!d.opts.show && !d.opts.hide)) {
 							setTitle();
 						}
 					});
-					if (fm.UA.Mobile && $.fn.tooltip) {
+					if (fm.UA.Mobile && jQuery.fn.tooltip) {
 						useTooltip = true;
 						forms.showHidden.tooltip({
 							classes: {
@@ -428,14 +428,14 @@ elFinder.prototype.commands.preference = function() {
 				var items = fm.getCommand('info').items,
 					tags = [],
 					hides = fm.storage('infohides') || fm.arrayFlip(fm.options.commandsOptions.info.hideItems, true);
-				$.each(items, function() {
+				jQuery.each(items, function() {
 					var key = this,
 						name = fm.i18n(key);
 					tags.push('<span class="elfinder-preference-info-item"><label><input type="checkbox" value="'+key+'" '+(hides[key]? '' : 'checked')+'/>'+name+'</label></span>');
 				});
-				return $(tags.join(' ')).on('change', 'input', function() {
-					var v = $(this).val(),
-						o = $(this).is(':checked');
+				return jQuery(tags.join(' ')).on('change', 'input', function() {
+					var v = jQuery(this).val(),
+						o = jQuery(this).is(':checked');
 					if (!o && !hides[v]) {
 						hides[v] = true;
 					} else if (o && hides[v]) {
@@ -449,52 +449,52 @@ elFinder.prototype.commands.preference = function() {
 			forms.hashChecker && fm.hashCheckers.length && (forms.hashChecker = (function() {
 				var tags = [],
 					enabled = fm.arrayFlip(fm.storage('hashchekcer') || fm.options.commandsOptions.info.showHashAlgorisms, true);
-				$.each(fm.hashCheckers, function() {
+				jQuery.each(fm.hashCheckers, function() {
 					var cmd = this,
 						name = fm.i18n(cmd);
 					tags.push('<span class="elfinder-preference-hashchecker-item"><label><input type="checkbox" value="'+cmd+'" '+(enabled[cmd]? 'checked' : '')+'/>'+name+'</label></span>');
 				});
-				return $(tags.join(' ')).on('change', 'input', function() {
-					var v = $(this).val(),
-						o = $(this).is(':checked');
+				return jQuery(tags.join(' ')).on('change', 'input', function() {
+					var v = jQuery(this).val(),
+						o = jQuery(this).is(':checked');
 					if (o) {
 						enabled[v] = true;
 					} else if (enabled[v]) {
 						delete enabled[v];
 					}
-					fm.storage('hashchekcer', $.grep(fm.hashCheckers, function(v) {
+					fm.storage('hashchekcer', jQuery.grep(fm.hashCheckers, function(v) {
 						return enabled[v];
 					}));
 				});
 			})());
 
-			forms.autoFocusDialog && (forms.autoFocusDialog = $('<input type="checkbox"/>').prop('checked', (function() {
+			forms.autoFocusDialog && (forms.autoFocusDialog = jQuery('<input type="checkbox"/>').prop('checked', (function() {
 				var s = fm.storage('autoFocusDialog');
 				return s? (s > 0) : fm.options.uiOptions.dialog.focusOnMouseOver;
 			})()).on('change', function(e) {
-				fm.storage('autoFocusDialog', $(this).is(':checked')? 1 : -1);
+				fm.storage('autoFocusDialog', jQuery(this).is(':checked')? 1 : -1);
 			}));
 			
-			forms.clearBrowserData && (forms.clearBrowserData = $('<button></button>').text(fm.i18n('reset')).button().on('click', function(e) {
+			forms.clearBrowserData && (forms.clearBrowserData = jQuery('<button></button>').text(fm.i18n('reset')).button().on('click', function(e) {
 				e.preventDefault();
 				fm.storage();
-				$('#'+fm.id).elfinder('reload');
+				jQuery('#'+fm.id).elfinder('reload');
 			}));
 			
-			$.each(cats, function(id, prefs) {
+			jQuery.each(cats, function(id, prefs) {
 				var dls, found;
 				if (prefs === true) {
 					found = 1;
 				} else if (prefs) {
-					dls = $();
-					$.each(prefs, function(i, n) {
+					dls = jQuery();
+					jQuery.each(prefs, function(i, n) {
 						var f, title, chks = '', cbox;
 						if (f = forms[n]) {
 							found = 2;
 							title = fm.i18n(n);
-							cbox = $(f).filter('input[type="checkbox"]');
+							cbox = jQuery(f).filter('input[type="checkbox"]');
 							if (!cbox.length) {
-								cbox = $(f).find('input[type="checkbox"]');
+								cbox = jQuery(f).find('input[type="checkbox"]');
 							}
 							if (cbox.length === 1) {
 								if (!cbox.attr('id')) {
@@ -504,7 +504,7 @@ elFinder.prototype.commands.preference = function() {
 							} else if (cbox.length > 1) {
 								chks = ' elfinder-preference-checkboxes';
 							}
-							dls = dls.add($('<dt class="elfinder-preference-'+n+chks+'">'+title+'</dt>')).add($('<dd class="elfinder-preference-'+n+chks+'"></dd>').append(f));
+							dls = dls.add(jQuery('<dt class="elfinder-preference-'+n+chks+'">'+title+'</dt>')).add(jQuery('<dd class="elfinder-preference-'+n+chks+'"></dd>').append(f));
 						}
 					});
 				}
@@ -512,16 +512,16 @@ elFinder.prototype.commands.preference = function() {
 					ul.append(tab[r](/\{id\}/g, id)[r](/\{title\}/, fm.i18n(id))[r](/\{class\}/, openTab === id? 'elfinder-focus' : ''));
 					if (found === 2) {
 						tabs.append(
-							$('<div id="'+fm.namespace+'-preference-'+id+'" class="elfinder-preference-content"></div>')
+							jQuery('<div id="'+fm.namespace+'-preference-'+id+'" class="elfinder-preference-content"></div>')
 							.hide()
-							.append($('<dl></dl>').append(dls))
+							.append(jQuery('<dl></dl>').append(dls))
 						);
 					}
 				}
 			});
 
 			ul.on('click', 'a', function(e) {
-				var t = $(e.target),
+				var t = jQuery(e.target),
 					h = t.attr('href');
 				e.preventDefault();
 				e.stopPropagation();
@@ -533,12 +533,12 @@ elFinder.prototype.commands.preference = function() {
 					tabs.addClass('elfinder-preference-taball').children().show();
 				} else {
 					tabs.removeClass('elfinder-preference-taball').children().hide();
-					$(h).show();
+					jQuery(h).show();
 				}
 			}).on('focus blur', 'a', function(e) {
-				$(this).parent().toggleClass('ui-state-focus', e.type === 'focusin');
+				jQuery(this).parent().toggleClass('ui-state-focus', e.type === 'focusin');
 			}).on('mouseenter mouseleave', 'li', function(e) {
-				$(this).toggleClass('ui-state-hover', e.type === 'mouseenter');
+				jQuery(this).toggleClass('ui-state-hover', e.type === 'mouseenter');
 			});
 
 			tabs.find('a,input,select,button').addClass('elfinder-tabstop');
@@ -599,7 +599,7 @@ elFinder.prototype.commands.preference = function() {
 			}
 		}
 		dialog.elfinderdialog('open');
-		return $.Deferred().resolve();
+		return jQuery.Deferred().resolve();
 	};
 
 };

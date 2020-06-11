@@ -22,7 +22,7 @@ elFinder.prototype.commands.opennew = function() {
 	};
 	
 	this.exec = function(hashes) {
-		var dfrd  = $.Deferred(),
+		var dfrd  = jQuery.Deferred(),
 			files = this.files(hashes),
 			cnt   = files.length,
 			opts  = this.options,

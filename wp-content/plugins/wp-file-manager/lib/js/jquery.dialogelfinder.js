@@ -3,7 +3,7 @@
  *
  * @param  Object  elFinder options with dialog options
  * @example
- * $(selector).dialogelfinder({
+ * jQuery(selector).dialogelfinder({
  *     // some elfinder options
  *     title          : 'My files', // dialog title, default = "Files"
  *     width          : 850,        // dialog width, default 840
@@ -12,20 +12,20 @@
  * })
  * @author Dmitry (dio) Levashov
  **/
-$.fn.dialogelfinder = function(opts, opts2) {
+jQuery.fn.dialogelfinder = function(opts, opts2) {
 		var position = 'elfinderPosition',
 		destroy  = 'elfinderDestroyOnClose',
 		node, pos;
 
-	if ($.isPlainObject(opts)) {
+	if (jQuery.isPlainObject(opts)) {
 		this.not('.elfinder').each(function() {
 
 			opts.handlers = opts.handlers || {};
 
-			var node    = $(this),
-				doc     = $(document),
-				toolbar = $('<div class="ui-widget-header dialogelfinder-drag ui-corner-top">'+(opts.title || 'Files')+'</div>'),
-				button  = $('<a href="#" class="dialogelfinder-drag-close ui-corner-all"><span class="ui-icon ui-icon-closethick"> </span></a>')
+			var node    = jQuery(this),
+				doc     = jQuery(document),
+				toolbar = jQuery('<div class="ui-widget-header dialogelfinder-drag ui-corner-top">'+(opts.title || 'Files')+'</div>'),
+				button  = jQuery('<a href="#" class="dialogelfinder-drag-close ui-corner-all"><span class="ui-icon ui-icon-closethick"> </span></a>')
 					.appendTo(toolbar)
 					.on('click', function(e) {
 						e.preventDefault();
@@ -66,15 +66,15 @@ $.fn.dialogelfinder = function(opts, opts2) {
 			
 			opts.position && node.data(position, opts.position);
 			
-			opts.autoOpen !== false && $(this).dialogelfinder('open');
+			opts.autoOpen !== false && jQuery(this).dialogelfinder('open');
 
 		});
 	} else {
 		if (opts === 'open') {
-			node = $(this);
+			node = jQuery(this);
 			pos = node.data(position) || {
-				top  : parseInt($(document).scrollTop() + ($(window).height() < node.height() ? 2 : ($(window).height() - node.height())/2)),
-				left : parseInt($(document).scrollLeft() + ($(window).width() < node.width()  ? 2 : ($(window).width()  - node.width())/2))
+				top  : parseInt(jQuery(document).scrollTop() + (jQuery(window).height() < node.height() ? 2 : (jQuery(window).height() - node.height())/2)),
+				left : parseInt(jQuery(document).scrollLeft() + (jQuery(window).width() < node.width()  ? 2 : (jQuery(window).width()  - node.width())/2))
 			};
 
 			if (node.is(':hidden')) {
@@ -86,7 +86,7 @@ $.fn.dialogelfinder = function(opts, opts2) {
 				}, 200);
 			}
 		} else if (opts === 'close') {
-			node = $(this).removeClass('ui-front');
+			node = jQuery(this).removeClass('ui-front');
 				
 			if (node.is(':visible')) {
 				!!node.data(destroy)
@@ -94,7 +94,7 @@ $.fn.dialogelfinder = function(opts, opts2) {
 					: node.elfinder('close');
 			}
 		} else if (opts === 'instance') {
-			return $(this).getElFinder();
+			return jQuery(this).getElFinder();
 		}
 	}
 

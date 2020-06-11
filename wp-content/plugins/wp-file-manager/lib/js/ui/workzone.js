@@ -2,12 +2,12 @@
  * @class elfinderworkzone - elFinder container for nav and current directory
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfinderworkzone = function(fm) {
+jQuery.fn.elfinderworkzone = function(fm) {
 	"use strict";
 	var cl = 'elfinder-workzone';
 	
 	this.not('.'+cl).each(function() {
-		var wz     = $(this).addClass(cl),
+		var wz     = jQuery(this).addClass(cl),
 			prevH  = Math.round(wz.height()),
 			parent = wz.parent(),
 			setDelta = function() {
@@ -25,7 +25,7 @@ $.fn.elfinderworkzone = function(fm) {
 				
 				parent.css('overflow', 'hidden')
 					.children(':visible:not(.'+cl+')').each(function() {
-						var ch = $(this);
+						var ch = jQuery(this);
 		
 						if (ch.css('position') != 'absolute' && ch.css('position') != 'fixed') {
 							height -= ch.outerHeight(true);

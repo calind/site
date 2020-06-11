@@ -3,7 +3,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfindertree = function(fm, opts) {
+jQuery.fn.elfindertree = function(fm, opts) {
 	"use strict";
 	var treeclass = fm.res('class', 'tree');
 	
@@ -194,7 +194,7 @@ $.fn.elfindertree = function(fm, opts) {
 			 */
 			subdirs = function(ids) {
 				var targets = [];
-				$.each(ids, function(i, id) {
+				jQuery.each(ids, function(i, id) {
 					subdirsQue[id] && targets.push(fm.navId2Hash(id));
 					delete subdirsQue[id];
 				});
@@ -207,7 +207,7 @@ $.fn.elfindertree = function(fm, opts) {
 						}
 					}).done(function(res) {
 						if (res && res.subdirs) {
-							$.each(res.subdirs, function(hash, subdirs) {
+							jQuery.each(res.subdirs, function(hash, subdirs) {
 								var elm = fm.navHash2Elm(hash);
 								elm.removeClass(chksubdir);
 								elm[subdirs? 'addClass' : 'removeClass'](collapsed);
@@ -231,7 +231,7 @@ $.fn.elfindertree = function(fm, opts) {
 					execSubdirsTm && clearTimeout(execSubdirsTm);
 					subdirsExecQue = [];
 					subdirsJobRes = fm.asyncJob(function(id) {
-						return fm.isInWindow($('#'+id))? id : null;
+						return fm.isInWindow(jQuery('#'+id))? id : null;
 					}, ids, { numPerOnce: 200 })
 					.done(function(arr) {
 						if (arr.length) {
@@ -281,10 +281,10 @@ $.fn.elfindertree = function(fm, opts) {
 			 *
 			 * @type Object
 			 */
-			droppableopts = $.extend(true, {}, fm.droppable, {
+			droppableopts = jQuery.extend(true, {}, fm.droppable, {
 				// show subfolders on dropover
 				over : function(e, ui) {
-					var dst    = $(this),
+					var dst    = jQuery(this),
 						helper = ui.helper,
 						cl     = hover+' '+dropover,
 						hash, status;
@@ -314,10 +314,10 @@ $.fn.elfindertree = function(fm, opts) {
 					}
 					hash = fm.navId2Hash(dst.attr('id'));
 					dst.data('dropover', hash);
-					$.each(ui.helper.data('files'), function(i, h) {
+					jQuery.each(ui.helper.data('files'), function(i, h) {
 						if (h === hash || (fm.file(h).phash === hash && !ui.helper.hasClass('elfinder-drag-helper-plus'))) {
 							dst.removeClass(cl);
-							return false; // break $.each
+							return false; // break jQuery.each
 						}
 					});
 					if (helper.data('locked')) {
@@ -332,7 +332,7 @@ $.fn.elfindertree = function(fm, opts) {
 					requestAnimationFrame(function(){ dst.hasClass(dropover) && helper.addClass(status); });
 				},
 				out : function(e, ui) {
-					var dst    = $(this),
+					var dst    = jQuery(this),
 						helper = ui.helper;
 					e.stopPropagation();
 					if (insideNavbar(e.clientX)) {
@@ -344,7 +344,7 @@ $.fn.elfindertree = function(fm, opts) {
 					   .removeClass(hover+' '+dropover);
 				},
 				deactivate : function() {
-					$(this).removeData('dropover')
+					jQuery(this).removeData('dropover')
 					       .removeClass(hover+' '+dropover);
 				},
 				drop : function(e, ui) {
@@ -352,7 +352,7 @@ $.fn.elfindertree = function(fm, opts) {
 				}
 			}),
 			
-			spinner = $(fm.res('tpl', 'navspinner')),
+			spinner = jQuery(fm.res('tpl', 'navspinner')),
 			
 			/**
 			 * Directory html template
@@ -412,10 +412,10 @@ $.fn.elfindertree = function(fm, opts) {
 						if (!dir.disabled || dir.disabled.length < 1) {
 							cls += ' '+pastable+' '+uploadable;
 						} else {
-							if ($.inArray('paste', dir.disabled) === -1) {
+							if (jQuery.inArray('paste', dir.disabled) === -1) {
 								cls += ' '+pastable;
 							}
-							if ($.inArray('upload', dir.disabled) === -1) {
+							if (jQuery.inArray('upload', dir.disabled) === -1) {
 								cls += ' '+uploadable;
 							}
 						}
@@ -453,7 +453,7 @@ $.fn.elfindertree = function(fm, opts) {
 			 * @return Array
 			 */
 			filter = function(files, checkExists) {
-				return $.map(files || [], function(f) {
+				return jQuery.map(files || [], function(f) {
 					return (f.mime === 'directory' && (!checkExists || fm.navHash2Elm(f.hash).length)) ? f : null;
 				});
 			},
@@ -502,7 +502,7 @@ $.fn.elfindertree = function(fm, opts) {
 				var length  = dirs.length,
 					orphans = [],
 					i = length,
-					tgts = $(),
+					tgts = jQuery(),
 					done = {},
 					cwd = fm.cwd(),
 					append = function(parent, dirs, start, direction) {
@@ -511,17 +511,17 @@ $.fn.elfindertree = function(fm, opts) {
 							max = fm.newAPI? Math.min(10000, Math.max(10, opts.subTreeMax)) : 10000,
 							setHashes = function() {
 								hashes = {};
-								$.each(dirs, function(i, d) {
+								jQuery.each(dirs, function(i, d) {
 									hashes[d.hash] = i;
 								});
 							},
 							change = function(mode) {
 								if (mode === 'prepare') {
-									$.each(dirs, function(i, d) {
+									jQuery.each(dirs, function(i, d) {
 										d.node && parent.append(d.node.hide());
 									});
 								} else if (mode === 'done') {
-									$.each(dirs, function(i, d) {
+									jQuery.each(dirs, function(i, d) {
 										d.node && d.node.detach().show();
 									});
 								}
@@ -541,7 +541,7 @@ $.fn.elfindertree = function(fm, opts) {
 								}
 								
 								if (data.removed && data.removed.length) {
-									dirs = $.grep(dirs, function(d) {
+									dirs = jQuery.grep(dirs, function(d) {
 										if (data.removed.indexOf(d.hash) === -1) {
 											return true;
 										} else {
@@ -552,7 +552,7 @@ $.fn.elfindertree = function(fm, opts) {
 								}
 								
 								if (data.added && data.added.length) {
-									dirs = dirs.concat($.grep(data.added, function(d) {
+									dirs = dirs.concat(jQuery.grep(data.added, function(d) {
 										if (hashes[d.hash] === void(0)) {
 											!changed && (changed = true);
 											return true;
@@ -598,14 +598,14 @@ $.fn.elfindertree = function(fm, opts) {
 									total = Math.ceil(dirs.length/max);
 									page = Math.ceil(start/max);
 								}
-								$.each(parts || dirs, function(i, d) {
+								jQuery.each(parts || dirs, function(i, d) {
 									html.push(itemhtml(d));
 									if (d.node) {
 										nodes[d.hash] = d.node;
 									}
 								});
 								if (prev > -1) {
-									prevBtn = $('<button class="elfinder-navbar-pager elfinder-navbar-pager-prev"></button>')
+									prevBtn = jQuery('<button class="elfinder-navbar-pager elfinder-navbar-pager-prev"></button>')
 										.text(fm.i18n('btnPrevious', page, total))
 										.button({
 											icons: {
@@ -618,10 +618,10 @@ $.fn.elfindertree = function(fm, opts) {
 											render(prev, 'up');
 										});
 								} else {
-									prevBtn = $();
+									prevBtn = jQuery();
 								}
 								if (next) {
-									nextBtn = $('<button class="elfinder-navbar-pager elfinder-navbar-pager-next"></button>')
+									nextBtn = jQuery('<button class="elfinder-navbar-pager elfinder-navbar-pager-next"></button>')
 										.text(fm.i18n('btnNext', page + 2, total))
 										.button({
 											icons: {
@@ -634,11 +634,11 @@ $.fn.elfindertree = function(fm, opts) {
 											render(next, 'down');
 										});
 								} else {
-									nextBtn = $();
+									nextBtn = jQuery();
 								}
 								detach();
 								parent.empty()[parts? 'addClass' : 'removeClass']('elfinder-navbar-hasmore').append(prevBtn, html.join(''), nextBtn);
-								$.each(nodes, function(h, n) {
+								jQuery.each(nodes, function(h, n) {
 									fm.navHash2Elm(h).parent().replaceWith(n);
 								});
 								if (direction) {
@@ -647,8 +647,8 @@ $.fn.elfindertree = function(fm, opts) {
 								! mobile && fm.lazy(function() { updateDroppable(null, parent); });
 							},
 							detach = function() {
-								$.each(parent.children('.elfinder-navbar-wrapper'), function(i, elm) {
-									var n = $(elm),
+								jQuery.each(parent.children('.elfinder-navbar-wrapper'), function(i, elm) {
+									var n = jQuery(elm),
 										ch = n.children('[id]:first'),
 										h, c;
 									if (ch.hasClass(loaded)) {
@@ -713,7 +713,7 @@ $.fn.elfindertree = function(fm, opts) {
 
 				// When init, html append at once
 				if (Object.keys(atonce).length){
-					$.each(atonce, function(p, dirs){
+					jQuery.each(atonce, function(p, dirs){
 						var parent = findSubtree(p),
 						    html   = [];
 						dirs.sort(compare);
@@ -768,11 +768,11 @@ $.fn.elfindertree = function(fm, opts) {
 			 * @return Object  jQuery Deferred
 			 */
 			autoScroll = function(target) {
-				var dfrd = $.Deferred(),
+				var dfrd = jQuery.Deferred(),
 					current, parent, top, treeH, bottom, tgtTop;
 				autoScrTm && clearTimeout(autoScrTm);
 				autoScrTm = setTimeout(function() {
-					current = $(document.getElementById((target || fm.navHash2Id(fm.cwd().hash))));
+					current = jQuery(document.getElementById((target || fm.navHash2Id(fm.cwd().hash))));
 					if (current.length) {
 						// expand parents directory
 						(openCwd? current : current.parent()).parents('.elfinder-navbar-wrapper').children('.'+loaded).addClass(expanded).next('.'+subtree).show();
@@ -868,7 +868,7 @@ $.fn.elfindertree = function(fm, opts) {
 					cwdhash = cwd.hash,
 					autoScr = aScr === void(0)? syncTree : aScr,
 					loadParents = function(dir) {
-						var dfd  = $.Deferred(),
+						var dfd  = jQuery.Deferred(),
 							reqs = [],
 							ends = getEnds(dir),
 							makeReq = function(cmd, h, until) {
@@ -886,7 +886,7 @@ $.fn.elfindertree = function(fm, opts) {
 							},
 							baseHash, baseId;
 						
-						reqs = $.map(ends, function(h) {
+						reqs = jQuery.map(ends, function(h) {
 							var d = fm.file(h),
 								isRoot = d? fm.isRoot(d) : false,
 								node = fm.navHash2Elm(h),
@@ -940,11 +940,11 @@ $.fn.elfindertree = function(fm, opts) {
 							selectPages(fm.file(baseHash));
 							baseId = fm.navHash2Id(baseHash);
 							autoScr && autoScroll(baseId);
-							baseNode = $('#'+baseId);
-							spinner = $(fm.res('tpl', 'navspinner')).insertBefore(baseNode.children('.'+arrow));
+							baseNode = jQuery('#'+baseId);
+							spinner = jQuery(fm.res('tpl', 'navspinner')).insertBefore(baseNode.children('.'+arrow));
 							baseNode.removeClass(collapsed);
 							
-							$.when.apply($, reqs)
+							jQuery.when.apply($, reqs)
 							.done(function() {
 								var res = {},data, treeDirs, dirs, argLen, i;
 								argLen = arguments.length;
@@ -980,7 +980,7 @@ $.fn.elfindertree = function(fm, opts) {
 							current;
 						
 						if (res) {
-							$.each(res, function(endHash, dirs) {
+							jQuery.each(res, function(endHash, dirs) {
 								dirs && updateTree(dirs);
 								selectPages(fm.file(endHash));
 								dirs && updateArrows(dirs, loaded);
@@ -1018,7 +1018,7 @@ $.fn.elfindertree = function(fm, opts) {
 							baseNode.addClass(collapsed + (fail? '' : (' ' + loaded)));
 						}
 					},
-					dfrd = $.Deferred(),
+					dfrd = jQuery.Deferred(),
 					baseNode, spinner;
 				
 				if (!fm.navHash2Elm(cwdhash).length) {
@@ -1039,7 +1039,7 @@ $.fn.elfindertree = function(fm, opts) {
 					done(void(0), dfrd);
 				}
 				
-				// trigger 'treesync' with my $.Deferred
+				// trigger 'treesync' with my jQuery.Deferred
 				fm.trigger('treesync', dfrd);
 
 				return dfrd;
@@ -1061,12 +1061,12 @@ $.fn.elfindertree = function(fm, opts) {
 					if (!node || node.closest('div.'+wrapperRoot).hasClass(pastable)) {
 						target = (node || tree.find('div.'+pastable)).find(selNavdir+':not(.'+droppable+')');
 					} else {
-						target = $();
+						target = jQuery();
 					}
 					if (node) {
 						// check leaf roots
 						node.children('div.'+wrapperRoot).each(function() {
-							updateDroppable(null, $(this));
+							updateDroppable(null, jQuery(this));
 						});
 					}
 				}
@@ -1074,8 +1074,8 @@ $.fn.elfindertree = function(fm, opts) {
 				// make droppable on async
 				if (target.length) {
 					fm.asyncJob(function(elm) {
-						$(elm).droppable(droppableopts);
-					}, $.makeArray(target), {
+						jQuery(elm).droppable(droppableopts);
+					}, jQuery.makeArray(target), {
 						interval : 20,
 						numPerOnce : 100
 					});
@@ -1094,10 +1094,10 @@ $.fn.elfindertree = function(fm, opts) {
 						? '.'+collapsed+':not(.'+loaded+')'
 						: ':not(.'+collapsed+')';
 				
-				$.each(dirs, function(i, dir) {
+				jQuery.each(dirs, function(i, dir) {
 					fm.navHash2Elm(dir.phash).filter(sel)
-						.filter(function() { return $.grep($(this).next('.'+subtree).children(), function(n) {
-							return ($(n).children().hasClass(root))? false : true;
+						.filter(function() { return jQuery.grep(jQuery(this).next('.'+subtree).children(), function(n) {
+							return (jQuery(n).children().hasClass(root))? false : true;
 						}).length > 0; })
 						.addClass(cls);
 				});
@@ -1110,12 +1110,12 @@ $.fn.elfindertree = function(fm, opts) {
 			 *
 			 * @type JQuery
 			 */
-			tree = $(this).addClass(treeclass)
+			tree = jQuery(this).addClass(treeclass)
 				// make dirs draggable and toggle hover class
 				.on('mouseenter mouseleave', selNavdir, function(e) {
 					var enter = (e.type === 'mouseenter');
 					if (enter && scrolling) { return; }
-					var link  = $(this),
+					var link  = jQuery(this),
 						hash, dir; 
 					
 					if (!link.hasClass(dropover+' '+disabled)) {
@@ -1138,7 +1138,7 @@ $.fn.elfindertree = function(fm, opts) {
 				// native drag enter
 				.on('dragenter', selNavdir, function(e) {
 					if (e.originalEvent.dataTransfer) {
-						var dst = $(this);
+						var dst = jQuery(this);
 						dst.addClass(hover);
 						if (dst.is('.'+collapsed+':not(.'+expanded+')')) {
 							dst.data('expandTimer', setTimeout(function() {
@@ -1150,14 +1150,14 @@ $.fn.elfindertree = function(fm, opts) {
 				// native drag leave
 				.on('dragleave', selNavdir, function(e) {
 					if (e.originalEvent.dataTransfer) {
-						var dst = $(this);
+						var dst = jQuery(this);
 						dst.data('expandTimer') && clearTimeout(dst.data('expandTimer'));
 						dst.removeClass(hover);
 					}
 				})
 				// open dir or open subfolders in tree
 				.on('click', selNavdir, function(e) {
-					var link = $(this),
+					var link = jQuery(this),
 						hash = fm.navId2Hash(link.attr('id')),
 						file = fm.file(hash);
 					
@@ -1197,7 +1197,7 @@ $.fn.elfindertree = function(fm, opts) {
 						return;
 					}
 					
-					p = $(this).addClass(hover)
+					p = jQuery(this).addClass(hover)
 					.removeData('longtap')
 					.data('tmlongtap', setTimeout(function(e){
 						// long tap
@@ -1215,18 +1215,18 @@ $.fn.elfindertree = function(fm, opts) {
 						e.stopPropagation();
 						return;
 					}
-					clearTimeout($(this).data('tmlongtap'));
-					$(this).removeData('tmlongtap');
+					clearTimeout(jQuery(this).data('tmlongtap'));
+					jQuery(this).removeData('tmlongtap');
 					if (e.type == 'touchmove') {
-						$(this).removeClass(hover);
+						jQuery(this).removeClass(hover);
 					}
 				})
 				// toggle subfolders in tree
 				.on('click', selNavdir+'.'+collapsed+' .'+arrow, function(e) {
-					var arrow = $(this),
+					var arrow = jQuery(this),
 						link  = arrow.parent(selNavdir),
 						stree = link.next('.'+subtree),
-						dfrd  = $.Deferred(),
+						dfrd  = jQuery.Deferred(),
 						slideTH = 30, cnt;
 
 					e.stopPropagation();
@@ -1281,7 +1281,7 @@ $.fn.elfindertree = function(fm, opts) {
 					arrow.data('dfrd', dfrd);
 				})
 				.on('contextmenu', selNavdir, function(e) {
-					var self = $(this);
+					var self = jQuery(this);
 					
 					// now dirname editing
 					if (self.find('input:text').length) {
@@ -1294,7 +1294,7 @@ $.fn.elfindertree = function(fm, opts) {
 					if (!self.data('tmlongtap')) {
 						fm.trigger('contextmenu', {
 							'type'    : 'navbar',
-							'targets' : [fm.navId2Hash($(this).attr('id'))],
+							'targets' : [fm.navId2Hash(jQuery(this).attr('id'))],
 							'x'       : e.pageX,
 							'y'       : e.pageY
 						});
@@ -1310,7 +1310,7 @@ $.fn.elfindertree = function(fm, opts) {
 					});
 				})
 				.on('scrolltoview', selNavdir, function(e, data) {
-					var self = $(this);
+					var self = jQuery(this);
 					autoScroll(self.attr('id')).done(function() {
 						if (!data || data.blink === 'undefined' || data.blink) {
 							fm.resources.blink(self, 'lookme');
@@ -1321,7 +1321,7 @@ $.fn.elfindertree = function(fm, opts) {
 				.on('create.'+fm.namespace, function(e, item) {
 					var pdir = findSubtree(item.phash),
 						lock = item.move || false,
-						dir  = $(itemhtml(item)).addClass('elfinder-navbar-wrapper-tmp'),
+						dir  = jQuery(itemhtml(item)).addClass('elfinder-navbar-wrapper-tmp'),
 						selected = fm.selected();
 						
 					lock && selected.length && fm.trigger('lockfiles', {files: selected});
@@ -1384,11 +1384,11 @@ $.fn.elfindertree = function(fm, opts) {
 			var dirs = filter(e.data.changed, true),
 				length = dirs.length,
 				l    = length,
-				tgts = $(),
+				tgts = jQuery(),
 				changed = {},
 				dir, phash, node, tmp, realParent, reqParent, realSibling, reqSibling, isExpanded, isLoaded, parent, subdirs;
 			
-			$.each(hasMoreDirs, function(h, node) {
+			jQuery.each(hasMoreDirs, function(h, node) {
 				node.trigger('update.'+fm.namespace, { change: 'prepare' });
 			});
 			
@@ -1413,7 +1413,7 @@ $.fn.elfindertree = function(fm, opts) {
 					}
 					isExpanded = node.hasClass(expanded);
 					isLoaded   = node.hasClass(loaded);
-					tmp        = $(itemhtml(dir));
+					tmp        = jQuery(itemhtml(dir));
 					node.replaceWith(tmp.children(selNavdir));
 					! mobile && updateDroppable(null, parent);
 					
@@ -1434,7 +1434,7 @@ $.fn.elfindertree = function(fm, opts) {
 				checkSubdirs();
 			}
 			
-			$.each(hasMoreDirs, function(h, node) {
+			jQuery.each(hasMoreDirs, function(h, node) {
 				node.trigger('update.'+fm.namespace, { change: 'done' });
 			});
 			
@@ -1446,7 +1446,7 @@ $.fn.elfindertree = function(fm, opts) {
 				l    = dirs.length,
 				node, stree, removed;
 			
-			$.each(hasMoreDirs, function(h, node) {
+			jQuery.each(hasMoreDirs, function(h, node) {
 				node.trigger('update.'+fm.namespace, { removed : dirs });
 				node.trigger('update.'+fm.namespace, { change: 'prepare' });
 			});
@@ -1464,7 +1464,7 @@ $.fn.elfindertree = function(fm, opts) {
 			
 			removed && fm.getUI('navbar').children('.ui-resizable-handle').trigger('resize');
 			
-			$.each(hasMoreDirs, function(h, node) {
+			jQuery.each(hasMoreDirs, function(h, node) {
 				node.trigger('update.'+fm.namespace, { change: 'done' });
 			});
 		})
@@ -1473,12 +1473,12 @@ $.fn.elfindertree = function(fm, opts) {
 			var lock = e.type == 'lockfiles',
 				helperLocked = e.data.helper? e.data.helper.data('locked') : false,
 				act  = (lock && !helperLocked) ? 'disable' : 'enable',
-				dirs = $.grep(e.data.files||[], function(h) {  
+				dirs = jQuery.grep(e.data.files||[], function(h) {  
 					var dir = fm.file(h);
 					return dir && dir.mime == 'directory' ? true : false;
 				});
 				
-			$.each(dirs, function(i, hash) {
+			jQuery.each(dirs, function(i, hash) {
 				var dir = fm.navHash2Elm(hash);
 				
 				if (dir.length && !helperLocked) {
@@ -1505,7 +1505,7 @@ $.fn.elfindertree = function(fm, opts) {
 					tree.empty();
 					
 					// append volume roots at first
-					updateTree($.map(fm.roots, function(h) {
+					updateTree(jQuery.map(fm.roots, function(h) {
 						var dir = fm.file(h);
 						return dir && !dir.phash? dir : null;
 					}));
@@ -1517,7 +1517,7 @@ $.fn.elfindertree = function(fm, opts) {
 					} else {
 						ends = getEnds();
 						if (ends.length > 1) {
-							$.each(ends, function(i, end) {
+							jQuery.each(ends, function(i, end) {
 								var vid = fm.file(fm.root(end)).volumeid; 
 								if (i === 0) {
 									topVid = vid;
@@ -1525,7 +1525,7 @@ $.fn.elfindertree = function(fm, opts) {
 								endsVid[vid] = end;
 								endsMap[end] = [];
 							});
-							$.each(dirs, function(i, d) {
+							jQuery.each(dirs, function(i, d) {
 								if (!d.volumeid) {
 									single = true;
 									return false;
@@ -1536,13 +1536,13 @@ $.fn.elfindertree = function(fm, opts) {
 							single = true;
 						}
 						if (single) {
-							$.each(ends, function(i, endHash) {
+							jQuery.each(ends, function(i, endHash) {
 								updateTree(dirs);
 								current = selectPages(fm.file(endHash));
 								updateArrows(dirs, loaded);
 							});
 						} else {
-							$.each(endsMap, function(endHash, dirs) {
+							jQuery.each(endsMap, function(endHash, dirs) {
 								updateTree(dirs);
 								current = selectPages(fm.file(endHash));
 								updateArrows(dirs, loaded);

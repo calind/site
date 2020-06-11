@@ -1,12 +1,12 @@
 
-$.fn.elfinderoverlay = function(opts) {
+jQuery.fn.elfinderoverlay = function(opts) {
 	"use strict";
 	var fm = this.parent().elfinder('instance'),
 		o, cnt, show, hide;
 	
 	this.filter(':not(.elfinder-overlay)').each(function() {
 		opts = Object.assign({}, opts);
-		$(this).addClass('ui-front ui-widget-overlay elfinder-overlay')
+		jQuery(this).addClass('ui-front ui-widget-overlay elfinder-overlay')
 			.hide()
 			.on('mousedown', function(e) {
 				e.preventDefault();

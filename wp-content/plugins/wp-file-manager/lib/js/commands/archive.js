@@ -24,7 +24,7 @@ elFinder.prototype.commands.archive = function() {
 	 **/
 	fm.bind('open reload', function() {
 		self.variants = [];
-		$.each((mimes = fm.option('archivers')['create'] || []), function(i, mime) {
+		jQuery.each((mimes = fm.option('archivers')['create'] || []), function(i, mime) {
 			self.variants.push([mime, fm.mime2kind(mime)]);
 		});
 		self.change();
@@ -33,12 +33,12 @@ elFinder.prototype.commands.archive = function() {
 	this.getstate = function(select) {
 		var sel = this.files(select),
 			cnt = sel.length,
-			chk = (cnt && ! fm.isRoot(sel[0]) && (fm.file(sel[0].phash) || {}).write && ! $.grep(sel, function(f){ return f.read ? false : true; }).length),
+			chk = (cnt && ! fm.isRoot(sel[0]) && (fm.file(sel[0].phash) || {}).write && ! jQuery.grep(sel, function(f){ return f.read ? false : true; }).length),
 			cwdId;
 		
 		if (chk && fm.searchStatus.state > 1) {
 			cwdId = fm.cwd().volumeid;
-			chk = (cnt === $.grep(sel, function(f) { return f.read && f.hash.indexOf(cwdId) === 0 ? true : false; }).length);
+			chk = (cnt === jQuery.grep(sel, function(f) { return f.read && f.hash.indexOf(cwdId) === 0 ? true : false; }).length);
 		}
 		
 		return chk && !this._disabled && mimes.length && (cnt || (dfrd && dfrd.state() == 'pending')) ? 0 : -1;
@@ -52,11 +52,11 @@ elFinder.prototype.commands.archive = function() {
 			error = ['errArchive', 'errPerm', 'errCreatingTempDir', 'errFtpDownloadFile', 'errFtpUploadFile', 'errFtpMkdir', 'errArchiveExec', 'errExtractExec', 'errRm'],
 			i, open;
 
-		dfrd = $.Deferred().fail(function(error) {
+		dfrd = jQuery.Deferred().fail(function(error) {
 			error && fm.error(error);
 		});
 
-		if (! (cnt && mimes.length && $.inArray(mime, mimes) !== -1)) {
+		if (! (cnt && mimes.length && jQuery.inArray(mime, mimes) !== -1)) {
 			return dfrd.reject();
 		}
 		
@@ -78,12 +78,12 @@ elFinder.prototype.commands.archive = function() {
 			open = fm.exec('open', cwd.hash).done(function() {
 				fm.one('cwdrender', function() {
 					fm.selectfiles({files : hashes});
-					dfrd = $.proxy(fm.res('mixin', 'make'), self)();
+					dfrd = jQuery.proxy(fm.res('mixin', 'make'), self)();
 				});
 			});
 		} else {
 			fm.selectfiles({files : hashes});
-			dfrd = $.proxy(fm.res('mixin', 'make'), self)();
+			dfrd = jQuery.proxy(fm.res('mixin', 'make'), self)();
 		}
 		
 		return dfrd;

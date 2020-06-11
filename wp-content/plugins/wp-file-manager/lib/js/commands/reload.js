@@ -31,7 +31,7 @@
 		if (fm.options.sync >= 1000) {
 			self.extra = {
 				icon: 'accept',
-				node: $('<span></span>')
+				node: jQuery('<span></span>')
 					.attr({title: fm.i18n('autoSync')})
 					.on('click touchstart', function(e){
 						if (e.type === 'touchstart' && e.originalEvent.touches.length > 1) {
@@ -39,13 +39,13 @@
 						}
 						e.stopPropagation();
 						e.preventDefault();
-						$(this).parent()
+						jQuery(this).parent()
 							.toggleClass('ui-state-disabled', fm.options.syncStart)
 							.parent().removeClass('ui-state-hover');
 						fm.options.syncStart = !fm.options.syncStart;
 						fm.autoSync(fm.options.syncStart? null : 'stop');
 					}).on('ready', function(){
-						$(this).parent().toggleClass('ui-state-disabled', !fm.options.syncStart).css('pointer-events', 'auto');
+						jQuery(this).parent().toggleClass('ui-state-disabled', !fm.options.syncStart).css('pointer-events', 'auto');
 					})
 			};
 		}
@@ -65,7 +65,7 @@
 				fm.trigger('reload');
 			});
 		} else {
-			$('div.elfinder-toolbar > div.'+fm.res('class', 'searchbtn') + ' > span.ui-icon-search').click();
+			jQuery('div.elfinder-toolbar > div.'+fm.res('class', 'searchbtn') + ' > span.ui-icon-search').click();
 		}
 	};
 

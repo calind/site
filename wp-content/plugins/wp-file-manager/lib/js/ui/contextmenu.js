@@ -3,10 +3,10 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfindercontextmenu = function(fm) {
+jQuery.fn.elfindercontextmenu = function(fm) {
 	"use strict";
 	return this.each(function() {
-		var self   = $(this),
+		var self   = jQuery(this),
 			cmItem = 'elfinder-contextmenu-item',
 			smItem = 'elfinder-contextsubmenu-item',
 			exIcon = 'elfinder-contextmenu-extra-icon',
@@ -20,7 +20,7 @@ $.fn.elfindercontextmenu = function(fm) {
 					menu.data('draged', true).removeData('drag');
 				}
 			},
-			menu = $(this).addClass('touch-punch ui-helper-reset ui-front ui-widget ui-state-default ui-corner-all elfinder-contextmenu elfinder-contextmenu-'+fm.direction)
+			menu = jQuery(this).addClass('touch-punch ui-helper-reset ui-front ui-widget ui-state-default ui-corner-all elfinder-contextmenu elfinder-contextmenu-'+fm.direction)
 				.hide()
 				.on('touchstart', function(e) {
 					menu.data('touching', true).children().removeClass(cHover);
@@ -29,17 +29,17 @@ $.fn.elfindercontextmenu = function(fm) {
 					menu.removeData('touching');
 				})
 				.on('mouseenter mouseleave', '.'+cmItem, function(e) {
-					$(this).toggleClass(cHover, (e.type === 'mouseenter' || (! menu.data('draged') && menu.data('submenuKeep'))? true : false));
+					jQuery(this).toggleClass(cHover, (e.type === 'mouseenter' || (! menu.data('draged') && menu.data('submenuKeep'))? true : false));
 					if (menu.data('draged') && menu.data('submenuKeep')) {
 						menu.find('.elfinder-contextmenu-sub:visible').parent().addClass(cHover);
 					}
 				})
 				.on('mouseenter mouseleave', '.'+exIcon, function(e) {
-					$(this).parent().toggleClass(cHover, e.type === 'mouseleave');
+					jQuery(this).parent().toggleClass(cHover, e.type === 'mouseleave');
 				})
 				.on('mouseenter mouseleave', '.'+cmItem+',.'+smItem, function(e) {
 					var setIndex = function(target, sub) {
-						$.each(sub? subnodes : nodes, function(i, n) {
+						jQuery.each(sub? subnodes : nodes, function(i, n) {
 							if (target[0] === n) {
 								(sub? subnodes : nodes)._cur = i;
 								if (sub) {
@@ -52,7 +52,7 @@ $.fn.elfindercontextmenu = function(fm) {
 						});
 					};
 					if (e.originalEvent) {
-						var target = $(this),
+						var target = jQuery(this),
 							unHover = function() {
 								if (selected && !selected.children('div.elfinder-contextmenu-sub:visible').length) {
 									selected.removeClass(cHover);
@@ -124,7 +124,7 @@ $.fn.elfindercontextmenu = function(fm) {
 						style = ' style="background:url(\''+fm.escape(v[0])+'\') '+(pos? pos : '0 0')+' no-repeat;'+(pos? '' : 'posbackground-size:contain;')+'"';
 					}
 				}
-				return $(tpl.replace('{icon}', icon ? 'elfinder-button-icon-'+icon : (iconClass? iconClass : ''))
+				return jQuery(tpl.replace('{icon}', icon ? 'elfinder-button-icon-'+icon : (iconClass? iconClass : ''))
 						.replace('{label}', label)
 						.replace('{style}', style)
 						.replace('{className}', className))
@@ -167,7 +167,7 @@ $.fn.elfindercontextmenu = function(fm) {
 								if (e.originalEvent.touches.length > 1) {
 									return;
 								}
-								var tgt = $(e.target);
+								var tgt = jQuery(e.target);
 								if (menu.first().length && !tgt.is('input:checkbox') && !tgt.hasClass('elfinder-cwd-select')) {
 									e.stopPropagation();
 									//e.preventDefault();
@@ -201,16 +201,16 @@ $.fn.elfindercontextmenu = function(fm) {
 			
 			keyEvts = function(e) {
 				var code = e.keyCode,
-					ESC = $.ui.keyCode.ESCAPE,
-					ENT = $.ui.keyCode.ENTER,
-					LEFT = $.ui.keyCode.LEFT,
-					RIGHT = $.ui.keyCode.RIGHT,
-					UP = $.ui.keyCode.UP,
-					DOWN = $.ui.keyCode.DOWN,
+					ESC = jQuery.ui.keyCode.ESCAPE,
+					ENT = jQuery.ui.keyCode.ENTER,
+					LEFT = jQuery.ui.keyCode.LEFT,
+					RIGHT = jQuery.ui.keyCode.RIGHT,
+					UP = jQuery.ui.keyCode.UP,
+					DOWN = jQuery.ui.keyCode.DOWN,
 					subent = fm.direction === 'ltr'? RIGHT : LEFT,
 					sublev = subent === RIGHT? LEFT : RIGHT;
 				
-				if ($.inArray(code, [ESC, ENT, LEFT, RIGHT, UP, DOWN]) !== -1) {
+				if (jQuery.inArray(code, [ESC, ENT, LEFT, RIGHT, UP, DOWN]) !== -1) {
 					e.preventDefault();
 					e.stopPropagation();
 					e.stopImmediatePropagation();
@@ -292,14 +292,14 @@ $.fn.elfindercontextmenu = function(fm) {
 				css[subpos] = parseInt(menu.width());
 				menu.find('.elfinder-contextmenu-sub').css(css);
 				if (fm.UA.iOS) {
-					$('div.elfinder div.overflow-scrolling-touch').css('-webkit-overflow-scrolling', 'auto');
+					jQuery('div.elfinder div.overflow-scrolling-touch').css('-webkit-overflow-scrolling', 'auto');
 				}
 				
 				selected = null;
 				subnodes = null;
 				subselected = null;
-				$(document).on('keydown.' + fm.namespace, keyEvts);
-				evts = $._data(document).events;
+				jQuery(document).on('keydown.' + fm.namespace, keyEvts);
+				evts = jQuery._data(document).events;
 				if (evts && evts.keydown) {
 					evts.keydown.unshift(evts.keydown.pop());
 				}
@@ -313,7 +313,7 @@ $.fn.elfindercontextmenu = function(fm) {
 			
 			close = function() {
 				fm.getUI().off('click.' + fm.namespace, close);
-				$(document).off('keydown.' + fm.namespace, keyEvts);
+				jQuery(document).off('keydown.' + fm.namespace, keyEvts);
 
 				currentType = currentTargets = null;
 				
@@ -334,7 +334,7 @@ $.fn.elfindercontextmenu = function(fm) {
 					}
 					fm.trigger('closecontextmenu');
 					if (fm.UA.iOS) {
-						$('div.elfinder div.overflow-scrolling-touch').css('-webkit-overflow-scrolling', 'touch');
+						jQuery('div.elfinder div.overflow-scrolling-touch').css('-webkit-overflow-scrolling', 'touch');
 					}
 				}
 				
@@ -369,8 +369,8 @@ $.fn.elfindercontextmenu = function(fm) {
 					 + '</span></div>');
 				}
 				
-				nodes = $();
-				$.each(types[type]||[], function(i, name) {
+				nodes = jQuery();
+				jQuery.each(types[type]||[], function(i, name) {
 					var cmd, cmdName, useMap, node, submenu, hover;
 					
 					if (name === '|') {
@@ -390,8 +390,8 @@ $.fn.elfindercontextmenu = function(fm) {
 
 					if (cmd && !isCwd && (!fm.searchStatus.state || !cmd.disableOnSearch)) {
 						cmd.__disabled = cmd._disabled;
-						cmd._disabled = !(cmd.alwaysEnabled || (fm._commands[cmdName] ? $.inArray(name, disabled) === -1 && (!useMap || !disabled[cmdName]) : false));
-						$.each(cmd.linkedCmds, function(i, n) {
+						cmd._disabled = !(cmd.alwaysEnabled || (fm._commands[cmdName] ? jQuery.inArray(name, disabled) === -1 && (!useMap || !disabled[cmdName]) : false));
+						jQuery.each(cmd.linkedCmds, function(i, n) {
 							var c;
 							if (c = fm.getCommand(n)) {
 								c.__disabled = c._disabled;
@@ -407,7 +407,7 @@ $.fn.elfindercontextmenu = function(fm) {
 							}
 							node = item(cmd.title, cmd.className? cmd.className : cmd.name, function(){}, cmd.contextmenuOpts);
 							
-							submenu = $('<div class="ui-front ui-corner-all elfinder-contextmenu-sub"></div>')
+							submenu = jQuery('<div class="ui-front ui-corner-all elfinder-contextmenu-sub"></div>')
 								.hide()
 								.css('max-height', fm.getUI().height() - 30)
 								.appendTo(node.append('<span class="elfinder-contextmenu-arrow"></span>'));
@@ -485,7 +485,7 @@ $.fn.elfindercontextmenu = function(fm) {
 									var opts, $this;
 									e.stopPropagation();
 									if (! menu.data('draged')) {
-										$this = $(this);
+										$this = jQuery(this);
 										if (!cmd.keepContextmenu) {
 											menu.hide();
 										} else {
@@ -517,7 +517,7 @@ $.fn.elfindercontextmenu = function(fm) {
 											clearTimeout(node.data('timer'));
 											node.removeData('timer');
 										}
-										if (!$(e.target).closest('.elfinder-contextmenu-sub', menu).length) {
+										if (!jQuery(e.target).closest('.elfinder-contextmenu-sub', menu).length) {
 											if (e.type === 'mouseleave') {
 												if (! menu.data('submenuKeep')) {
 													node.data('timer', setTimeout(function() {
@@ -535,12 +535,12 @@ $.fn.elfindercontextmenu = function(fm) {
 									}
 								});
 							
-							$.each(cmd.variants, function(i, variant) {
+							jQuery.each(cmd.variants, function(i, variant) {
 								var item = variant === '|' ? '<div class="elfinder-contextmenu-separator"></div>' :
-									$('<div class="'+cmItem+' '+smItem+'"><span>'+variant[1]+'</span></div>').data('exec', variant[0]),
+									jQuery('<div class="'+cmItem+' '+smItem+'"><span>'+variant[1]+'</span></div>').data('exec', variant[0]),
 									iconClass, icon;
 								if (typeof variant[2] !== 'undefined') {
-									icon = $('<span></span>').addClass('elfinder-button-icon elfinder-contextmenu-icon');
+									icon = jQuery('<span></span>').addClass('elfinder-button-icon elfinder-contextmenu-icon');
 									if (! /\//.test(variant[2])) {
 										icon.addClass('elfinder-button-icon-'+variant[2]);
 									} else {
@@ -559,9 +559,9 @@ $.fn.elfindercontextmenu = function(fm) {
 								}
 							}, cmd.contextmenuOpts);
 							if (cmd.extra && cmd.extra.node) {
-								$('<span class="elfinder-button-icon elfinder-button-icon-'+(cmd.extra.icon || '')+' '+exIcon+'"></span>')
+								jQuery('<span class="elfinder-button-icon elfinder-button-icon-'+(cmd.extra.icon || '')+' '+exIcon+'"></span>')
 									.append(cmd.extra.node).appendTo(node);
-								$(cmd.extra.node).trigger('ready', {targets: targets});
+								jQuery(cmd.extra.node).trigger('ready', {targets: targets});
 							} else {
 								node.remove('.'+exIcon);
 							}
@@ -582,7 +582,7 @@ $.fn.elfindercontextmenu = function(fm) {
 					if (cmd && typeof cmd.__disabled !== 'undefined') {
 						cmd._disabled = cmd.__disabled;
 						delete cmd.__disabled;
-						$.each(cmd.linkedCmds, function(i, n) {
+						jQuery.each(cmd.linkedCmds, function(i, n) {
 							var c;
 							if (c = fm.getCommand(n)) {
 								c._disabled = c.__disabled;
@@ -596,7 +596,7 @@ $.fn.elfindercontextmenu = function(fm) {
 			
 			createFromRaw = function(raw) {
 				currentType = 'raw';
-				$.each(raw, function(i, data) {
+				jQuery.each(raw, function(i, data) {
 					var node;
 					
 					if (data === '|') {
@@ -645,7 +645,7 @@ $.fn.elfindercontextmenu = function(fm) {
 						prevNode.after(menu);
 					}
 					if (data.fitHeight) {
-						css = {maxHeight: Math.min(fm.getUI().height(), $(window).height()), overflowY: 'auto'};
+						css = {maxHeight: Math.min(fm.getUI().height(), jQuery(window).height()), overflowY: 'auto'};
 						menu.draggable('destroy').removeClass('ui-draggable');
 					}
 					open(data.x, data.y, css);
@@ -667,7 +667,7 @@ $.fn.elfindercontextmenu = function(fm) {
 			callback    : function(e) {
 				e.stopPropagation();
 				e.preventDefault();
-				$(document).one('contextmenu.' + fm.namespace, function(e) {
+				jQuery(document).one('contextmenu.' + fm.namespace, function(e) {
 					e.preventDefault();
 					e.stopPropagation();
 				});

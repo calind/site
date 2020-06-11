@@ -3,7 +3,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfindersortbutton = function(cmd) {
+jQuery.fn.elfindersortbutton = function(cmd) {
 	"use strict";
 	return this.each(function() {
 		var fm       = cmd.fm,
@@ -15,8 +15,8 @@ $.fn.elfindersortbutton = function(cmd) {
 			selected = item+'-selected',
 			asc      = selected+'-asc',
 			desc     = selected+'-desc',
-			text     = $('<span class="elfinder-button-text">'+cmd.title+'</span>'),
-			button   = $(this).addClass('ui-state-default elfinder-button elfinder-menubutton elfiner-button-'+name)
+			text     = jQuery('<span class="elfinder-button-text">'+cmd.title+'</span>'),
+			button   = jQuery(this).addClass('ui-state-default elfinder-button elfinder-menubutton elfiner-button-'+name)
 				.attr('title', cmd.title)
 				.append('<span class="elfinder-button-icon elfinder-button-icon-'+name+'"></span>', text)
 				.on('mouseenter mouseleave', function(e) { !button.hasClass(disabled) && button.toggleClass(hover, e.type === 'mouseenter'); })
@@ -33,10 +33,10 @@ $.fn.elfindersortbutton = function(cmd) {
 					}
 				}),
 			hide = function() { fm.toHide(menu); },
-			menu = $('<div class="ui-front ui-widget ui-widget-content elfinder-button-menu elfinder-button-sort-menu ui-corner-all"></div>')
+			menu = jQuery('<div class="ui-front ui-widget ui-widget-content elfinder-button-menu elfinder-button-sort-menu ui-corner-all"></div>')
 				.hide()
 				.appendTo(fm.getUI())
-				.on('mouseenter mouseleave', '.'+item, function(e) { $(this).toggleClass(hover, e.type === 'mouseenter'); })
+				.on('mouseenter mouseleave', '.'+item, function(e) { jQuery(this).toggleClass(hover, e.type === 'mouseenter'); })
 				.on('click', function(e) {
 					e.preventDefault();
 					e.stopPropagation();
@@ -62,15 +62,15 @@ $.fn.elfindersortbutton = function(cmd) {
 			
 		text.hide();
 		
-		$.each(fm.sortRules, function(name, value) {
-			menu.append($('<div class="'+item+'" rel="'+name+'"><span class="ui-icon ui-icon-arrowthick-1-n"></span><span class="ui-icon ui-icon-arrowthick-1-s"></span>'+fm.i18n('sort'+name)+'</div>').data('type', name));
+		jQuery.each(fm.sortRules, function(name, value) {
+			menu.append(jQuery('<div class="'+item+'" rel="'+name+'"><span class="ui-icon ui-icon-arrowthick-1-n"></span><span class="ui-icon ui-icon-arrowthick-1-s"></span>'+fm.i18n('sort'+name)+'</div>').data('type', name));
 		});
 		
 		menu.children().on('click', function(e) {
-			cmd.exec([], $(this).removeClass(hover).attr('rel'));
+			cmd.exec([], jQuery(this).removeClass(hover).attr('rel'));
 		});
 		
-		$('<div class="'+item+' '+item+'-separated elfinder-sort-ext elfinder-sort-stick"><span class="ui-icon ui-icon-check"></span>'+fm.i18n('sortFoldersFirst')+'</div>')
+		jQuery('<div class="'+item+' '+item+'-separated elfinder-sort-ext elfinder-sort-stick"><span class="ui-icon ui-icon-check"></span>'+fm.i18n('sortFoldersFirst')+'</div>')
 			.appendTo(menu)
 			.on('click', function() {
 				cmd.exec([], 'stick');
@@ -78,7 +78,7 @@ $.fn.elfindersortbutton = function(cmd) {
 
 		fm.one('init', function() {
 			if (fm.ui.tree && fm.options.sortAlsoTreeview !== null) {
-				$('<div class="'+item+' '+item+'-separated elfinder-sort-ext elfinder-sort-tree"><span class="ui-icon ui-icon-check"></span>'+fm.i18n('sortAlsoTreeview')+'</div>')
+				jQuery('<div class="'+item+' '+item+'-separated elfinder-sort-ext elfinder-sort-tree"><span class="ui-icon ui-icon-check"></span>'+fm.i18n('sortAlsoTreeview')+'</div>')
 				.appendTo(menu)
 				.on('click', function() {
 					cmd.exec([], 'tree');

@@ -23,6 +23,6 @@ elFinder.prototype.commands.selectnone = function() {
 	
 	this.exec = function() {
 		fm.getUI('cwd').trigger('unselectall');
-		return $.Deferred().resolve();
+		return jQuery.Deferred().resolve();
 	};
 };

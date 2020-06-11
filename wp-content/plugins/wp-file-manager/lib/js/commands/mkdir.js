@@ -34,7 +34,7 @@ elFinder.prototype.commands.mkdir = function() {
 		}
 		//this.move = (!onCwd && curOrg !== 'navbar' && fm.selected().length)? true : false;
 		this.move = this.value === fm.i18n('cmdmkdirin');
-		return $.proxy(fm.res('mixin', 'make'), self)();
+		return jQuery.proxy(fm.res('mixin', 'make'), self)();
 	};
 	
 	this.shortcuts = [{
@@ -78,7 +78,7 @@ elFinder.prototype.commands.mkdir = function() {
 		if (curOrg === 'navbar') {
 			return cnt && sel[0].write && sel[0].read? 0 : -1;  
 		} else {
-			return cwd.write && (!cnt || $.grep(sel, function(f) { return f.read && ! f.locked? true : false; }).length == cnt)? 0 : -1;
+			return cwd.write && (!cnt || jQuery.grep(sel, function(f) { return f.read && ! f.locked? true : false; }).length == cnt)? 0 : -1;
 		}
 	};
 

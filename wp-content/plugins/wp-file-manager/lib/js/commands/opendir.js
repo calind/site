@@ -21,7 +21,7 @@ elFinder.prototype.commands.opendir = function() {
 	
 	this.exec = function(hashes) {
 		var fm    = this.fm,
-			dfrd  = $.Deferred(),
+			dfrd  = jQuery.Deferred(),
 			files = this.files(hashes),
 			cnt   = files.length,
 			hash, pcheck = null;

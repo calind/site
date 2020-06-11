@@ -29,24 +29,24 @@ elFinder.prototype.commands.empty = function() {
 			cnt;
 		
 		cnt = sel.length;
-		return $.grep(sel, function(f) { return f.read && f.write && f.mime === 'directory' ? true : false; }).length == cnt ? 0 : -1;
+		return jQuery.grep(sel, function(f) { return f.read && f.write && f.mime === 'directory' ? true : false; }).length == cnt ? 0 : -1;
 	};
 	
 	this.exec = function(hashes) {
 		var dirs = selFiles(hashes),
 			cnt  = dirs.length,
-			dfrd = $.Deferred()
+			dfrd = jQuery.Deferred()
 				.done(function() {
 					var data = {changed: {}};
 					fm.toast({msg: fm.i18n(['"'+success.join('", ')+'"', 'complete', fm.i18n('cmdempty')])});
-					$.each(dirs, function(i, dir) {
+					jQuery.each(dirs, function(i, dir) {
 						data.changed[dir.hash] = dir;
 					});
 					fm.change(data);
 				})
 				.always(function() {
 					var cwd = fm.cwd().hash;
-					fm.trigger('selectfiles', {files: $.map(dirs, function(d) { return cwd === d.phash? d.hash : null; })});
+					fm.trigger('selectfiles', {files: jQuery.map(dirs, function(d) { return cwd === d.phash? d.hash : null; })});
 				}),
 			success = [],
 			done = function(res) {
@@ -59,7 +59,7 @@ elFinder.prototype.commands.empty = function() {
 				(--cnt < 1) && dfrd[success.length? 'resolve' : 'reject']();
 			};
 
-		$.each(dirs, function(i, dir) {
+		jQuery.each(dirs, function(i, dir) {
 			var tm;
 			if (!(dir.write && dir.mime === 'directory')) {
 				done(['errEmpty', dir.name, 'errPerm']);
@@ -87,7 +87,7 @@ elFinder.prototype.commands.empty = function() {
 						done(['errEmpty', dir.name, 'errMaxTargets', fm.maxTargets]);
 					} else {
 						fm.updateCache(data);
-						$.each(data.files, function(i, f) {
+						jQuery.each(data.files, function(i, f) {
 							if (!f.write || f.locked) {
 								done(['errEmpty', dir.name, 'errRm', f.name, 'errPerm']);
 								targets = [];

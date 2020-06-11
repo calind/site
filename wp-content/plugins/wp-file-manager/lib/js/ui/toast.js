@@ -6,7 +6,7 @@
  *
  * @author Naoki Sawada
  **/
-$.fn.elfindertoast = function(opts, fm) {
+jQuery.fn.elfindertoast = function(opts, fm) {
 	"use strict";
 	var defOpts = Object.assign({
 		mode: 'success', // or 'info', 'warning' and 'error'
@@ -23,11 +23,11 @@ $.fn.elfindertoast = function(opts, fm) {
 		extNode: undefined,
 		button: undefined,
 		width: undefined
-	}, $.isPlainObject(fm.options.uiOptions.toast.defaults)? fm.options.uiOptions.toast.defaults : {});
+	}, jQuery.isPlainObject(fm.options.uiOptions.toast.defaults)? fm.options.uiOptions.toast.defaults : {});
 	return this.each(function() {
 		opts = Object.assign({}, defOpts, opts || {});
 		
-		var self = $(this),
+		var self = jQuery(this),
 			show = function(notm) {
 				self.stop();
 				fm.toFront(self);
@@ -70,7 +70,7 @@ $.fn.elfindertoast = function(opts, fm) {
 					rmTm = setTimeout(rm, opts.timeOut);
 				}
 			}
-		}).hide().addClass('toast-' + opts.mode).append($('<div class="elfinder-toast-msg"></div>').html(opts.msg.replace(/%([a-zA-Z0-9]+)%/g, function(m, m1) {
+		}).hide().addClass('toast-' + opts.mode).append(jQuery('<div class="elfinder-toast-msg"></div>').html(opts.msg.replace(/%([a-zA-Z0-9]+)%/g, function(m, m1) {
 			return fm.i18n(m1);
 		})));
 		
@@ -80,10 +80,10 @@ $.fn.elfindertoast = function(opts, fm) {
 
 		if (opts.button) {
 			self.append(
-				$('<button class="ui-button ui-widget ui-state-default ui-corner-all elfinder-tabstop"></button>')
-				.append($('<span class="ui-button-text"></span>').text(fm.i18n(opts.button.text)))
+				jQuery('<button class="ui-button ui-widget ui-state-default ui-corner-all elfinder-tabstop"></button>')
+				.append(jQuery('<span class="ui-button-text"></span>').text(fm.i18n(opts.button.text)))
 				.on('mouseenter mouseleave', function(e) { 
-					$(this).toggleClass('ui-state-hover', e.type == 'mouseenter');
+					jQuery(this).toggleClass('ui-state-hover', e.type == 'mouseenter');
 				})
 				.on('click', opts.button.click || function(){})
 			);

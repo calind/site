@@ -80,7 +80,7 @@ elFinder.prototype._options = {
 	 * Transport to send request to backend.
 	 * Required for future extensions using websockets/webdav etc.
 	 * Must be an object with "send" method.
-	 * transport.send must return $.Deferred() object
+	 * transport.send must return jQuery.Deferred() object
 	 *
 	 * @type Object
 	 * @default null
@@ -88,12 +88,12 @@ elFinder.prototype._options = {
 	 *  transport : {
 	 *    init : function(elfinderInstance) { },
 	 *    send : function(options) {
-	 *      var dfrd = $.Deferred();
+	 *      var dfrd = jQuery.Deferred();
 	 *      // connect to backend ...
 	 *      return dfrd;
 	 *    },
 	 *    upload : function(data) {
-	 *      var dfrd = $.Deferred();
+	 *      var dfrd = jQuery.Deferred();
 	 *      // upload ...
 	 *      return dfrd;
 	 *    }
@@ -455,14 +455,14 @@ elFinder.prototype._options = {
 				// 	 * @type  Function
 				// 	 */
 				// 	init : function(id, file, content, fm) {
-				// 		$(this).attr('id', id + '-text').val(content);
+				// 		jQuery(this).attr('id', id + '-text').val(content);
 				// 	},
 				// 	/**
 				// 	 * Get edited contents (optional for text editor)
 				// 	 * @type  Function
 				// 	 */
 				// 	getContent : function() {
-				// 		return $(this).val();
+				// 		return jQuery(this).val();
 				// 	},
 				// 	/**
 				// 	 * Called when "edit" dialog loaded.
@@ -579,7 +579,7 @@ elFinder.prototype._options = {
 					function(queryObject, cwdHashes, elFinderInstance) {
 						var q = queryObject.val;
 						var regex = queryObject.regex;
-						var matchedHashes = $.grep(cwdHashes, function(hash) {
+						var matchedHashes = jQuery.grep(cwdHashes, function(hash) {
 							var file = elFinderInstance.file(hash);
 							return (file && file.mime && file.mime.match(regex))? true : false;
 						});
@@ -1116,7 +1116,7 @@ elFinder.prototype._options = {
 	 * Element which is the reference of the height percentage
 	 *
 	 * @type Object|String
-	 * @default null | $(window) (if height is percentage)
+	 * @default null | jQuery(window) (if height is percentage)
 	 **/
 	heightBase : null,
 	
@@ -1325,7 +1325,7 @@ elFinder.prototype._options = {
 	 * 
 	 * @type Null|Function
 	 */
-	rawStringDecoder : typeof Encoding === 'object' && $.isFunction(Encoding.convert)? function(str) {
+	rawStringDecoder : typeof Encoding === 'object' && jQuery.isFunction(Encoding.convert)? function(str) {
 		return Encoding.convert(str, {
 			to: 'UNICODE',
 			type: 'string'

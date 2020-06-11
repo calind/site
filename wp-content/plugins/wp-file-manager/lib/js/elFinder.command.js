@@ -180,11 +180,11 @@ elFinder.prototype.command = function(fm) {
 						if (fm.searchStatus.state < 2) {
 							enabled = fm.isCommandEnabled(self.name);
 						} else {
-							$.each(fm.selected(), function(i, h) {
+							jQuery.each(fm.selected(), function(i, h) {
 								if (fm.optionsByHashes[h]) {
 									checks[h] = true;
 								} else {
-									$.each(fm.volOptions, function(id) {
+									jQuery.each(fm.volOptions, function(id) {
 										if (!checks[id] && h.indexOf(id) === 0) {
 											checks[id] = true;
 											return false;
@@ -192,7 +192,7 @@ elFinder.prototype.command = function(fm) {
 									});
 								}
 							});
-							$.each(checks, function(h) {
+							jQuery.each(checks, function(h) {
 								enabled = fm.isCommandEnabled(self.name, h);
 								if (! enabled) {
 									return false;
@@ -229,8 +229,8 @@ elFinder.prototype.command = function(fm) {
 			this._handlers.select = function() { this.update(void(0), this.value); };
 		}
 
-		$.each(Object.assign({}, self._handlers, self.handlers), function(cmd, handler) {
-			fm.bind(cmd, $.proxy(handler, self));
+		jQuery.each(Object.assign({}, self._handlers, self.handlers), function(cmd, handler) {
+			fm.bind(cmd, jQuery.proxy(handler, self));
 		});
 
 		for (i = 0; i < this.shortcuts.length; i++) {
@@ -262,10 +262,10 @@ elFinder.prototype.command = function(fm) {
 	 *
 	 * @param  Array         target files hashes
 	 * @param  Array|Object  command value
-	 * @return $.Deferred
+	 * @return jQuery.Deferred
 	 */
 	this.exec = function(files, opts) { 
-		return $.Deferred().reject(); 
+		return jQuery.Deferred().reject(); 
 	};
 	
 	this.getUndo = function(opts, resData) {
@@ -368,7 +368,7 @@ elFinder.prototype.command = function(fm) {
 	 */
 	this.hashes = function(hashes) {
 		return hashes
-			? $.grep(Array.isArray(hashes) ? hashes : [hashes], function(hash) { return fm.file(hash) ? true : false; })
+			? jQuery.grep(Array.isArray(hashes) ? hashes : [hashes], function(hash) { return fm.file(hash) ? true : false; })
 			: fm.selected();
 	};
 	
@@ -382,7 +382,7 @@ elFinder.prototype.command = function(fm) {
 		var fm = this.fm;
 		
 		return hashes
-			? $.map(Array.isArray(hashes) ? hashes : [hashes], function(hash) { return fm.file(hash) || null; })
+			? jQuery.map(Array.isArray(hashes) ? hashes : [hashes], function(hash) { return fm.file(hash) || null; })
 			: fm.selectedFiles();
 	};
 

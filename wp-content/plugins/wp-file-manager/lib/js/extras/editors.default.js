@@ -49,7 +49,7 @@
 			return ext;
 		},
 		changeImageType = function(src, toMime) {
-			var dfd = $.Deferred();
+			var dfd = jQuery.Deferred();
 			try {
 				var canvas = document.createElement('canvas'),
 					ctx = canvas.getContext('2d'),
@@ -70,7 +70,7 @@
 					};
 
 				img.src = src;
-				$(img).on('load', function() {
+				jQuery(img).on('load', function() {
 					try {
 						canvas.width = img.width;
 						canvas.height = img.height;
@@ -88,8 +88,8 @@
 			}
 		},
 		initImgTag = function(id, file, content, fm) {
-			var node = $(this).children('img:first').data('ext', getExtention(file.mime, fm)),
-				spnr = $('<div class="elfinder-edit-spinner elfinder-edit-image"></div>')
+			var node = jQuery(this).children('img:first').data('ext', getExtention(file.mime, fm)),
+				spnr = jQuery('<div class="elfinder-edit-spinner elfinder-edit-image"></div>')
 					.html('<span class="elfinder-spinner-text">' + fm.i18n('ntfloadimg') + '</span><span class="elfinder-spinner"></span>')
 					.hide()
 					.appendTo(this),
@@ -141,8 +141,8 @@
 			return data;
 		},
 		iframeClose = function(ifm) {
-			var $ifm = $(ifm),
-				dfd = $.Deferred().always(function() {
+			var $ifm = jQuery(ifm),
+				dfd = jQuery.Deferred().always(function() {
 					$ifm.off('load', load);
 				}),
 				ab = 'about:blank',
@@ -236,18 +236,18 @@
 			load : function(base) {
 				var self = this,
 					fm   = this.fm,
-					dfrd = $.Deferred(),
+					dfrd = jQuery.Deferred(),
 					cdns = fm.options.cdns,
 					ver  = self.confObj.opts.version,
 					init = function(editor) {
-						var $base = $(base),
+						var $base = jQuery(base),
 							bParent = $base.parent(),
 							opts = self.confObj.opts,
 							iconsPath = opts.iconsPath,
-							tmpContainer = $('<div class="tui-image-editor-container">').appendTo(bParent),
+							tmpContainer = jQuery('<div class="tui-image-editor-container">').appendTo(bParent),
 							tmpDiv = [
-								$('<div class="tui-image-editor-submenu"></div>').appendTo(tmpContainer),
-								$('<div class="tui-image-editor-controls"></div>').appendTo(tmpContainer)
+								jQuery('<div class="tui-image-editor-submenu"></div>').appendTo(tmpContainer),
+								jQuery('<div class="tui-image-editor-controls"></div>').appendTo(tmpContainer)
 							],
 							iEditor = new editor(base, {
 								includeUI: {
@@ -279,7 +279,7 @@
 							canvas = $base.find('canvas:first').get(0),
 							zoom = function(v) {
 								if (typeof v !== 'undefined') {
-									var c = $(canvas),
+									var c = jQuery(canvas),
 										w = parseInt(c.attr('width')),
 										h = parseInt(c.attr('height')),
 										a = w / h,
@@ -305,9 +305,9 @@
 									}
 								}
 							},
-							zup = $('<span class="ui-icon ui-icon-plusthick"></span>').data('val', 10),
-							zdown = $('<span class="ui-icon ui-icon-minusthick"></span>').data('val', -10),
-							per = $('<button></button>').css('width', '4em').text('%').attr('title', '100%').data('val', 0),
+							zup = jQuery('<span class="ui-icon ui-icon-plusthick"></span>').data('val', 10),
+							zdown = jQuery('<span class="ui-icon ui-icon-minusthick"></span>').data('val', -10),
+							per = jQuery('<button></button>').css('width', '4em').text('%').attr('title', '100%').data('val', 0),
 							quty, qutyTm, zoomTm, zoomMore;
 
 						tmpContainer.remove();
@@ -315,7 +315,7 @@
 						// jpeg quality controls
 						if (self.file.mime === 'image/jpeg') {
 							$base.data('quality', fm.storage('jpgQuality') || fm.option('jpgQuality'));
-							quty = $('<input type="number" class="ui-corner-all elfinder-resize-quality elfinder-tabstop"/>')
+							quty = jQuery('<input type="number" class="ui-corner-all elfinder-resize-quality elfinder-tabstop"/>')
 								.attr('min', '1')
 								.attr('max', '100')
 								.attr('title', '1 - 100')
@@ -330,9 +330,9 @@
 									});
 								})
 								.val($base.data('quality'));
-							$('<div class="ui-dialog-buttonset elfinder-edit-extras elfinder-edit-extras-quality"></div>')
+							jQuery('<div class="ui-dialog-buttonset elfinder-edit-extras elfinder-edit-extras-quality"></div>')
 								.append(
-									$('<span>').html(fm.i18n('quality') + ' : '), quty, $('<span></span>')
+									jQuery('<span>').html(fm.i18n('quality') + ' : '), quty, jQuery('<span></span>')
 								)
 								.prependTo($base.parent().next());
 						} else if (self.file.mime === 'image/svg+xml') {
@@ -343,13 +343,13 @@
 							});
 						}
 						// zoom scale controls
-						$('<div class="ui-dialog-buttonset elfinder-edit-extras"></div>')
+						jQuery('<div class="ui-dialog-buttonset elfinder-edit-extras"></div>')
 							.append(
 								zdown, per, zup
 							)
 							.attr('title', fm.i18n('scale'))
 							.on('click', 'span,button', function() {
-								zoom($(this).data('val'));
+								zoom(jQuery(this).data('val'));
 							})
 							.on('mousedown mouseup mouseleave', 'span', function(e) {
 								zoomMore = false;
@@ -357,7 +357,7 @@
 								if (e.type === 'mousedown') {
 									zoomTm = setTimeout(function() {
 										zoomMore = true;
-										zoom($(e.target).data('val'));
+										zoom(jQuery(e.target).data('val'));
 									}, 500);
 								}
 							})
@@ -379,7 +379,7 @@
 						// show color slider (maybe TUI-Image-Editor's bug)
 						// see https://github.com/nhn/tui.image-editor/issues/153
 						$base.find('.tui-colorpicker-palette-container').on('click', '.tui-colorpicker-palette-preview', function() {
-							$(this).closest('.color-picker-control').height('auto').find('.tui-colorpicker-slider-container').toggle();
+							jQuery(this).closest('.color-picker-control').height('auto').find('.tui-colorpicker-slider-container').toggle();
 						});
 						$base.on('click', function() {
 							$base.find('.tui-colorpicker-slider-container').hide();
@@ -388,7 +388,7 @@
 					loader;
 
 				if (!self.confObj.editor) {
-					loader = $.Deferred();
+					loader = jQuery.Deferred();
 					fm.loadCss([
 						cdns.tui + '/tui-color-picker/latest/tui-color-picker.css',
 						cdns.tui + '/tui-image-editor/'+ver+'/tui-image-editor.css'
@@ -440,7 +440,7 @@
 			getContent : function(base) {
 				var editor = this.editor,
 					fm = editor.fm,
-					$base = $(base),
+					$base = jQuery(base),
 					quality = $base.data('quality');
 				if (editor.instance) {
 					if ($base.data('mime') === 'image/jpeg') {
@@ -454,7 +454,7 @@
 				}
 			},
 			save : function(base) {
-				var $base = $(base),
+				var $base = jQuery(base),
 					quality = $base.data('quality'),
 					hash = $base.data('hash'),
 					file;
@@ -496,7 +496,7 @@
 			// Initialization of editing node (this: this editors HTML node)
 			init : function(id, file, dum, fm) {
 				var orig = 'https://www.photopea.com',
-					ifm = $(this).hide()
+					ifm = jQuery(this).hide()
 						//.css('box-sizing', 'border-box')
 						.on('load', function() {
 							//spnr.remove();
@@ -508,7 +508,7 @@
 						}),
 					editor = this.editor,
 					confObj = editor.confObj,
-					spnr = $('<div class="elfinder-edit-spinner elfinder-edit-photopea"></div>')
+					spnr = jQuery('<div class="elfinder-edit-spinner elfinder-edit-photopea"></div>')
 						.html('<span class="elfinder-spinner-text">' + fm.i18n('nowLoading') + '</span><span class="elfinder-spinner"></span>')
 						.appendTo(ifm.parent()),
 					saveMimes = fm.arrayFlip(confObj.info.canMakeEmpty),
@@ -543,7 +543,7 @@
 						var wnd = ifm.get(0).contentWindow,
 							phase = 0,
 							data = null,
-							dfdIni = $.Deferred().done(function() {
+							dfdIni = jQuery.Deferred().done(function() {
 								spnr.remove();
 								phase = 1;
 								wnd.postMessage(data, orig);
@@ -590,7 +590,7 @@
 							if (phase > 1) {
 								dfdGet && dfdGet.state() === 'pending' && dfdGet.reject();
 								dfdGet = null;
-								dfdGet = $.Deferred();
+								dfdGet = jQuery.Deferred();
 								if (phase === 2) {
 									phase = 3;
 									dfdGet.resolve('data:' + mime + ';base64,' + fm.arrayBufferToBase64(data));
@@ -614,7 +614,7 @@
 				ifm.parent().css('padding', 0);
 				type = getType(file.mime);
 				liveMsg = editor.liveMsg = new confObj.liveMsg(ifm, spnr, file);
-				$(window).on('message.' + fm.namespace, liveMsg.receive);
+				jQuery(window).on('message.' + fm.namespace, liveMsg.receive);
 				liveMsg.load().done(function() {
 					var d = JSON.stringify({
 						files : [],
@@ -632,7 +632,7 @@
 				// jpeg quality controls
 				if (file.mime === 'image/jpeg' || file.mime === 'image/webp') {
 					ifm.data('quality', fm.storage('jpgQuality') || fm.option('jpgQuality'));
-					quty = $('<input type="number" class="ui-corner-all elfinder-resize-quality elfinder-tabstop"/>')
+					quty = jQuery('<input type="number" class="ui-corner-all elfinder-resize-quality elfinder-tabstop"/>')
 						.attr('min', '1')
 						.attr('max', '100')
 						.attr('title', '1 - 100')
@@ -641,18 +641,18 @@
 							ifm.data('quality', q);
 						})
 						.val(ifm.data('quality'));
-					$('<div class="ui-dialog-buttonset elfinder-edit-extras elfinder-edit-extras-quality"></div>')
+					jQuery('<div class="ui-dialog-buttonset elfinder-edit-extras elfinder-edit-extras-quality"></div>')
 						.append(
-							$('<span>').html(fm.i18n('quality') + ' : '), quty, $('<span></span>')
+							jQuery('<span>').html(fm.i18n('quality') + ' : '), quty, jQuery('<span></span>')
 						)
 						.prependTo(ifm.parent().next());
 				}
 			},
 			load : function(base) {
-				var dfd = $.Deferred(),
+				var dfd = jQuery.Deferred(),
 					self = this,
 					fm = this.fm,
-					$base = $(base);
+					$base = jQuery(base);
 				if (self.initFail) {
 					dfd.reject();
 				} else {
@@ -666,7 +666,7 @@
 				return this.editor.liveMsg? this.editor.liveMsg.getContent() : void(0);
 			},
 			save : function(base, liveMsg) {
-				var $base = $(base),
+				var $base = jQuery(base),
 					quality = $base.data('quality'),
 					hash = $base.data('hash'),
 					file;
@@ -682,8 +682,8 @@
 			},
 			// On dialog closed
 			close : function(base, liveMsg) {
-				$(base).attr('src', '');
-				liveMsg && $(window).off('message.' + this.fm.namespace, liveMsg.receive);
+				jQuery(base).attr('src', '');
+				liveMsg && jQuery(window).off('message.' + this.fm.namespace, liveMsg.receive);
 			}
 		},
 		{
@@ -719,28 +719,28 @@
 			},
 			// Get data uri scheme (this: this editors HTML node)
 			getContent : function() {
-				return $(this).children('img:first').attr('src');
+				return jQuery(this).children('img:first').attr('src');
 			},
 			// Launch Pixo editor when dialog open
 			load : function(base) {
 				var self = this,
 					fm = this.fm,
-					$base = $(base),
+					$base = jQuery(base),
 					node = $base.children('img:first'),
 					dialog = $base.closest('.ui-dialog'),
 					elfNode = fm.getUI(),
-					dfrd = $.Deferred(),
-					container = $('#elfinder-pixo-container'),
+					dfrd = jQuery.Deferred(),
+					container = jQuery('#elfinder-pixo-container'),
 					init = function(onload) {
 						var opts;
 							
 						if (!container.length) {
-							container = $('<div id="elfinder-pixo-container" class="ui-front"></div>').css({
+							container = jQuery('<div id="elfinder-pixo-container" class="ui-front"></div>').css({
 								position: 'fixed',
 								top: 0,
 								right: 0,
 								width: '100%',
-								height: $(window).height(),
+								height: jQuery(window).height(),
 								overflow: 'hidden'
 							}).hide().appendTo(elfNode.hasClass('elfinder-fullscreen')? elfNode : 'body');
 							// bind switch fullscreen event
@@ -832,7 +832,7 @@
 
 				// jpeg quality controls
 				if (self.file.mime === 'image/jpeg') {
-					quty = $('<input type="number" class="ui-corner-all elfinder-resize-quality elfinder-tabstop"/>')
+					quty = jQuery('<input type="number" class="ui-corner-all elfinder-resize-quality elfinder-tabstop"/>')
 						.attr('min', '1')
 						.attr('max', '100')
 						.attr('title', '1 - 100')
@@ -848,10 +848,10 @@
 							});
 						})
 						.val(fm.storage('jpgQuality') || fm.option('jpgQuality'));
-					qBase = $('<div class="ui-dialog-buttonset elfinder-edit-extras elfinder-edit-extras-quality"></div>')
+					qBase = jQuery('<div class="ui-dialog-buttonset elfinder-edit-extras elfinder-edit-extras-quality"></div>')
 						.hide()
 						.append(
-							$('<span>').html(fm.i18n('quality') + ' : '), quty, $('<span></span>')
+							jQuery('<span>').html(fm.i18n('quality') + ' : '), quty, jQuery('<span></span>')
 						)
 						.prependTo($base.parent().next());
 					$base.data('quty', quty);
@@ -871,7 +871,7 @@
 			// Convert content url to data uri scheme to save content
 			save : function(base) {
 				var self = this,
-					$base = $(base),
+					$base = jQuery(base),
 					node = $base.children('img:first'),
 					q;
 				if (base._canvas) {
@@ -905,11 +905,11 @@
 			load : function(textarea) {
 				var self = this,
 					fm   = this.fm,
-					dfrd = $.Deferred(),
+					dfrd = jQuery.Deferred(),
 					cdn  = fm.options.cdns.ace,
 					start = function() {
 						var editor, editorBase, mode,
-						ta = $(textarea),
+						ta = jQuery(textarea),
 						taBase = ta.parent(),
 						dialog = taBase.parent(),
 						id = textarea.id + '_ace',
@@ -950,7 +950,7 @@
 						ace.config.set('basePath', cdn);
 
 						// Base node of Ace editor
-						editorBase = $('<div id="'+id+'" style="width:100%; height:100%;"></div>').text(ta.val()).insertBefore(ta.hide());
+						editorBase = jQuery('<div id="'+id+'" style="width:100%; height:100%;"></div>').text(ta.val()).insertBefore(ta.hide());
 
 						// Editor flag
 						ta.data('ace', true);
@@ -1019,27 +1019,27 @@
 						editor.resize();
 
 						// TextArea button and Setting button
-						$('<div class="ui-dialog-buttonset"></div>').css('float', 'left')
+						jQuery('<div class="ui-dialog-buttonset"></div>').css('float', 'left')
 						.append(
-							$('<button></button>').html(self.fm.i18n('TextArea'))
+							jQuery('<button></button>').html(self.fm.i18n('TextArea'))
 							.button()
 							.on('click', function(){
 								if (ta.data('ace')) {
 									ta.removeData('ace');
 									editorBase.hide();
 									ta.val(editor.session.getValue()).show().trigger('focus');
-									$(this).text('AceEditor');
+									jQuery(this).text('AceEditor');
 								} else {
 									ta.data('ace', true);
 									editorBase.show();
 									editor.setValue(ta.hide().val(), -1);
 									editor.focus();
-									$(this).html(self.fm.i18n('TextArea'));
+									jQuery(this).html(self.fm.i18n('TextArea'));
 								}
 							})
 						)
 						.append(
-							$('<button>Ace editor setting</button>')
+							jQuery('<button>Ace editor setting</button>')
 							.button({
 								icons: {
 									primary: 'ui-icon-gear',
@@ -1049,10 +1049,10 @@
 							})
 							.on('click', function(){
 								editor.showSettingsMenu();
-								$('#ace_settingsmenu')
+								jQuery('#ace_settingsmenu')
 									.css('font-size', '80%')
 									.find('div[contains="setOptions"]').hide().end()
-									.parent().appendTo($('#elfinder'));
+									.parent().appendTo(jQuery('#elfinder'));
 							})
 						)
 						.prependTo(taBase.next());
@@ -1071,7 +1071,7 @@
 
 				// check ace & start
 				if (!self.confObj.loader) {
-					self.confObj.loader = $.Deferred();
+					self.confObj.loader = jQuery.Deferred();
 					self.fm.loadScript([ cdn+'/ace.js' ], function() {
 						self.confObj.loader.resolve();
 					}, void 0, {obj: window, name: 'ace'});
@@ -1084,10 +1084,10 @@
 				instance && instance.destroy();
 			},
 			save : function(textarea, instance) {
-				instance && $(textarea).data('ace') && (textarea.value = instance.session.getValue());
+				instance && jQuery(textarea).data('ace') && (textarea.value = instance.session.getValue());
 			},
 			focus : function(textarea, instance) {
-				instance && $(textarea).data('ace') && instance.focus();
+				instance && jQuery(textarea).data('ace') && instance.focus();
 			},
 			resize : function(textarea, instance, e, data) {
 				instance && instance.resize();
@@ -1110,10 +1110,10 @@
 			load : function(textarea) {
 				var fm = this.fm,
 					cmUrl = fm.convAbsUrl(fm.options.cdns.codemirror),
-					dfrd = $.Deferred(),
+					dfrd = jQuery.Deferred(),
 					self = this,
 					start = function(CodeMirror) {
-						var ta   = $(textarea),
+						var ta   = jQuery(textarea),
 							base = ta.parent(),
 							editor, editorBase, opts;
 						
@@ -1164,7 +1164,7 @@
 						}
 						
 						// editor base node
-						editorBase = $(editor.getWrapperElement()).css({
+						editorBase = jQuery(editor.getWrapperElement()).css({
 							// fix CSS conflict to SimpleMDE
 							padding: 0,
 							border: 'none'
@@ -1175,23 +1175,23 @@
 						editorBase.height('100%');
 						
 						// TextArea button and Setting button
-						$('<div class="ui-dialog-buttonset"></div>').css('float', 'left')
+						jQuery('<div class="ui-dialog-buttonset"></div>').css('float', 'left')
 						.append(
-							$('<button></button>').html(self.fm.i18n('TextArea'))
+							jQuery('<button></button>').html(self.fm.i18n('TextArea'))
 							.button()
 							.on('click', function(){
 								if (ta.data('cm')) {
 									ta.removeData('cm');
 									editorBase.hide();
 									ta.val(editor.getValue()).show().trigger('focus');
-									$(this).text('CodeMirror');
+									jQuery(this).text('CodeMirror');
 								} else {
 									ta.data('cm', true);
 									editorBase.show();
 									editor.setValue(ta.hide().val());
 									editor.refresh();
 									editor.focus();
-									$(this).html(self.fm.i18n('TextArea'));
+									jQuery(this).html(self.fm.i18n('TextArea'));
 								}
 							})
 						)
@@ -1199,7 +1199,7 @@
 					};
 				// load script then start
 				if (!self.confObj.loader) {
-					self.confObj.loader = $.Deferred();
+					self.confObj.loader = jQuery.Deferred();
 					if (useRequire) {
 						require.config({
 							packages: [{
@@ -1241,10 +1241,10 @@
 				instance && instance.toTextArea();
 			},
 			save : function(textarea, instance) {
-				instance && $(textarea).data('cm') && (textarea.value = instance.getValue());
+				instance && jQuery(textarea).data('cm') && (textarea.value = instance.getValue());
 			},
 			focus : function(textarea, instance) {
-				instance && $(textarea).data('cm') && instance.focus();
+				instance && jQuery(textarea).data('cm') && instance.focus();
 			},
 			resize : function(textarea, instance, e, data) {
 				instance && instance.refresh();
@@ -1267,8 +1267,8 @@
 			load : function(textarea) {
 				var self = this,
 					fm   = this.fm,
-					base = $(textarea).parent(),
-					dfrd = $.Deferred(),
+					base = jQuery(textarea).parent(),
+					dfrd = jQuery.Deferred(),
 					cdn  = fm.options.cdns.simplemde,
 					start = function(SimpleMDE) {
 						var h	 = base.height(),
@@ -1281,7 +1281,7 @@
 								ctrH = 0,
 								areaH;
 							base.children('.editor-toolbar,.editor-statusbar').each(function() {
-								ctrH += $(this).outerHeight(true);
+								ctrH += jQuery(this).outerHeight(true);
 							});
 							areaH = h - ctrH - delta;
 							editorBase.height(areaH);
@@ -1310,7 +1310,7 @@
 						dfrd.resolve(editor);
 						
 						// editor base node
-						editorBase = $(editor.codemirror.getWrapperElement());
+						editorBase = jQuery(editor.codemirror.getWrapperElement());
 						
 						// fit height to base
 						editorBase.css('min-height', '50px')
@@ -1320,7 +1320,7 @@
 
 				// check SimpleMDE & start
 				if (!self.confObj.loader) {
-					self.confObj.loader = $.Deferred();
+					self.confObj.loader = jQuery.Deferred();
 					self.fm.loadCss(cdn+'/simplemde.min.css');
 					if (useRequire) {
 						require([
@@ -1377,9 +1377,9 @@
 			load : function(textarea) {
 				var self = this,
 					fm   = this.fm,
-					dfrd = $.Deferred(),
+					dfrd = jQuery.Deferred(),
 					init = function() {
-						var base = $(textarea).parent(),
+						var base = jQuery(textarea).parent(),
 							dlg = base.closest('.elfinder-dialog'),
 							h = base.height(),
 							reg = /([&?]getfile=)[^&]+/,
@@ -1437,18 +1437,18 @@
 						CKEDITOR.on('dialogDefinition', function(e) {
 							var dlg = e.data.definition.dialog;
 							dlg.on('show', function(e) {
-								fm.getUI().append($('.cke_dialog_background_cover')).append(this.getElement().$);
+								fm.getUI().append(jQuery('.cke_dialog_background_cover')).append(this.getElement().$);
 							});
 							dlg.on('hide', function(e) {
-								$('body:first').append($('.cke_dialog_background_cover')).append(this.getElement().$);
+								jQuery('body:first').append(jQuery('.cke_dialog_background_cover')).append(this.getElement().$);
 							});
 						});
 					};
 
 				if (!self.confObj.loader) {
-					self.confObj.loader = $.Deferred();
+					self.confObj.loader = jQuery.Deferred();
 					window.CKEDITOR_BASEPATH = fm.options.cdns.ckeditor + '/';
-					$.getScript(fm.options.cdns.ckeditor + '/ckeditor.js', function() {
+					jQuery.getScript(fm.options.cdns.ckeditor + '/ckeditor.js', function() {
 						self.confObj.loader.resolve();
 					});
 				}
@@ -1468,7 +1468,7 @@
 				var self;
 				if (instance) {
 					if (instance.status === 'ready') {
-						instance.resize('100%', $(textarea).parent().height());
+						instance.resize('100%', jQuery(textarea).parent().height());
 					}
 				}
 			}
@@ -1510,7 +1510,7 @@
 			},
 			// Prepare on before show dialog
 			prepare : function(base, dialogOpts, file) {
-				$(base).height(base.editor.fm.getUI().height() - 100);
+				jQuery(base).height(base.editor.fm.getUI().height() - 100);
 			},
 			init : function(id, file, data, fm) {
 				var m = data.match(/^([\s\S]*<body[^>]*>)([\s\S]+)(<\/body>[\s\S]*)$/i),
@@ -1539,7 +1539,7 @@
 			load : function(editnode) {
 				var self = this,
 					fm   = this.fm,
-					dfrd = $.Deferred(),
+					dfrd = jQuery.Deferred(),
 					mode = self.confObj.ckeditor5Mode || 'decoupled-document',
 					lang = (function() {
 						var l = fm.lang.toLowerCase().replace('_', '-');
@@ -1549,7 +1549,7 @@
 						return l;
 					})(),
 					init = function(cEditor) {
-						var base = $(editnode).parent(),
+						var base = jQuery(editnode).parent(),
 							opts;
 						
 						// set base height
@@ -1576,10 +1576,10 @@
 									fileRepo = editor.plugins.get('FileRepository'),
 									prevVars = {}, isImage, insertImages;
 								if (editor.ui.view.toolbar && (mode === 'classic' || mode === 'decoupled-document')) {
-									$(editnode).closest('.elfinder-dialog').children('.ui-widget-header').append($(editor.ui.view.toolbar.element).css({marginRight:'-1em',marginLeft:'-1em'}));
+									jQuery(editnode).closest('.elfinder-dialog').children('.ui-widget-header').append(jQuery(editor.ui.view.toolbar.element).css({marginRight:'-1em',marginLeft:'-1em'}));
 								}
 								if (mode === 'classic') {
-									$(editnode).closest('.elfinder-edit-editor').css('overflow', 'auto');
+									jQuery(editnode).closest('.elfinder-edit-editor').css('overflow', 'auto');
 								}
 								// Set up this elFinder instead of CKFinder
 								if (ckf) {
@@ -1628,7 +1628,7 @@
 												return;
 											}
 											fm.getUI('cwd').trigger('unselectall');
-											$.each(files, function(i, f) {
+											jQuery.each(files, function(i, f) {
 												if (isImage(f)) {
 													imgs.push(fm.convAbsUrl(f.url));
 												} else {
@@ -1653,10 +1653,10 @@
 								fileRepo.createUploadAdapter = function(loader) {
 									return new uploder(loader);
 								};
-								editor.setData($(editnode).data('data').body);
+								editor.setData(jQuery(editnode).data('data').body);
 								// move .ck-body to elFinder node for fullscreen mode
-								fm.getUI().append($('body > div.ck-body'));
-								$('div.ck-balloon-panel').css({
+								fm.getUI().append(jQuery('body > div.ck-body'));
+								jQuery('div.ck-balloon-panel').css({
 									'z-index': fm.getMaximizeCss().zIndex + 1
 								});
 								dfrd.resolve(editor);
@@ -1712,7 +1712,7 @@
 					}, loader;
 
 				if (!self.confObj.editor) {
-					loader = $.Deferred();
+					loader = jQuery.Deferred();
 					self.fm.loadScript([
 						fm.options.cdns.ckeditor5 + '/' + mode + '/ckeditor.js'
 					], function(editor) {
@@ -1749,14 +1749,14 @@
 				return dfrd;
 			},
 			getContent : function() {
-				var data = $(this).data('data');
+				var data = jQuery(this).data('data');
 				return data.header + data.body + data.footer;
 			},
 			close : function(editnode, instance) {
 				instance && instance.destroy();
 			},
 			save : function(editnode, instance) {
-				var elm = $(editnode),
+				var elm = jQuery(editnode),
 					data = elm.data('data');
 				if (instance) {
 					data.body = instance.getData();
@@ -1764,7 +1764,7 @@
 				}
 			},
 			focus : function(editnode, instance) {
-				$(editnode).trigger('focus');
+				jQuery(editnode).trigger('focus');
 			}
 		},
 		{
@@ -1792,9 +1792,9 @@
 			load : function(textarea) {
 				var self = this,
 					fm   = this.fm,
-					dfrd = $.Deferred(),
+					dfrd = jQuery.Deferred(),
 					init = function() {
-						var base = $(textarea).show().parent(),
+						var base = jQuery(textarea).show().parent(),
 							dlg = base.closest('.elfinder-dialog'),
 							h = base.height(),
 							delta = base.outerHeight(true) - h,
@@ -1803,10 +1803,10 @@
 								var mceW;
 								if (tinymce.activeEditor.windowManager.windows) {
 									mceW = tinymce.activeEditor.windowManager.windows[0];
-									mceDlg = $(mceW? mceW.getEl() : void(0)).hide();
-									mceCv = $('#mce-modal-block').hide();
+									mceDlg = jQuery(mceW? mceW.getEl() : void(0)).hide();
+									mceCv = jQuery('#mce-modal-block').hide();
 								} else {
-									mceDlg = $('.tox-dialog-wrap').hide();
+									mceDlg = jQuery('.tox-dialog-wrap').hide();
 								}
 							},
 							// Show MCE dialog and modal block
@@ -1822,12 +1822,12 @@
 						// fit height function
 						textarea._setHeight = function(height) {
 							if (tVer < 5) {
-								var base = $(this).parent(),
+								var base = jQuery(this).parent(),
 									h = height || base.innerHeight(),
 									ctrH = 0,
 									areaH;
 								base.find('.mce-container-body:first').children('.mce-top-part,.mce-statusbar').each(function() {
-									ctrH += $(this).outerHeight(true);
+									ctrH += jQuery(this).outerHeight(true);
 								});
 								areaH = h - ctrH - delta;
 								base.find('.mce-edit-area iframe:first').height(areaH);
@@ -1986,7 +1986,7 @@
 					};
 				
 				if (!self.confObj.loader) {
-					self.confObj.loader = $.Deferred();
+					self.confObj.loader = jQuery.Deferred();
 					self.fm.loadScript([fm.options.cdns.tinymce + (fm.options.cdns.tinymce.match(/\.js/)? '' : '/tinymce.min.js')], function() {
 						self.confObj.loader.resolve();
 					}, {
@@ -2054,26 +2054,26 @@
 			// Prepare on before show dialog
 			prepare : function(base, dialogOpts, file) {
 				var elfNode = base.editor.fm.getUI();
-				$(base).height(elfNode.height());
+				jQuery(base).height(elfNode.height());
 				dialogOpts.width = Math.max(dialogOpts.width || 0, elfNode.width() * 0.8);
 			},
 			// Initialization of editing node (this: this editors HTML node)
 			init : function(id, file, dum, fm) {
 				var ta = this,
-					ifm = $(this).hide(),
+					ifm = jQuery(this).hide(),
 					uiToast = fm.getUI('toast'),
-					spnr = $('<div class="elfinder-edit-spinner elfinder-edit-zohoeditor"></div>')
+					spnr = jQuery('<div class="elfinder-edit-spinner elfinder-edit-zohoeditor"></div>')
 						.html('<span class="elfinder-spinner-text">' + fm.i18n('nowLoading') + '</span><span class="elfinder-spinner"></span>')
 						.appendTo(ifm.parent()),
 					cdata = function() {
 						var data = '';
-						$.each(fm.customData, function(key, val) {
+						jQuery.each(fm.customData, function(key, val) {
 							data += '&' + encodeURIComponent(key) + '=' + encodeURIComponent(val);
 						});
 						return data;
 					};
 				
-				$(ta).data('xhr', fm.request({
+				jQuery(ta).data('xhr', fm.request({
 					data: {
 						cmd: 'editor',
 						name: ta.editor.confObj.info.cmdCheck,
@@ -2133,7 +2133,7 @@
 			// On dialog closed
 			close : function(ta) {
 				var fm = this.fm,
-					xhr = $(ta).data('xhr');
+					xhr = jQuery(ta).data('xhr');
 				if (xhr.state() === 'pending') {
 					xhr.reject();
 				}
@@ -2148,7 +2148,7 @@
 				cmdCheck : 'ZipArchive',
 				edit : function(file, editor) {
 					var fm = this,
-						dfrd = $.Deferred();
+						dfrd = jQuery.Deferred();
 					fm.request({
 						data:{
 							cmd: 'netmount',
@@ -2204,7 +2204,7 @@
 					opts: {}
 				});
 				textarea.setSelectionRange && textarea.setSelectionRange(0, 0);
-				$(textarea).trigger('focus').show();
+				jQuery(textarea).trigger('focus').show();
 			},
 			save : function(){}
 		},
@@ -2248,13 +2248,13 @@
 						Hash: 'txt'
 					},
 					link : '<div class="elfinder-edit-onlineconvert-link"><a href="https://www.online-convert.com" target="_blank"><span class="elfinder-button-icon"></span>ONLINE-CONVERT.COM</a></div>',
-					useTabs : ($.fn.tabs && !fm.UA.iOS)? true : false // Can't work on iOS, I don't know why.
+					useTabs : (jQuery.fn.tabs && !fm.UA.iOS)? true : false // Can't work on iOS, I don't know why.
 				}, mOpts);
 			},
 			// Prepare on before show dialog
 			prepare : function(base, dialogOpts, file) {
 				var elfNode = base.editor.fm.getUI();
-				$(base).height(elfNode.height());
+				jQuery(base).height(elfNode.height());
 				dialogOpts.width = Math.max(dialogOpts.width || 0, elfNode.width() * 0.8);
 			},
 			// Initialization of editing node (this: this editors HTML node)
@@ -2265,7 +2265,7 @@
 					uiToast = fm.getUI('toast'),
 					idxs = {},
 					allowZip = fm.uploadMimeCheck('application/zip', file.phash),
-					selfUrl = $('base').length? document.location.href.replace(/#.*$/, '') : '',
+					selfUrl = jQuery('base').length? document.location.href.replace(/#.*$/, '') : '',
 					getExt = function(cat, con) {
 						var c;
 						if (set.catExts[cat]) {
@@ -2288,7 +2288,7 @@
 								preventDefault : true
 							});
 						} else {
-							dfdInit = $.Deferred().resolve({api: confObj.api});
+							dfdInit = jQuery.Deferred().resolve({api: confObj.api});
 						}
 						cat = cat.toLowerCase();
 						dfdInit.done(function(data) {
@@ -2304,13 +2304,13 @@
 									confObj.conversions = {};
 								}
 								if (!confObj.conversions[cat]) {
-									dfd = $.getJSON('https://api2.online-convert.com/conversions' + type);
+									dfd = jQuery.getJSON('https://api2.online-convert.com/conversions' + type);
 								} else {
-									dfd = $.Deferred().resolve(confObj.conversions[cat]);
+									dfd = jQuery.Deferred().resolve(confObj.conversions[cat]);
 								}
 								dfd.done(function(d) {
 									confObj.conversions[cat] = d;
-									$.each(d, function(i, o) {
+									jQuery.each(d, function(i, o) {
 										btns[set.useTabs? 'children' : 'find']('.onlineconvert-category-' + o.category).children('.onlineconvert-' + o.target).trigger('makeoption', o);
 									});
 									done && done();
@@ -2319,8 +2319,8 @@
 						});
 					},
 					btns = (function() {
-						var btns = $('<div></div>').on('click', 'button', function() {
-								var b = $(this),
+						var btns = jQuery('<div></div>').on('click', 'button', function() {
+								var b = jQuery(this),
 									opts = b.data('opts') || null,
 									cat = b.closest('.onlineconvert-category').data('cname'),
 									con = b.data('conv');
@@ -2332,7 +2332,7 @@
 									});
 								}
 							}).on('change', function(e) {
-								var t = $(e.target),
+								var t = jQuery(e.target),
 									p = t.parent(), 
 									b = t.closest('.elfinder-edit-onlineconvert-button').children('button:first'),
 									o = b.data('opts') || {},
@@ -2359,9 +2359,9 @@
 								}
 								b.data('opts', o);
 							}),
-							ul = $('<ul></ul>'),
+							ul = jQuery('<ul></ul>'),
 							oform = function(n, o) {
-								var f = $('<p></p>').data('optkey', n).data('type', o.type),
+								var f = jQuery('<p></p>').data('optkey', n).data('type', o.type),
 									checked = '',
 									disabled = '',
 									nozip = false,
@@ -2372,7 +2372,7 @@
 								if (o.pattern) {
 									f.data('pattern', o.pattern);
 								}
-								f.append($('<span></span>').text(fm.i18n(n) + ' : '));
+								f.append(jQuery('<span></span>').text(fm.i18n(n) + ' : '));
 								if (o.type === 'boolean') {
 									if (o['default'] || (nozip = (n === 'allow_multiple_outputs' && !allowZip))) {
 										checked = ' checked';
@@ -2384,26 +2384,26 @@
 										opts[n] = true;
 										btn.data('opts', opts);
 									}
-									f.append($('<input type="checkbox" value="true"'+checked+disabled+'/>'));
+									f.append(jQuery('<input type="checkbox" value="true"'+checked+disabled+'/>'));
 								} else if (o['enum']){
-									elm = $('<select></select>').append($('<option value=""></option>').text('Select...'));
-									$.each(o['enum'], function(i, v) {
-										elm.append($('<option value="'+v+'"></option>').text(v));
+									elm = jQuery('<select></select>').append(jQuery('<option value=""></option>').text('Select...'));
+									jQuery.each(o['enum'], function(i, v) {
+										elm.append(jQuery('<option value="'+v+'"></option>').text(v));
 									});
 									f.append(elm);
 								} else {
-									f.append($('<input type="text" value=""/>'));
+									f.append(jQuery('<input type="text" value=""/>'));
 								}
 								return f;
 							},
 							makeOption = function(o) {
 								var elm = this,
-									b = $('<span class="elfinder-button-icon elfinder-button-icon-preference"></span>').on('click', function() {
+									b = jQuery('<span class="elfinder-button-icon elfinder-button-icon-preference"></span>').on('click', function() {
 										f.toggle();
 									}),
-									f = $('<div class="elfinder-edit-onlinconvert-options"></div>').hide();
+									f = jQuery('<div class="elfinder-edit-onlinconvert-options"></div>').hide();
 								if (o.options) {
-									$.each(o.options, function(k, v) {
+									jQuery.each(o.options, function(k, v) {
 										k !== 'download_password' && f.append(oform.call(elm, k, v));
 									});
 								}
@@ -2415,12 +2415,12 @@
 						if (!confObj.ext2mime) {
 							confObj.ext2mime = Object.assign(fm.arrayFlip(fm.mimeTypes), ext2mime);
 						}
-						$.each(set.conv, function(t, c) {
+						jQuery.each(set.conv, function(t, c) {
 							var cname = t.toLowerCase(),
 								id = 'elfinder-edit-onlineconvert-' + cname + ts,
-								type = $('<div id="' + id + '" class="onlineconvert-category onlineconvert-category-'+cname+'"></div>').data('cname', t),
+								type = jQuery('<div id="' + id + '" class="onlineconvert-category onlineconvert-category-'+cname+'"></div>').data('cname', t),
 								cext;
-							$.each(c, function(n, o) {
+							jQuery.each(c, function(n, o) {
 								var nl = n.toLowerCase(),
 									ext = getExt(t, n);
 								if (!confObj.ext2mime[ext]) {
@@ -2431,16 +2431,16 @@
 									}
 								}
 								if (fm.uploadMimeCheck(confObj.ext2mime[ext], file.phash)) {
-									type.append($('<div class="elfinder-edit-onlineconvert-button onlineconvert-'+nl+'"></div>').on('makeoption', function(e, data) {
-										var elm = $(this);
+									type.append(jQuery('<div class="elfinder-edit-onlineconvert-button onlineconvert-'+nl+'"></div>').on('makeoption', function(e, data) {
+										var elm = jQuery(this);
 										if (!elm.children('.elfinder-button-icon-preference').length) {
 											makeOption.call(elm, data);
 										}
-									}).append($('<button></button>').text(n).data('conv', n)));
+									}).append(jQuery('<button></button>').text(n).data('conv', n)));
 								}
 							});
 							if (type.children().length) {
-								ul.append($('<li></li>').append($('<a></a>').attr('href', selfUrl + '#' + id).text(t)));
+								ul.append(jQuery('<li></li>').append(jQuery('<a></a>').attr('href', selfUrl + '#' + id).text(t)));
 								btns.append(type);
 								idxs[cname] = i++;
 							}
@@ -2452,28 +2452,28 @@
 								}
 							});
 						} else {
-							$.each(set.conv, function(t) {
+							jQuery.each(set.conv, function(t) {
 								var tl = t.toLowerCase();
-								btns.append($('<fieldset class="onlineconvert-fieldset-' + tl + '"></fieldset>').append($('<legend></legend>').text(t)).append(btns.children('.onlineconvert-category-' + tl)));
+								btns.append(jQuery('<fieldset class="onlineconvert-fieldset-' + tl + '"></fieldset>').append(jQuery('<legend></legend>').text(t)).append(btns.children('.onlineconvert-category-' + tl)));
 							});
 						}
 						return btns;
 					})(),
-					select = $(this)
+					select = jQuery(this)
 						.append(
 							btns,
-							(set.showLink? $(set.link) : null)
+							(set.showLink? jQuery(set.link) : null)
 						),
-					spnr = $('<div class="elfinder-edit-spinner elfinder-edit-onlineconvert"></div>')
+					spnr = jQuery('<div class="elfinder-edit-spinner elfinder-edit-onlineconvert"></div>')
 						.hide()
 						.html('<span class="elfinder-spinner-text">' + fm.i18n('nowLoading') + '</span><span class="elfinder-spinner"></span>')
 						.appendTo(select.parent()),
-					prog = $('<div class="elfinder-quicklook-info-progress"></div>').appendTo(spnr),
+					prog = jQuery('<div class="elfinder-quicklook-info-progress"></div>').appendTo(spnr),
 					_url = null,
 					url = function() {
 						var onetime;
 						if (_url) {
-							return $.Deferred().resolve(_url);
+							return jQuery.Deferred().resolve(_url);
 						} else {
 							spnr.show();
 							return fm.forExternalUrl(file.hash, { progressBar: prog }).done(function(url) {
@@ -2487,7 +2487,7 @@
 						}
 					},
 					api = function(opts) {
-						$(ta).data('dfrd', url().done(function(url) {
+						jQuery(ta).data('dfrd', url().done(function(url) {
 							select.fadeOut();
 							setStatus({info: 'Start conversion request.'});
 							fm.request({
@@ -2518,7 +2518,7 @@
 							if (status.code === 'failed') {
 								spnr.hide();
 								if (res.errors && res.errors.length) {
-									$.each(res.errors, function(i, o) {
+									jQuery.each(res.errors, function(i, o) {
 										o.message && err.push(o.message);
 									});
 								}
@@ -2582,7 +2582,7 @@
 						spnr.hide();
 						if (output && output.length) {
 							ta.elfinderdialog('destroy');
-							$.each(output, function(i, o) {
+							jQuery.each(output, function(i, o) {
 								if (o.uri) {
 									url += o.uri + '\n';
 								}
@@ -2609,10 +2609,10 @@
 					}
 				} else {
 					cl = Object.keys(set.conv).length;
-					$.each(set.conv, function(t) {
+					jQuery.each(set.conv, function(t) {
 						if (t.toLowerCase() === mode) {
 							setOptions(t, function() {
-								$.each(set.conv, function(t0) {
+								jQuery.each(set.conv, function(t0) {
 									t0.toLowerCase() !== mode && setOptions(t0);
 								});
 							});
@@ -2621,7 +2621,7 @@
 						cl--;
 					});
 					if (!cl) {
-						$.each(set.conv, function(t) {
+						jQuery.each(set.conv, function(t) {
 							setOptions(t);
 						});
 					}
@@ -2634,7 +2634,7 @@
 			// On dialog closed
 			close : function(ta) {
 				var fm = this.fm,
-					dfrd = $(ta).data('dfrd');
+					dfrd = jQuery(ta).data('dfrd');
 				if (dfrd && dfrd.state() === 'pending') {
 					dfrd.reject();
 				}

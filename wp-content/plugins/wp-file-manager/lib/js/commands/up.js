@@ -24,7 +24,7 @@
 			fm.one('opendone', function() {
 				fm.selectfiles({files : [cwdhash]});
 			});
-		}) : $.Deferred().reject();
+		}) : jQuery.Deferred().reject();
 	};
 
 }).prototype = { forceLoad : true }; // this is required command

@@ -3,11 +3,11 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfindertoolbar = function(fm, opts) {
+jQuery.fn.elfindertoolbar = function(fm, opts) {
 	"use strict";
 	this.not('.elfinder-toolbar').each(function() {
 		var commands = fm._commands,
-			self     = $(this).addClass('ui-helper-clearfix ui-widget-header elfinder-toolbar'),
+			self     = jQuery(this).addClass('ui-helper-clearfix ui-widget-header elfinder-toolbar'),
 			options  = {
 				// default options
 				displayTextLabel: false,
@@ -16,8 +16,8 @@ $.fn.elfindertoolbar = function(fm, opts) {
 				showPreferenceButton: 'none'
 			},
 			filter   = function(opts) {
-				return $.grep(opts, function(v) {
-					if ($.isPlainObject(v)) {
+				return jQuery.grep(opts, function(v) {
+					if (jQuery.isPlainObject(v)) {
 						options = Object.assign(options, v);
 						return false;
 					}
@@ -27,19 +27,19 @@ $.fn.elfindertoolbar = function(fm, opts) {
 			render = function(disabled){
 				var name,cmdPref;
 				
-				$.each(buttons, function(i, b) { b.detach(); });
+				jQuery.each(buttons, function(i, b) { b.detach(); });
 				self.empty();
 				l = panels.length;
 				while (l--) {
 					if (panels[l]) {
-						panel = $('<div class="ui-widget-content ui-corner-all elfinder-buttonset"></div>');
+						panel = jQuery('<div class="ui-widget-content ui-corner-all elfinder-buttonset"></div>');
 						i = panels[l].length;
 						while (i--) {
 							name = panels[l][i];
 							if ((!disabled || !disabled[name]) && (cmd = commands[name])) {
 								button = 'elfinder'+cmd.options.ui;
-								if (! buttons[name] && $.fn[button]) {
-									buttons[name] = $('<div></div>')[button](cmd);
+								if (! buttons[name] && jQuery.fn[button]) {
+									buttons[name] = jQuery('<div></div>')[button](cmd);
 								}
 								if (buttons[name]) {
 									buttons[name].children('.elfinder-button-text')[textLabel? 'show' : 'hide']();
@@ -58,10 +58,10 @@ $.fn.elfindertoolbar = function(fm, opts) {
 					//cmdPref.state = !self.children().length? 0 : -1;
 					if (options.showPreferenceButton === 'always' || (!self.children().length && options.showPreferenceButton === 'auto')) {
 						//cmdPref.state = 0;
-						panel = $('<div class="ui-widget-content ui-corner-all elfinder-buttonset"></div>');
+						panel = jQuery('<div class="ui-widget-content ui-corner-all elfinder-buttonset"></div>');
 						name = 'preference';
 						button = 'elfinder'+cmd.options.ui;
-						buttons[name] = $('<div></div>')[button](cmdPref);
+						buttons[name] = jQuery('<div></div>')[button](cmdPref);
 						buttons[name].children('.elfinder-button-text')[textLabel? 'show' : 'hide']();
 						panel.prepend(buttons[name]);
 						self.append(panel);
@@ -87,7 +87,7 @@ $.fn.elfindertoolbar = function(fm, opts) {
 			// correction of options.displayTextLabel
 			textLabel = fm.storage('toolbarTextLabel');
 			if (textLabel === null) {
-				textLabel = (options.displayTextLabel && (! options.labelExcludeUA || ! options.labelExcludeUA.length || ! $.grep(options.labelExcludeUA, function(v){ return fm.UA[v]? true : false; }).length));
+				textLabel = (options.displayTextLabel && (! options.labelExcludeUA || ! options.labelExcludeUA.length || ! jQuery.grep(options.labelExcludeUA, function(v){ return fm.UA[v]? true : false; }).length));
 			} else {
 				textLabel = (textLabel == 1);
 			}
@@ -171,7 +171,7 @@ $.fn.elfindertoolbar = function(fm, opts) {
 			
 			if (! userHides && Array.isArray(options.defaultHides)) {
 				userHides = {};
-				$.each(options.defaultHides, function() {
+				jQuery.each(options.defaultHides, function() {
 					userHides[this] = true;
 				});
 				fm.storage('toolbarhides', userHides);
@@ -186,14 +186,14 @@ $.fn.elfindertoolbar = function(fm, opts) {
 				}
 			}
 			
-			$.each(userHides, function(n) {
+			jQuery.each(userHides, function(n) {
 				if (!disabled[n]) {
 					disabled[n] = true;
 				}
 			});
 			
 			if (Object.keys(fm.commandMap).length) {
-				$.each(fm.commandMap, function(from, to){
+				jQuery.each(fm.commandMap, function(from, to){
 					if (to === 'hidden') {
 						disabled[from] = true;
 					}
@@ -211,23 +211,23 @@ $.fn.elfindertoolbar = function(fm, opts) {
 				uiCmdMapPrev = JSON.stringify(fm.commandMap);
 				if (! doRender) {
 					// reset toolbar
-					$.each($('div.elfinder-button'), function(){
-						var origin = $(this).data('origin');
+					jQuery.each(jQuery('div.elfinder-button'), function(){
+						var origin = jQuery(this).data('origin');
 						if (origin) {
-							$(this).after(origin).detach();
+							jQuery(this).after(origin).detach();
 						}
 					});
 				}
 				if (Object.keys(fm.commandMap).length) {
-					$.each(fm.commandMap, function(from, to){
+					jQuery.each(fm.commandMap, function(from, to){
 						var cmd = fm._commands[to],
 							button = cmd? 'elfinder'+cmd.options.ui : null,
 							btn;
-						if (button && $.fn[button]) {
+						if (button && jQuery.fn[button]) {
 							btn = buttons[from];
 							if (btn) {
-								if (! buttons[to] && $.fn[button]) {
-									buttons[to] = $('<div></div>')[button](cmd);
+								if (! buttons[to] && jQuery.fn[button]) {
+									buttons[to] = jQuery('<div></div>')[button](cmd);
 									if (buttons[to]) {
 										buttons[to].children('.elfinder-button-text')[textLabel? 'show' : 'hide']();
 										if (cmd.extendsCmd) {
@@ -258,7 +258,7 @@ $.fn.elfindertoolbar = function(fm, opts) {
 		if (fm.UA.Touch) {
 			autoHide = fm.storage('autoHide') || {};
 			if (typeof autoHide.toolbar === 'undefined') {
-				autoHide.toolbar = (options.autoHideUA && options.autoHideUA.length > 0 && $.grep(options.autoHideUA, function(v){ return fm.UA[v]? true : false; }).length);
+				autoHide.toolbar = (options.autoHideUA && options.autoHideUA.length > 0 && jQuery.grep(options.autoHideUA, function(v){ return fm.UA[v]? true : false; }).length);
 				fm.storage('autoHide', autoHide);
 			}
 			
@@ -269,7 +269,7 @@ $.fn.elfindertoolbar = function(fm, opts) {
 			}
 			
 			fm.bind('load', function() {
-				swipeHandle = $('<div class="elfinder-toolbar-swipe-handle"></div>').hide().appendTo(fm.getUI());
+				swipeHandle = jQuery('<div class="elfinder-toolbar-swipe-handle"></div>').hide().appendTo(fm.getUI());
 				if (swipeHandle.css('pointer-events') !== 'none') {
 					swipeHandle.remove();
 					swipeHandle = null;

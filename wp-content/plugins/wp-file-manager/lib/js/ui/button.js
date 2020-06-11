@@ -4,7 +4,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfinderbutton = function(cmd) {
+jQuery.fn.elfinderbutton = function(cmd) {
 	"use strict";
 	return this.each(function() {
 		
@@ -16,9 +16,9 @@ $.fn.elfinderbutton = function(cmd) {
 			item     = 'elfinder-button-menu-item',
 			selected = 'elfinder-button-menu-item-selected',
 			menu,
-			text     = $('<span class="elfinder-button-text">'+cmd.title+'</span>'),
+			text     = jQuery('<span class="elfinder-button-text">'+cmd.title+'</span>'),
 			prvCname = cmd.className? cmd.className : cmd.name,
-			button   = $(this).addClass('ui-state-default elfinder-button')
+			button   = jQuery(this).addClass('ui-state-default elfinder-button')
 				.attr('title', cmd.title)
 				.append('<span class="elfinder-button-icon elfinder-button-icon-' + prvCname + '"></span>', text)
 				.on('mouseenter mouseleave', function(e) { !button.hasClass(disabled) && button[e.type == 'mouseleave' ? 'removeClass' : 'addClass'](hover);})
@@ -76,12 +76,12 @@ $.fn.elfinderbutton = function(cmd) {
 		if (Array.isArray(cmd.variants)) {
 			button.addClass('elfinder-menubutton');
 			
-			menu = $('<div class="ui-front ui-widget ui-widget-content elfinder-button-menu elfinder-button-' + prvCname + '-menu ui-corner-all"></div>')
+			menu = jQuery('<div class="ui-front ui-widget ui-widget-content elfinder-button-menu elfinder-button-' + prvCname + '-menu ui-corner-all"></div>')
 				.hide()
 				.appendTo(fm.getUI())
-				.on('mouseenter mouseleave', '.'+item, function() { $(this).toggleClass(hover); })
+				.on('mouseenter mouseleave', '.'+item, function() { jQuery(this).toggleClass(hover); })
 				.on('click', '.'+item, function(e) {
-					var opts = $(this).data('value');
+					var opts = jQuery(this).data('value');
 					e.preventDefault();
 					e.stopPropagation();
 					button.removeClass(hover);
@@ -100,8 +100,8 @@ $.fn.elfinderbutton = function(cmd) {
 			
 			cmd.change(function() {
 				menu.html('');
-				$.each(cmd.variants, function(i, variant) {
-					menu.append($('<div class="'+item+'">'+variant[1]+'</div>').data('value', variant[0]).addClass(variant[0] == cmd.value ? selected : ''));
+				jQuery.each(cmd.variants, function(i, variant) {
+					menu.append(jQuery('<div class="'+item+'">'+variant[1]+'</div>').data('value', variant[0]).addClass(variant[0] == cmd.value ? selected : ''));
 				});
 			});
 		}	

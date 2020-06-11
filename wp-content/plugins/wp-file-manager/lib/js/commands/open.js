@@ -32,11 +32,11 @@
 		
 		return cnt == 1 
 			? (sel[0].read ? 0 : -1)
-			: (cnt && !fm.UA.Mobile) ? ($.grep(sel, function(file) { return file.mime == 'directory' || ! file.read ? false : true;}).length == cnt ? 0 : -1) : -1;
+			: (cnt && !fm.UA.Mobile) ? (jQuery.grep(sel, function(file) { return file.mime == 'directory' || ! file.read ? false : true;}).length == cnt ? 0 : -1) : -1;
 	};
 	
 	this.exec = function(hashes, cOpts) {
-		var dfrd  = $.Deferred().fail(function(error) { error && fm.error(error); }),
+		var dfrd  = jQuery.Deferred().fail(function(error) { error && fm.error(error); }),
 			files = this.files(hashes),
 			cnt   = files.length,
 			thash = (typeof cOpts == 'object')? cOpts.thash : false,
@@ -71,7 +71,7 @@
 			}
 		}
 		
-		files = $.grep(files, function(file) { return file.mime != 'directory' ? true : false; });
+		files = jQuery.grep(files, function(file) { return file.mime != 'directory' ? true : false; });
 		
 		// nothing to open or files and folders selected - do nothing
 		if (cnt != files.length) {
@@ -80,7 +80,7 @@
 		
 		var doOpen = function() {
 			var openCB = function(url) {
-					var link = $('<a>').hide().appendTo($('body'));
+					var link = jQuery('<a>').hide().appendTo(jQuery('body'));
 					if (fm.UA.Mobile || !inline) {
 						if (html5dl) {
 							if (!inline) {
@@ -153,7 +153,7 @@
 								target: file.hash,
 								_t: file.ts || parseInt(+new Date()/1000)
 							});
-							$.each(params, function(key, val)
+							jQuery.each(params, function(key, val)
 							{
 								var input = document.createElement("input");
 								input.name = key;
@@ -166,7 +166,7 @@
 						} else if (into !== 'window') {
 							wnd.location = url;
 						}
-						$(wnd).trigger('focus');
+						jQuery(wnd).trigger('focus');
 					}
 					link.remove();
 				},
@@ -179,7 +179,7 @@
 			}
 	
 			// open files
-			html5dl  = (typeof $('<a>').get(0).download === 'string');
+			html5dl  = (typeof jQuery('<a>').get(0).download === 'string');
 			cnt = files.length;
 			while (cnt--) {
 				target = 'elf_open_window';
@@ -222,7 +222,7 @@
 		} else {
 			selAct = fm.storage('selectAction') || opts.selectAction;
 			if (selAct) {
-				$.each(selAct.split('/'), function() {
+				jQuery.each(selAct.split('/'), function() {
 					var cmdName = this.valueOf();
 					if (cmdName !== 'open' && (cmd = fm.getCommand(cmdName)) && cmd.enabled()) {
 						return false;

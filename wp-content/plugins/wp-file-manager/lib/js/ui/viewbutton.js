@@ -3,10 +3,10 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfinderviewbutton = function(cmd) {
+jQuery.fn.elfinderviewbutton = function(cmd) {
 	"use strict";
 	return this.each(function() {
-		var button = $(this).elfinderbutton(cmd),
+		var button = jQuery(this).elfinderbutton(cmd),
 			icon   = button.children('.elfinder-button-icon'),
 			text   = button.children('.elfinder-button-text'),
 			tm;

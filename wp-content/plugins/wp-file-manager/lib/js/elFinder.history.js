@@ -51,7 +51,7 @@ elFinder.prototype.history = function(fm) {
 				update = false;
 				return fm.exec('open', history[fwd ? ++current : --current]).fail(reset);
 			}
-			return $.Deferred().reject();
+			return jQuery.Deferred().reject();
 		},
 		/**
 		 * Sets the native history.

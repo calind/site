@@ -5,7 +5,7 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfinderpath = function(fm, options) {
+jQuery.fn.elfinderpath = function(fm, options) {
 	"use strict";
 	return this.each(function() {
 		var query  = '',
@@ -14,13 +14,13 @@ $.fn.elfinderpath = function(fm, options) {
 			place  = 'statusbar',
 			clHover= fm.res('class', 'hover'),
 			prefix = 'path' + (elFinder.prototype.uniqueid? elFinder.prototype.uniqueid : '') + '-',
-			wzbase = $('<div class="ui-widget-header ui-helper-clearfix elfinder-workzone-path"></div>'),
-			path   = $(this).addClass('elfinder-path').html('&nbsp;')
+			wzbase = jQuery('<div class="ui-widget-header ui-helper-clearfix elfinder-workzone-path"></div>'),
+			path   = jQuery(this).addClass('elfinder-path').html('&nbsp;')
 				.on('mousedown', 'span.elfinder-path-dir', function(e) {
-					var hash = $(this).attr('id').substr(prefix.length);
+					var hash = jQuery(this).attr('id').substr(prefix.length);
 					e.preventDefault();
 					if (hash != fm.cwd().hash) {
-						$(this).addClass(clHover);
+						jQuery(this).addClass(clHover);
 						if (query) {
 							fm.exec('search', query, { target: hash, mime: mimes.join(' ') });
 						} else {
@@ -29,14 +29,14 @@ $.fn.elfinderpath = function(fm, options) {
 					}
 				})
 				.prependTo(fm.getUI('statusbar').show()),
-			roots = $('<div class="elfinder-path-roots"></div>').on('click', function(e) {
+			roots = jQuery('<div class="elfinder-path-roots"></div>').on('click', function(e) {
 				e.stopPropagation();
 				e.preventDefault();
 				
-				var roots = $.map(fm.roots, function(h) { return fm.file(h); }),
+				var roots = jQuery.map(fm.roots, function(h) { return fm.file(h); }),
 				raw = [];
 
-				$.each(roots, function(i, f) {
+				jQuery.each(roots, function(i, f) {
 					if (! f.phash && fm.root(fm.cwd().hash, true) !== f.hash) {
 						raw.push({
 							label    : fm.escape(f.i18 || f.name),
@@ -58,7 +58,7 @@ $.fn.elfinderpath = function(fm, options) {
 			render = function(cwd) {
 				var dirs = [],
 					names = [];
-				$.each(fm.parents(cwd), function(i, hash) {
+				jQuery.each(fm.parents(cwd), function(i, hash) {
 					var c = (cwd === hash)? 'elfinder-path-dir elfinder-path-cwd' : 'elfinder-path-dir',
 						f = fm.file(hash),
 						name = fm.escape(f.i18 || f.name);
@@ -70,7 +70,7 @@ $.fn.elfinderpath = function(fm, options) {
 			toWorkzone = function() {
 				var prev;
 				path.children('span.elfinder-path-dir').attr('style', '');
-				prev = fm.direction === 'ltr'? $('#'+prefix + fm.cwd().hash).prevAll('span.elfinder-path-dir:first') : $();
+				prev = fm.direction === 'ltr'? jQuery('#'+prefix + fm.cwd().hash).prevAll('span.elfinder-path-dir:first') : jQuery();
 				path.scrollLeft(prev.length? prev.position().left : 0);
 			},
 			fit = function() {
@@ -89,11 +89,11 @@ $.fn.elfinderpath = function(fm, options) {
 				dirs.css({maxWidth: (100/cnt)+'%', display: 'inline-block'});
 				m = path.width() - 9;
 				path.children('span.elfinder-path-other').each(function() {
-					m -= $(this).width();
+					m -= jQuery(this).width();
 				});
 				ids = [];
 				dirs.each(function(i) {
-					var dir = $(this),
+					var dir = jQuery(this),
 						w   = dir.width();
 					m -= w;
 					if (w < this.scrollWidth) {
@@ -104,8 +104,8 @@ $.fn.elfinderpath = function(fm, options) {
 				if (ids.length) {
 					if (m > 0) {
 						m = m / ids.length;
-						$.each(ids, function(i, k) {
-							var d = $(dirs[k]);
+						jQuery.each(ids, function(i, k) {
+							var d = jQuery(dirs[k]);
 							d.css('max-width', d.width() + m);
 						});
 					}

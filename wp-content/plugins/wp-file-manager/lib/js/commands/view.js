@@ -21,13 +21,13 @@ elFinder.prototype.commands.view = function() {
 	
 	this.extra = {
 		icon: 'menu',
-		node: $('<span></span>')
+		node: jQuery('<span></span>')
 			.attr({title: fm.i18n('viewtype')})
 			.on('click touchstart', function(e){
 				if (e.type === 'touchstart' && e.originalEvent.touches.length > 1) {
 					return;
 				}
-				var node = $(this);
+				var node = jQuery(this);
 				e.stopPropagation();
 				e.preventDefault();
 				fm.trigger('contextmenu', {
@@ -91,13 +91,13 @@ elFinder.prototype.commands.view = function() {
 	}).bind('contextmenucreate', function() {
 		self.extra = {
 			icon: 'menu',
-			node: $('<span></span>')
+			node: jQuery('<span></span>')
 				.attr({title: fm.i18n('cmdview')})
 				.on('click touchstart', function(e){
 					if (e.type === 'touchstart' && e.originalEvent.touches.length > 1) {
 						return;
 					}
-					var node = $(this),
+					var node = jQuery(this),
 						raw = subMenuRaw.concat(),
 						idx, i;
 					if (self.value === 'list') {

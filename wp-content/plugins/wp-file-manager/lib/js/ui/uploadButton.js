@@ -3,16 +3,16 @@
  *
  * @author Dmitry (dio) Levashov
  **/
-$.fn.elfinderuploadbutton = function(cmd) {
+jQuery.fn.elfinderuploadbutton = function(cmd) {
 	"use strict";
 	return this.each(function() {
 		var fm = cmd.fm,
-			button = $(this).elfinderbutton(cmd)
+			button = jQuery(this).elfinderbutton(cmd)
 				.off('click'), 
-			form = $('<form></form>').appendTo(button),
-			input = $('<input type="file" multiple="true" title="'+cmd.fm.i18n('selectForUpload')+'"/>')
+			form = jQuery('<form></form>').appendTo(button),
+			input = jQuery('<input type="file" multiple="true" title="'+cmd.fm.i18n('selectForUpload')+'"/>')
 				.on('change', function() {
-					var _input = $(this);
+					var _input = jQuery(this);
 					if (_input.val()) {
 						fm.exec('upload', {input : _input.remove()[0]}, void(0), fm.cwd().hash);
 						input.clone(true).appendTo(form);

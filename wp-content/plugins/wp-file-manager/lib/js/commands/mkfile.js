@@ -30,7 +30,7 @@ elFinder.prototype.commands.mkfile = function() {
 			hides = fm.getCommand('edit').getMkfileHides();
 		self.variants = [];
 		if (fm.mimesCanMakeEmpty) {
-			$.each(fm.mimesCanMakeEmpty, function(mime, type) {
+			jQuery.each(fm.mimesCanMakeEmpty, function(mime, type) {
 				type && !hides[mime] && fm.uploadMimeCheck(mime) && self.variants.push([mime, self.getTypeName(mime, type)]);
 			});
 		}
@@ -48,10 +48,10 @@ elFinder.prototype.commands.mkfile = function() {
 			if (fm.uploadMimeCheck(mime)) {
 				this.mime = mime;
 				this.prefix = fm.i18n(['untitled file', type]);
-				return $.proxy(fm.res('mixin', 'make'), self)();
+				return jQuery.proxy(fm.res('mixin', 'make'), self)();
 			}
 			err = ['errMkfile', self.getTypeName(mime, type)];
 		}
-		return $.Deferred().reject(err);
+		return jQuery.Deferred().reject(err);
 	};
 };

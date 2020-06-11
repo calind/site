@@ -12,7 +12,7 @@
 		filter = function(files) {
 			var o = self.options;
 
-			files = $.grep(files, function(file) {
+			files = jQuery.grep(files, function(file) {
 				return (file.mime != 'directory' || o.folders) && file.read ? true : false;
 			});
 
@@ -37,7 +37,7 @@
 			cnt   = files.length,
 			url   = fm.option('url'),
 			tmb   = fm.option('tmbUrl'),
-			dfrd  = $.Deferred()
+			dfrd  = jQuery.Deferred()
 				.done(function(data) {
 					var res,
 						done = function() {
@@ -74,7 +74,7 @@
 				}),
 			result = function(file) {
 				return opts.onlyURL
-					? opts.multiple ? $.map(files, function(f) { return f.url; }) : files[0].url
+					? opts.multiple ? jQuery.map(files, function(f) { return f.url; }) : files[0].url
 					: opts.multiple ? files : files[0];
 			},
 			req = [], 
@@ -107,7 +107,7 @@
 					if (file.path === '' && file.phash) {
 						// get parents
 						(function() {
-							var dfd  = $.Deferred();
+							var dfd  = jQuery.Deferred();
 							req.push(dfd);
 							fm.path(file.hash, false, {})
 								.done(function(path) {
@@ -150,7 +150,7 @@
 		}
 		
 		if (req.length) {
-			$.when.apply(null, req).always(function() {
+			jQuery.when.apply(null, req).always(function() {
 				dfrd.resolve(result(files));
 			});
 			return dfrd;

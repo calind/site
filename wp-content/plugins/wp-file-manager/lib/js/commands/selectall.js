@@ -21,7 +21,7 @@ elFinder.prototype.commands.selectall = function() {
 	};
 	
 	this.exec = function() {
-		$(document).trigger($.Event('keydown', { keyCode: 65, ctrlKey : true, shiftKey : false, altKey : false, metaKey : false }));
-		return $.Deferred().resolve();
+		jQuery(document).trigger(jQuery.Event('keydown', { keyCode: 65, ctrlKey : true, shiftKey : false, altKey : false, metaKey : false }));
+		return jQuery.Deferred().resolve();
 	};
 };

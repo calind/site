@@ -16,10 +16,10 @@ elFinder.prototype.commands.edit = function () {
       return str.replace(/\s+$/, "");
     },
     getEncSelect = function (heads) {
-      var sel = $('<select class="ui-corner-all"></select>'),
+      var sel = jQuery('<select class="ui-corner-all"></select>'),
         hval;
       if (heads) {
-        $.each(heads, function (i, head) {
+        jQuery.each(heads, function (i, head) {
           hval = fm.escape(head.value);
           sel.append(
             '<option value="' +
@@ -30,13 +30,13 @@ elFinder.prototype.commands.edit = function () {
           );
         });
       }
-      $.each(self.options.encodings, function (i, v) {
+      jQuery.each(self.options.encodings, function (i, v) {
         sel.append('<option value="' + v + '">' + v + "</option>");
       });
       return sel;
     },
     getDlgWidth = function () {
-      var win = fm.options.dialogContained ? fm.getUI() : $(window),
+      var win = fm.options.dialogContained ? fm.getUI() : jQuery(window),
         m,
         width;
       if (
@@ -53,7 +53,7 @@ elFinder.prototype.commands.edit = function () {
       if (!self.options.dialogHeight) {
         return void 0;
       }
-      var win = fm.options.dialogContained ? fm.getUI() : $(window),
+      var win = fm.options.dialogContained ? fm.getUI() : jQuery(window),
         m,
         height;
       if (
@@ -82,7 +82,7 @@ elFinder.prototype.commands.edit = function () {
         mime = files[0].mime;
         ext = files[0].name.replace(/^.*(\.[^.]+)$/, "$1");
       }
-      return $.grep(files, function (file) {
+      return jQuery.grep(files, function (file) {
         var res;
         if (skip || file.mime === "directory") {
           return false;
@@ -91,9 +91,9 @@ elFinder.prototype.commands.edit = function () {
           file.read &&
           (allowAll ||
             fm.mimeIsText(file.mime) ||
-            $.inArray(file.mime, cnt === 1 ? mimesSingle : mimes) !== -1) &&
+            jQuery.inArray(file.mime, cnt === 1 ? mimesSingle : mimes) !== -1) &&
           (!self.onlyMimes.length ||
-            $.inArray(file.mime, self.onlyMimes) !== -1) &&
+            jQuery.inArray(file.mime, self.onlyMimes) !== -1) &&
           (cnt === 1 ||
             (file.mime === mime &&
               file.name.substr(ext.length * -1) === ext)) &&
@@ -131,10 +131,10 @@ elFinder.prototype.commands.edit = function () {
      * @param  String  id       dialog id
      * @param  Object  file     file object
      * @param  String  content  file content
-     * @return $.Deferred
+     * @return jQuery.Deferred
      **/
     dialog = function (id, file, content, encoding, editor, toasts) {
-      var dfrd = $.Deferred(),
+      var dfrd = jQuery.Deferred(),
         _loaded = false,
         loaded = function () {
           if (!_loaded) {
@@ -149,14 +149,14 @@ elFinder.prototype.commands.edit = function () {
         makeToasts = function () {
           // make toast message
           if (toasts && Array.isArray(toasts)) {
-            $.each(toasts, function () {
+            jQuery.each(toasts, function () {
               this.msg && fm.toast(this);
             });
           }
         },
         save = function () {
           var encord = selEncoding ? selEncoding.val() : void 0,
-            saveDfd = $.Deferred().fail(function (err) {
+            saveDfd = jQuery.Deferred().fail(function (err) {
               dialogNode
                 .show()
                 .find("button.elfinder-btncnt-0,button.elfinder-btncnt-1")
@@ -256,7 +256,7 @@ elFinder.prototype.commands.edit = function () {
               self.requestCmd = "mkfile";
               self.nextAction = {};
               self.data = { target: phash };
-              $.proxy(fm.res("mixin", "make"), self)()
+              jQuery.proxy(fm.res("mixin", "make"), self)()
                 .done(function (data) {
                   var oldHash;
                   if (data.added && data.added.length) {
@@ -312,7 +312,7 @@ elFinder.prototype.commands.edit = function () {
             reqInfo = fm.request({ cmd: "info", targets: [phash] });
           }
 
-          $.when([reqOpen, reqInfo])
+          jQuery.when([reqOpen, reqInfo])
             .done(function () {
               if (reqInfo) {
                 fm.one("infodone", function () {
@@ -325,7 +325,7 @@ elFinder.prototype.commands.edit = function () {
             .fail(fail);
         },
         changed = function () {
-          var dfd = $.Deferred(),
+          var dfd = jQuery.Deferred(),
             res,
             tm;
           if (!_loaded) {
@@ -507,7 +507,7 @@ elFinder.prototype.commands.edit = function () {
         getContent = function () {
           var res = ta.getContent.call(ta, ta[0]);
           if (res === undefined || res === false || res === null) {
-            res = $.Deferred().reject();
+            res = jQuery.Deferred().reject();
           }
           return res;
         },
@@ -554,7 +554,7 @@ elFinder.prototype.commands.edit = function () {
 
       if (editor) {
         if (editor.html) {
-          ta = $(editor.html);
+          ta = jQuery(editor.html);
         }
         extEditor = {
           init: editor.init || null,
@@ -592,7 +592,7 @@ elFinder.prototype.commands.edit = function () {
           return dfrd.reject("errEditorNotFound");
         }
         (function () {
-          ta = $(
+          ta = jQuery(
             '<textarea class="elfinder-file-edit" rows="20" id="' +
               id +
               '-ta"></textarea>'
@@ -605,7 +605,7 @@ elFinder.prototype.commands.edit = function () {
                 start;
 
               e.stopPropagation();
-              if (code == $.ui.keyCode.TAB) {
+              if (code == jQuery.ui.keyCode.TAB) {
                 e.preventDefault();
                 // insert tab on tab press
                 if (this.setSelectionRange) {
@@ -648,12 +648,12 @@ elFinder.prototype.commands.edit = function () {
       ta._setupSelEncoding = function (content) {
         var heads =
             encoding && encoding !== "unknown" ? [{ value: encoding }] : [],
-          wfake = $("<select></select>").hide(),
+          wfake = jQuery("<select></select>").hide(),
           setSelW = function (init) {
             init && wfake.appendTo(selEncoding.parent());
             wfake
               .empty()
-              .append($("<option></option>").text(selEncoding.val()));
+              .append(jQuery("<option></option>").text(selEncoding.val()));
             selEncoding.width(wfake.width());
           };
         if (content === "" || !encoding || encoding !== "UTF-8") {
@@ -680,7 +680,7 @@ elFinder.prototype.commands.edit = function () {
         ta.parent()
           .next()
           .prepend(
-            $(
+            jQuery(
               '<div class="ui-dialog-buttonset elfinder-edit-extras"></div>'
             ).append(selEncoding)
           );
@@ -741,7 +741,7 @@ elFinder.prototype.commands.edit = function () {
           if (data.extention && data.mime) {
             var ext = data.extention,
               mime = data.mime,
-              btnSet = $(this)
+              btnSet = jQuery(this)
                 .children(".ui-dialog-buttonpane")
                 .children(".ui-dialog-buttonset");
             btnSet.children(".elfinder-btncnt-0,.elfinder-btncnt-1").hide();
@@ -755,7 +755,7 @@ elFinder.prototype.commands.edit = function () {
         });
 
       // care to viewport scale change with mobile devices
-      maxW = (fm.options.dialogContained ? fm.getUI() : $(window)).width();
+      maxW = (fm.options.dialogContained ? fm.getUI() : jQuery(window)).width();
       dialogNode.width() > maxW && dialogNode.width(maxW);
 
       return dfrd.promise();
@@ -770,7 +770,7 @@ elFinder.prototype.commands.edit = function () {
     edit = function (file, convert, editor) {
       var hash = file.hash,
         opts = fm.options,
-        dfrd = $.Deferred(),
+        dfrd = jQuery.Deferred(),
         id = "edit-" + fm.namespace + "-" + file.hash,
         d = fm.getUI().find("#" + id),
         conv = !convert ? 0 : convert,
@@ -811,7 +811,7 @@ elFinder.prototype.commands.edit = function () {
 
         noContent = editor.info.preventGet || editor.info.noContent;
         if (editor.info.urlAsContent || noContent) {
-          req = $.Deferred();
+          req = jQuery.Deferred();
           if (editor.info.urlAsContent) {
             fm.url(hash, { async: true, onetime: true, temporary: true }).done(
               function (url) {
@@ -858,7 +858,7 @@ elFinder.prototype.commands.edit = function () {
                 },
                 optionsCallback: function (options) {
                   options.create = function () {
-                    var base = $(
+                    var base = jQuery(
                         '<div class="elfinder-dialog-confirm-encoding"></div>'
                       ),
                       head = { value: data.doconv },
@@ -868,12 +868,12 @@ elFinder.prototype.commands.edit = function () {
                       head.caption = "-";
                     }
                     selEncoding = getEncSelect([head]);
-                    $(this)
+                    jQuery(this)
                       .next()
                       .find(".ui-dialog-buttonset")
                       .prepend(
                         base.append(
-                          $(
+                          jQuery(
                             "<label>" + fm.i18n("encoding") + " </label>"
                           ).append(selEncoding)
                         )
@@ -987,7 +987,7 @@ elFinder.prototype.commands.edit = function () {
           opts: {},
         });
         textarea.setSelectionRange && textarea.setSelectionRange(0, 0);
-        $(textarea).trigger("focus").show();
+        jQuery(textarea).trigger("focus").show();
       },
       save: function () {},
     },
@@ -1005,7 +1005,7 @@ elFinder.prototype.commands.edit = function () {
           } else {
             if (
               editorMimes[0] === "*" ||
-              $.inArray(fileMime, editorMimes) !== -1
+              jQuery.inArray(fileMime, editorMimes) !== -1
             ) {
               return true;
             }
@@ -1044,7 +1044,7 @@ elFinder.prototype.commands.edit = function () {
       if (!optEditors.length) {
         optEditors = [fallbackEditor];
       }
-      $.each(optEditors, function (i, editor) {
+      jQuery.each(optEditors, function (i, editor) {
         var name;
         if (
           (cnt === 1 || !editor.info.single) &&
@@ -1070,7 +1070,7 @@ elFinder.prototype.commands.edit = function () {
     },
     store = function (mime, editor) {
       if (mime && editor) {
-        if (!$.isPlainObject(stored)) {
+        if (!jQuery.isPlainObject(stored)) {
           stored = {};
         }
         stored[mime] = editor.id;
@@ -1088,7 +1088,7 @@ elFinder.prototype.commands.edit = function () {
     },
     getSubMenuRaw = function (files, callback) {
       var subMenuRaw = [];
-      $.each(editors, function (id, ed) {
+      jQuery.each(editors, function (id, ed) {
         subMenuRaw.push({
           label: fm.escape(ed.i18n),
           icon: ed.info && ed.info.icon ? ed.info.icon : "edit",
@@ -1146,7 +1146,7 @@ elFinder.prototype.commands.edit = function () {
             opts.makeTextMimes || ["text/plain"]
           ),
         });
-        $.each(opts.editors, function (i, editor) {
+        jQuery.each(opts.editors, function (i, editor) {
           if (editor.info && editor.info.cmdCheck) {
             cmdChecks.push(editor.info.cmdCheck);
           }
@@ -1170,15 +1170,15 @@ elFinder.prototype.commands.edit = function () {
               });
           } else {
             ccData = {};
-            dfd = $.Deferred().resolve();
+            dfd = jQuery.Deferred().resolve();
           }
         } else {
-          dfd = $.Deferred().resolve();
+          dfd = jQuery.Deferred().resolve();
         }
 
         dfd.always(function () {
           if (ccData) {
-            opts.editors = $.grep(opts.editors, function (e) {
+            opts.editors = jQuery.grep(opts.editors, function (e) {
               if (e.info && e.info.cmdCheck) {
                 return ccData[e.info.cmdCheck] ? true : false;
               } else {
@@ -1186,7 +1186,7 @@ elFinder.prototype.commands.edit = function () {
               }
             });
           }
-          $.each(opts.editors, function (i, editor) {
+          jQuery.each(opts.editors, function (i, editor) {
             if (editor.setup && typeof editor.setup === "function") {
               editor.setup.call(editor, opts, fm);
             }
@@ -1219,10 +1219,10 @@ elFinder.prototype.commands.edit = function () {
             }
           });
 
-          mimesSingle = ($.uniqueSort || $.unique)(mimesSingle);
-          mimes = ($.uniqueSort || $.unique)(mimes);
+          mimesSingle = (jQuery.uniqueSort || jQuery.unique)(mimesSingle);
+          mimes = (jQuery.uniqueSort || jQuery.unique)(mimes);
 
-          opts.editors = $.grep(opts.editors, function (e) {
+          opts.editors = jQuery.grep(opts.editors, function (e) {
             return e.disabled ? false : true;
           });
         });
@@ -1259,7 +1259,7 @@ elFinder.prototype.commands.edit = function () {
               ) {
                 delete self.extra;
                 self.variants = [];
-                $.each(editors, function (id, editor) {
+                jQuery.each(editors, function (id, editor) {
                   self.variants.push([
                     { editor: editor },
                     editor.i18n,
@@ -1272,7 +1272,7 @@ elFinder.prototype.commands.edit = function () {
                 single(editor);
                 self.extra = {
                   icon: "menu",
-                  node: $("<span></span>")
+                  node: jQuery("<span></span>")
                     .attr({ title: fm.i18n("select") })
                     .on("click touchstart", function (e) {
                       if (
@@ -1281,7 +1281,7 @@ elFinder.prototype.commands.edit = function () {
                       ) {
                         return;
                       }
-                      var node = $(this);
+                      var node = jQuery(this);
                       e.stopPropagation();
                       e.preventDefault();
                       fm.trigger("contextmenu", {
@@ -1308,7 +1308,7 @@ elFinder.prototype.commands.edit = function () {
           var defs = fm.arrayFlip(self.options.makeTextMimes || ["text/plain"]),
             hides = self.getMkfileHides();
 
-          $.each(fm.storage("mkfileTextMimes") || {}, function (mime, type) {
+          jQuery.each(fm.storage("mkfileTextMimes") || {}, function (mime, type) {
             if (!defs[mime]) {
               delete fm.mimesCanMakeEmpty[mime];
               delete hides[mime];
@@ -1334,18 +1334,18 @@ elFinder.prototype.commands.edit = function () {
   this.exec = function (select, opts) {
     var fm = this.fm,
       files = filter(this.files(select)),
-      hashes = $.map(files, function (f) {
+      hashes = jQuery.map(files, function (f) {
         return f.hash;
       }),
       list = [],
       editor = opts && opts.editor ? opts.editor : null,
-      node = $(
+      node = jQuery(
         opts && opts._currentNode
           ? opts._currentNode
           : fm.cwdHash2Elm(hashes[0])
       ),
       getEditor = function () {
-        var dfd = $.Deferred(),
+        var dfd = jQuery.Deferred(),
           storedId;
 
         if (!editor && Object.keys(editors).length > 1) {
@@ -1385,7 +1385,7 @@ elFinder.prototype.commands.edit = function () {
           );
         }
       },
-      dfrd = $.Deferred(),
+      dfrd = jQuery.Deferred(),
       file;
 
     if (editors === null) {
@@ -1407,7 +1407,7 @@ elFinder.prototype.commands.edit = function () {
         }
 
         if (list.length) {
-          $.when
+          jQuery.when
             .apply(null, list)
             .done(function () {
               dfrd.resolve();

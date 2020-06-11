@@ -57,7 +57,7 @@ elFinder.prototype.commands.hide = function() {
 
 	this.exec = function(hashes, opts) {
 		var fm = this.fm,
-			dfrd = $.Deferred()
+			dfrd = jQuery.Deferred()
 				.done(function() {
 					fm.trigger('hide', {items: items, opts: opts});
 				})
@@ -71,10 +71,10 @@ elFinder.prototype.commands.hide = function() {
 			notifyto, files, res;
 
 		hideData = fm.storage('hide') || {};
-		if (!$.isPlainObject(hideData)) {
+		if (!jQuery.isPlainObject(hideData)) {
 			hideData = {};
 		}
-		if (!$.isPlainObject(hideData.items)) {
+		if (!jQuery.isPlainObject(hideData.items)) {
 			hideData.items = {};
 		}
 		if (opts._currentType === 'shortcut' || !items.length || (opts._currentType !== 'navbar' && sOrigin !=='navbar' && items[0] === fm.cwd().hash)) {
@@ -98,7 +98,7 @@ elFinder.prototype.commands.hide = function() {
 				fm.storage('hide', o.reset? null : hideData);
 				self.title = fm.i18n('hideHidden');
 				self.update(o.reset? -1 : void(0), self.title);
-				$.each(hideData.items, function(h) {
+				jQuery.each(hideData.items, function(h) {
 					var f = fm.file(h, true);
 					if (f && (fm.searchStatus.state || !f.phash || fm.file(f.phash))) {
 						added.push(f);
@@ -117,7 +117,7 @@ elFinder.prototype.commands.hide = function() {
 		}
 
 		if (items.length) {
-			$.each(items, function(i, h) {
+			jQuery.each(items, function(i, h) {
 				var f;
 				if (!hideData.items[h]) {
 					f = fm.file(h);
@@ -141,7 +141,7 @@ elFinder.prototype.commands.hide = function() {
 					callback : function() {
 						var nData = fm.storage('hide');
 						if (nData) {
-							$.each(items, function(i, h) {
+							jQuery.each(items, function(i, h) {
 								delete nData.items[h];
 							});
 							hideCnt = Object.keys(nData.items).length;

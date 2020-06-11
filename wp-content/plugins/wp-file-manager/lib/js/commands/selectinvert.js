@@ -13,8 +13,8 @@ elFinder.prototype.commands.selectinvert = function() {
 	};
 	
 	this.exec = function() {
-		$(document).trigger($.Event('keydown', { keyCode: 73, ctrlKey : true, shiftKey : true, altKey : false, metaKey : false }));
-		return $.Deferred().resolve();
+		jQuery(document).trigger(jQuery.Event('keydown', { keyCode: 73, ctrlKey : true, shiftKey : true, altKey : false, metaKey : false }));
+		return jQuery.Deferred().resolve();
 	};
 
 };

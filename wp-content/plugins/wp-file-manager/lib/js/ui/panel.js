@@ -1,7 +1,7 @@
-$.fn.elfinderpanel = function(fm) {
+jQuery.fn.elfinderpanel = function(fm) {
 	"use strict";
 	return this.each(function() {
-		var panel = $(this).addClass('elfinder-panel ui-state-default ui-corner-all'),
+		var panel = jQuery(this).addClass('elfinder-panel ui-state-default ui-corner-all'),
 			margin = 'margin-'+(fm.direction == 'ltr' ? 'left' : 'right');
 		
 		fm.one('load', function(e) {

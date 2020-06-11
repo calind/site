@@ -24,7 +24,7 @@
 				'<ul class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-top">'],
 		stpl    = '<div class="elfinder-help-shortcut"><div class="elfinder-help-shortcut-pattern">{pattern}</div> {descrip}</div>',
 		sep     = '<div class="elfinder-help-separator"></div>',
-		selfUrl = $('base').length? document.location.href.replace(/#.*$/, '') : '',
+		selfUrl = jQuery('base').length? document.location.href.replace(/#.*$/, '') : '',
 		clTabActive = fm.res('class', 'tabsactive'),
 		
 		getTheme = function() {
@@ -43,7 +43,7 @@
 			html.push('<div class="'+prim+'">'+fm.i18n('webfm')+'</div>');
 			html.push('<div class="'+sec+'">'+fm.i18n('ver')+': '+fm.version+'</div>');
 			html.push('<div class="'+sec+'">'+fm.i18n('protocolver')+': <span class="apiver"></span></div>');
-			html.push('<div class="'+sec+'">jQuery/jQuery UI: '+$().jquery+'/'+$.ui.version+'</div>');
+			html.push('<div class="'+sec+'">jQuery/jQuery UI: '+jQuery().jquery+'/'+jQuery.ui.version+'</div>');
 
 			html.push(sep);
 			
@@ -62,8 +62,8 @@
 			html.push(atpl[r](author, 'Alexey Sukhotin &lt;strogg@yandex.ru&gt;')[r](work, fm.i18n('contributor')));
 			
 			if (fm.i18[fm.lang].translator) {
-				$.each(fm.i18[fm.lang].translator.split(', '), function() {
-					html.push(atpl[r](author, $.trim(this))[r](work, fm.i18n('translator')+' ('+fm.i18[fm.lang].language+')'));
+				jQuery.each(fm.i18[fm.lang].translator.split(', '), function() {
+					html.push(atpl[r](author, jQuery.trim(this))[r](work, fm.i18n('translator')+' ('+fm.i18[fm.lang].language+')'));
 				});	
 			}
 			
@@ -85,7 +85,7 @@
 			
 			if (sh.length) {
 				html.push('<div class="ui-widget-content elfinder-help-shortcuts">');
-				$.each(sh, function(i, s) {
+				jQuery.each(sh, function(i, s) {
 					html.push(stpl.replace(/\{pattern\}/, s[0]).replace(/\{descrip\}/, s[1]));
 				});
 			
@@ -121,16 +121,16 @@
 		},
 		debugRender = function() {
 			var render = function(elm, obj) {
-				$.each(obj, function(k, v) {
-					elm.append($('<dt></dt>').text(k));
+				jQuery.each(obj, function(k, v) {
+					elm.append(jQuery('<dt></dt>').text(k));
 					if (typeof v === 'undefined') {
-						elm.append($('<dd></dd>').append($('<span></span>').text('undfined')));
+						elm.append(jQuery('<dd></dd>').append(jQuery('<span></span>').text('undfined')));
 					} else if (typeof v === 'object' && !v) {
-						elm.append($('<dd></dd>').append($('<span></span>').text('null')));
-					} else if (typeof v === 'object' && ($.isPlainObject(v) || v.length)) {
-						elm.append( $('<dd></dd>').append(render($('<dl></dl>'), v)));
+						elm.append(jQuery('<dd></dd>').append(jQuery('<span></span>').text('null')));
+					} else if (typeof v === 'object' && (jQuery.isPlainObject(v) || v.length)) {
+						elm.append( jQuery('<dd></dd>').append(render(jQuery('<dl></dl>'), v)));
 					} else {
-						elm.append($('<dd></dd>').append($('<span></span>').text((v && typeof v === 'object')? '[]' : (v? v : '""'))));
+						elm.append(jQuery('<dd></dd>').append(jQuery('<span></span>').text((v && typeof v === 'object')? '[]' : (v? v : '""'))));
 					}
 				});
 				return elm;
@@ -153,8 +153,8 @@
 				}
 				
 				tabId = fm.namespace + '-help-debug-' + (+new Date());
-				targetL = $('<li></li>').html('<a href="'+selfUrl+'#'+tabId+'">'+self.debug.debug.cmd+'</a>').prependTo(debugUL);
-				target = $('<div id="'+tabId+'"></div>').data('debug', self.debug);
+				targetL = jQuery('<li></li>').html('<a href="'+selfUrl+'#'+tabId+'">'+self.debug.debug.cmd+'</a>').prependTo(debugUL);
+				target = jQuery('<div id="'+tabId+'"></div>').data('debug', self.debug);
 				
 				targetL.on('click.debugrender', function() {
 					var debug = target.data('debug');
@@ -162,11 +162,11 @@
 					if (debug) {
 						target.hide();
 						if (debug.debug) {
-							info = $('<fieldset>').append($('<legend></legend>').text('debug'), render($('<dl></dl>'), debug.debug));
+							info = jQuery('<fieldset>').append(jQuery('<legend></legend>').text('debug'), render(jQuery('<dl></dl>'), debug.debug));
 							target.append(info);
 						}
 						if (debug.options) {
-							info = $('<fieldset>').append($('<legend></legend>').text('options'), render($('<dl></dl>'), debug.options));
+							info = jQuery('<fieldset>').append(jQuery('<legend></legend>').text('options'), render(jQuery('<dl></dl>'), debug.options));
 							target.append(info);
 						}
 						target.show();
@@ -196,45 +196,45 @@
 			i, helpSource, tabBase, tabNav, tabs, delta;
 		
 		// remove 'preference' tab, it moved to command 'preference'
-		if ((i = $.inArray('preference', parts)) !== -1) {
+		if ((i = jQuery.inArray('preference', parts)) !== -1) {
 			parts.splice(i, 1);
 		}
 		
 		// debug tab require jQueryUI Tabs Widget
-		if (! $.fn.tabs) {
-			if ((i = $.inArray(parts, 'debug')) !== -1) {
+		if (! jQuery.fn.tabs) {
+			if ((i = jQuery.inArray(parts, 'debug')) !== -1) {
 				parts.splice(i, 1);
 			}
 		}
 		
-		$.each(parts, function(i, title) {
+		jQuery.each(parts, function(i, title) {
 			html.push(tab[r](/\{id\}/g, title)[r](/\{title\}/, fm.i18n(title)));
 		});
 		
 		html.push('</ul>');
 
-		$.inArray('about', parts) !== -1 && about();
-		$.inArray('shortcuts', parts) !== -1 && shortcuts();
-		if ($.inArray('help', parts) !== -1) {
+		jQuery.inArray('about', parts) !== -1 && about();
+		jQuery.inArray('shortcuts', parts) !== -1 && shortcuts();
+		if (jQuery.inArray('help', parts) !== -1) {
 			helpSource = fm.i18nBaseUrl + 'help/%s.html.js';
 			help();
 		}
-		$.inArray('integrations', parts) !== -1 && integrations();
-		$.inArray('debug', parts) !== -1 && debug();
+		jQuery.inArray('integrations', parts) !== -1 && integrations();
+		jQuery.inArray('debug', parts) !== -1 && debug();
 		
 		html.push('</div>');
-		content = $(html.join(''));
+		content = jQuery(html.join(''));
 		
 		content.find('.ui-tabs-nav li')
 			.on('mouseenter mouseleave', function(e) {
-				$(this).toggleClass('ui-state-hover', e.type === 'mouseenter');
+				jQuery(this).toggleClass('ui-state-hover', e.type === 'mouseenter');
 			})
 			.on('focus blur', 'a', function(e) {
-				$(e.delegateTarget).toggleClass('ui-state-focus', e.type === 'focusin');
+				jQuery(e.delegateTarget).toggleClass('ui-state-focus', e.type === 'focusin');
 			})
 			.children()
 			.on('click', function(e) {
-				var link = $(this);
+				var link = jQuery(this);
 				
 				e.preventDefault();
 				e.stopPropagation();
@@ -246,12 +246,12 @@
 		
 		if (useInteg) {
 			tabInteg = content.find('.elfinder-help-tab-integrations').hide();
-			integDIV = content.find('#'+fm.namespace+'-help-integrations').hide().append($('<div class="elfinder-help-integrations-desc"></div>').html(fm.i18n('integrationWith')));
+			integDIV = content.find('#'+fm.namespace+'-help-integrations').hide().append(jQuery('<div class="elfinder-help-integrations-desc"></div>').html(fm.i18n('integrationWith')));
 			fm.bind('helpIntegration', function(e) {
 				var ul = integDIV.children('ul:first'),
 					data, elm, cmdUL, cmdCls;
 				if (e.data) {
-					if ($.isPlainObject(e.data)) {
+					if (jQuery.isPlainObject(e.data)) {
 						data = Object.assign({
 							link: '',
 							title: '',
@@ -262,18 +262,18 @@
 								data.title = data.link;
 							}
 							if (data.link) {
-								elm = $('<a></a>').attr('href', data.link).attr('target', '_blank').text(data.title);
+								elm = jQuery('<a></a>').attr('href', data.link).attr('target', '_blank').text(data.title);
 							} else {
-								elm = $('<span></span>').text(data.title);
+								elm = jQuery('<span></span>').text(data.title);
 							}
 							if (data.banner) {
-								elm = $('<span></span>').append($('<img/>').attr(data.banner), elm);
+								elm = jQuery('<span></span>').append(jQuery('<img/>').attr(data.banner), elm);
 							}
 						}
 					} else {
-						elm = $(e.data);
+						elm = jQuery(e.data);
 						elm.filter('a').each(function() {
-							var tgt = $(this);
+							var tgt = jQuery(this);
 							if (!tgt.attr('target')) {
 								tgt.attr('target', '_blank');;
 							}
@@ -282,18 +282,18 @@
 					if (elm) {
 						tabInteg.show();
 						if (!ul.length) {
-							ul = $('<ul class="elfinder-help-integrations"></ul>').appendTo(integDIV);
+							ul = jQuery('<ul class="elfinder-help-integrations"></ul>').appendTo(integDIV);
 						}
 						if (data && data.cmd) {
 							cmdCls = 'elfinder-help-integration-' + data.cmd;
 							cmdUL = ul.find('ul.' + cmdCls);
 							if (!cmdUL.length) {
-								cmdUL = $('<ul class="'+cmdCls+'"></ul>');
-								ul.append($('<li></li>').append($('<span></span>').html(fm.i18n('cmd'+data.cmd))).append(cmdUL));
+								cmdUL = jQuery('<ul class="'+cmdCls+'"></ul>');
+								ul.append(jQuery('<li></li>').append(jQuery('<span></span>').html(fm.i18n('cmd'+data.cmd))).append(cmdUL));
 							}
-							elm = cmdUL.append($('<li></li>').append(elm));
+							elm = cmdUL.append(jQuery('<li></li>').append(elm));
 						} else {
-							ul.append($('<li></li>').append(elm));
+							ul.append(jQuery('<li></li>').append(elm));
 						}
 					}
 				}
@@ -357,17 +357,17 @@
 		
 		if (helpSource) {
 			self.dialog.one('initContents', function() {
-				$.ajax({
+				jQuery.ajax({
 					url: self.options.helpSource? self.options.helpSource : helpSource.replace('%s', fm.lang),
 					dataType: 'html'
 				}).done(function(source) {
-					$('#'+fm.namespace+'-help-help').html(source);
+					jQuery('#'+fm.namespace+'-help-help').html(source);
 				}).fail(function() {
-					$.ajax({
+					jQuery.ajax({
 						url: helpSource.replace('%s', 'en'),
 						dataType: 'html'
 					}).done(function(source) {
-						$('#'+fm.namespace+'-help-help').html(source);
+						jQuery('#'+fm.namespace+'-help-help').html(source);
 					});
 				});
 			});
@@ -408,7 +408,7 @@
 			};
 		debugShow();
 		this.dialog.trigger('initContents').elfinderdialog('open').find((tab? '.elfinder-help-tab-'+tab : '.ui-tabs-nav li') + ' a:first').trigger('click');
-		return $.Deferred().resolve();
+		return jQuery.Deferred().resolve();
 	};
 
 }).prototype = { forceLoad : true }; // this is required command

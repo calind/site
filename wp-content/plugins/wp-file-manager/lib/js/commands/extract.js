@@ -10,8 +10,8 @@ elFinder.prototype.commands.extract = function() {
 		fm      = self.fm,
 		mimes   = [],
 		filter  = function(files) {
-			return $.grep(files, function(file) { 
-				return file.read && $.inArray(file.mime, mimes) !== -1 ? true : false;
+			return jQuery.grep(files, function(file) { 
+				return file.read && jQuery.inArray(file.mime, mimes) !== -1 ? true : false;
 			});
 		};
 	
@@ -38,7 +38,7 @@ elFinder.prototype.commands.extract = function() {
 	
 	this.exec = function(hashes, opts) {
 		var files    = this.files(hashes),
-			dfrd     = $.Deferred(),
+			dfrd     = jQuery.Deferred(),
 			cnt      = files.length,
 			makedir  = opts && opts.makedir ? 1 : 0,
 			i, error,
@@ -48,9 +48,9 @@ elFinder.prototype.commands.extract = function() {
 		var omitAll = false;
 		var mkdirAll = 0;
 
-		var names = $.map(fm.files(hashes), function(file) { return file.name; });
+		var names = jQuery.map(fm.files(hashes), function(file) { return file.name; });
 		var map = {};
-		$.grep(fm.files(hashes), function(file) {
+		jQuery.grep(fm.files(hashes), function(file) {
 			map[file.name] = file;
 			return false;
 		});
@@ -71,7 +71,7 @@ elFinder.prototype.commands.extract = function() {
 				error = ['errExtract', file.name, 'errPerm'];
 				fm.error(error);
 				dfrd.reject(error);
-			} else if ($.inArray(file.mime, mimes) === -1) {
+			} else if (jQuery.inArray(file.mime, mimes) === -1) {
 				error = ['errExtract', file.name, 'errNoArchive'];
 				fm.error(error);
 				dfrd.reject(error);
@@ -102,7 +102,7 @@ elFinder.prototype.commands.extract = function() {
 		var confirm = function(files, index) {
 			var file = files[index],
 			name = fm.splitFileExtention(file.name)[0],
-			existed = ($.inArray(name, names) >= 0),
+			existed = (jQuery.inArray(name, names) >= 0),
 			next = function(){
 				if((index+1) < cnt) {
 					confirm(files, index+1);

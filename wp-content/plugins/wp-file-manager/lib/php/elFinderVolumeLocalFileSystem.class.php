@@ -1163,25 +1163,13 @@ class elFinderVolumeLocalFileSystem extends elFinderVolumeDriver
             }
 
             $this->archiveSize = 0;
-
-            // find symlinks and check extracted items
-            $checkRes = $this->checkExtractItems($dir);
-            if ($checkRes['symlinks']) {
-                self::localRmdirRecursive($dir);
-                return $this->setError(array_merge($this->error, array(elFinder::ERROR_ARC_SYMLINKS)));
-            }
-            $this->archiveSize = $checkRes['totalSize'];
-            if ($checkRes['rmNames']) {
-                foreach ($checkRes['rmNames'] as $name) {
-                    $this->addError(elFinder::ERROR_SAVE, $name);
-                }
-            }
-
-            // check max files size
-            if ($this->options['maxArcFilesSize'] > 0 && $this->options['maxArcFilesSize'] < $this->archiveSize) {
-                $this->delTree($dir);
-                return $this->setError(elFinder::ERROR_ARC_MAXSIZE);
-            }
+  
+			$symlinks = $this->_findSymlinks($dir);
+			
+			if ($symlinks) {
+				$this->delTree($dir);
+				return $this->setError(array_merge($this->error, array(elFinder::ERROR_ARC_SYMLINKS)));
+			}
 
             $extractTo = $this->extractToNewdir; // 'auto', ture or false
 

@@ -22,7 +22,7 @@ elFinder.prototype.commands.netmount = function() {
 				fm.one('open', function() {
 					self.drivers = fm.netDrivers;
 					if (self.drivers.length) {
-						$.each(self.drivers, function() {
+						jQuery.each(self.drivers, function() {
 							var d = self.options[this];
 							if (d) {
 								hasMenus = true;
@@ -43,14 +43,14 @@ elFinder.prototype.commands.netmount = function() {
 	
 	this.exec = function() {
 		var fm = self.fm,
-			dfrd = $.Deferred(),
+			dfrd = jQuery.Deferred(),
 			o = self.options,
 			create = function() {
 				var winFocus = function() {
 						inputs.protocol.trigger('change', 'winfocus');
 					},
 					inputs = {
-						protocol : $('<select></select>')
+						protocol : jQuery('<select></select>')
 						.on('change', function(e, data){
 							var protocol = this.value;
 							content.find('.elfinder-netmount-tr').hide();
@@ -68,12 +68,12 @@ elFinder.prototype.commands.netmount = function() {
 						modal          : true,
 						destroyOnClose : false,
 						open           : function() {
-							$(window).on('focus.'+fm.namespace, winFocus);
+							jQuery(window).on('focus.'+fm.namespace, winFocus);
 							inputs.protocol.trigger('change');
 						},
 						close          : function() { 
 							dfrd.state() == 'pending' && dfrd.reject();
-							$(window).off('focus.'+fm.namespace, winFocus);
+							jQuery(window).off('focus.'+fm.namespace, winFocus);
 						},
 						buttons        : {}
 					},
@@ -82,15 +82,15 @@ elFinder.prototype.commands.netmount = function() {
 							data = {cmd : 'netmount', protocol: protocol},
 							cur = o[protocol],
 							mnt2res;
-						$.each(content.find('input.elfinder-netmount-inputs-'+protocol), function(name, input) {
+						jQuery.each(content.find('input.elfinder-netmount-inputs-'+protocol), function(name, input) {
 							var val, elm;
-							elm = $(input);
+							elm = jQuery(input);
 							if (elm.is(':radio,:checkbox')) {
 								if (elm.is(':checked')) {
-									val = $.trim(elm.val());
+									val = jQuery.trim(elm.val());
 								}
 							} else {
-								val = $.trim(elm.val());
+								val = jQuery.trim(elm.val());
 							}
 							if (val) {
 								data[input.name] = val;
@@ -133,14 +133,14 @@ elFinder.prototype.commands.netmount = function() {
 	
 						self.dialog.elfinderdialog('close');
 					},
-					form = $('<form autocomplete="off"></form>').on('keydown', 'input', function(e) {
+					form = jQuery('<form autocomplete="off"></form>').on('keydown', 'input', function(e) {
 						var comp = true,
 							next;
-						if (e.keyCode === $.ui.keyCode.ENTER) {
-							$.each(form.find('input:visible:not(.elfinder-input-optional)'), function() {
-								if ($(this).val() === '') {
+						if (e.keyCode === jQuery.ui.keyCode.ENTER) {
+							jQuery.each(form.find('input:visible:not(.elfinder-input-optional)'), function() {
+								if (jQuery(this).val() === '') {
 									comp = false;
-									next = $(this);
+									next = jQuery(this);
 									return false;
 								}
 							});
@@ -151,20 +151,20 @@ elFinder.prototype.commands.netmount = function() {
 							}
 						}
 					}),
-					hidden  = $('<div></div>'),
+					hidden  = jQuery('<div></div>'),
 					dialog;
 
-				content = $('<table class="elfinder-info-tb elfinder-netmount-tb"></table>')
-					.append($('<tr></tr>').append($('<td>'+fm.i18n('protocol')+'</td>')).append($('<td></td>').append(inputs.protocol)));
+				content = jQuery('<table class="elfinder-info-tb elfinder-netmount-tb"></table>')
+					.append(jQuery('<tr></tr>').append(jQuery('<td>'+fm.i18n('protocol')+'</td>')).append(jQuery('<td></td>').append(inputs.protocol)));
 
-				$.each(self.drivers, function(i, protocol) {
+				jQuery.each(self.drivers, function(i, protocol) {
 					if (o[protocol]) {
 						inputs.protocol.append('<option value="'+protocol+'">'+fm.i18n(o[protocol].name || protocol)+'</option>');
-						$.each(o[protocol].inputs, function(name, input) {
+						jQuery.each(o[protocol].inputs, function(name, input) {
 							input.attr('name', name);
 							if (input.attr('type') != 'hidden') {
 								input.addClass('ui-corner-all elfinder-netmount-inputs-'+protocol);
-								content.append($('<tr></tr>').addClass('elfinder-netmount-tr elfinder-netmount-tr-'+protocol).append($('<td>'+fm.i18n(name)+'</td>')).append($('<td></td>').append(input)));
+								content.append(jQuery('<tr></tr>').addClass('elfinder-netmount-tr elfinder-netmount-tr-'+protocol).append(jQuery('<td>'+fm.i18n(name)+'</td>')).append(jQuery('<td></td>').append(input)));
 							} else {
 								input.addClass('elfinder-netmount-inputs-'+protocol);
 								hidden.append(input);
@@ -257,7 +257,7 @@ elFinder.prototype.commands.netunmount = function() {
 	this.exec = function(hashes) {
 		var self   = this,
 			fm     = this.fm,
-			dfrd   = $.Deferred()
+			dfrd   = jQuery.Deferred()
 				.fail(function(error) {
 					error && fm.error(error);
 				}),
@@ -267,19 +267,19 @@ elFinder.prototype.commands.netunmount = function() {
 					work;
 				if (fm.leafRoots) {
 					work = [];
-					$.each(fm.leafRoots, function(phash, hashes) {
+					jQuery.each(fm.leafRoots, function(phash, hashes) {
 						var parents = fm.parents(phash),
 							idx, deep;
-						if ((idx = $.inArray(hash, parents)) !== -1) {
+						if ((idx = jQuery.inArray(hash, parents)) !== -1) {
 							idx = parents.length - idx;
-							$.each(hashes, function(i, h) {
+							jQuery.each(hashes, function(i, h) {
 								work.push({i: idx, hash: h});
 							});
 						}
 					});
 					if (work.length) {
 						work.sort(function(a, b) { return a.i < b.i; });
-						$.each(work, function(i, o) {
+						jQuery.each(work, function(i, o) {
 							roots.push(o.hash);
 						});
 					}
@@ -303,7 +303,7 @@ elFinder.prototype.commands.netunmount = function() {
 							requests = [],
 							removed = [],
 							doUmount = function() {
-								$.when(requests).done(function() {
+								jQuery.when(requests).done(function() {
 									fm.request({
 										data   : {cmd  : 'netmount', protocol : 'netunmount', host: drive.netkey, user : target, pass : 'dum'}, 
 										notify : {type : 'netunmount', cnt : 1, hideCnt : true},
@@ -329,7 +329,7 @@ elFinder.prototype.commands.netunmount = function() {
 								title : self.title,
 								text  : (function() {
 									var msgs = ['unmountChildren'];
-									$.each(roots, function(i, hash) {
+									jQuery.each(roots, function(i, hash) {
 										msgs.push([fm.file(hash).name]);
 									});
 									return msgs;
@@ -337,7 +337,7 @@ elFinder.prototype.commands.netunmount = function() {
 								accept : {
 									label : 'btnUnmount',
 									callback : function() {
-										$.each(roots, function(i, hash) {
+										jQuery.each(roots, function(i, hash) {
 											var d = fm.file(hash);
 											if (d.netkey) {
 												requests.push(fm.request({

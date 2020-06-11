@@ -1,9 +1,9 @@
 /*** jQuery UI droppable performance tune for elFinder ***/
 (function(){
-if ($.ui) {
-	if ($.ui.ddmanager) {
-		var origin = $.ui.ddmanager.prepareOffsets;
-		$.ui.ddmanager.prepareOffsets = function( t, event ) {
+if (jQuery.ui) {
+	if (jQuery.ui.ddmanager) {
+		var origin = jQuery.ui.ddmanager.prepareOffsets;
+		jQuery.ui.ddmanager.prepareOffsets = function( t, event ) {
 			var isOutView = function(elem) {
 				if (elem.is(':hidden')) {
 					return true;
@@ -14,7 +14,7 @@ if ($.ui) {
 			
 			if (event.type === 'mousedown' || t.options.elfRefresh) {
 				var i, d,
-				m = $.ui.ddmanager.droppables[ t.options.scope ] || [],
+				m = jQuery.ui.ddmanager.droppables[ t.options.scope ] || [],
 				l = m.length;
 				for ( i = 0; i < l; i++ ) {
 					d = m[ i ];
@@ -44,7 +44,7 @@ if ($.ui) {
 	"use strict";
 
 	// use this transport for "binary" data type
-	$.ajaxTransport("+binary", function(options, originalOptions, jqXHR) {
+	jQuery.ajaxTransport("+binary", function(options, originalOptions, jqXHR) {
 		// check for conditions and support for blob / arraybuffer response type
 		if (window.FormData && ((options.dataType && (options.dataType == 'binary')) || (options.data && ((window.ArrayBuffer && options.data instanceof ArrayBuffer) || (window.Blob && options.data instanceof Blob))))) {
 			var callback;
@@ -158,14 +158,14 @@ if ($.ui) {
 (function ($) {
 
   // Detect touch support
-  $.support.touch = 'ontouchend' in document;
+  jQuery.support.touch = 'ontouchend' in document;
 
   // Ignore browsers without touch support
-  if (!$.support.touch) {
+  if (!jQuery.support.touch) {
 	return;
   }
 
-  var mouseProto = $.ui.mouse.prototype,
+  var mouseProto = jQuery.ui.mouse.prototype,
 	  _mouseInit = mouseProto._mouseInit,
 	  _mouseDestroy = mouseProto._mouseDestroy,
 	  touchHandled,
@@ -183,7 +183,7 @@ if ($.ui) {
 	  return;
 	}
 
-	if (! $(event.currentTarget).hasClass('touch-punch-keep-default')) {
+	if (! jQuery(event.currentTarget).hasClass('touch-punch-keep-default')) {
 		event.preventDefault();
 	}
 
@@ -302,7 +302,7 @@ if ($.ui) {
   };
 
   /**
-   * A duck punch of the $.ui.mouse _mouseInit method to support touch events.
+   * A duck punch of the jQuery.ui.mouse _mouseInit method to support touch events.
    * This method extends the widget with bound touch event handlers that
    * translate touch events to mouse events and pass them to the widget's
    * original mouse event handling methods.
@@ -314,13 +314,13 @@ if ($.ui) {
 	if (self.element.hasClass('touch-punch')) {
 		// Delegate the touch handlers to the widget's element
 		self.element.on({
-		  touchstart: $.proxy(self, '_touchStart'),
-		  touchmove: $.proxy(self, '_touchMove'),
-		  touchend: $.proxy(self, '_touchEnd')
+		  touchstart: jQuery.proxy(self, '_touchStart'),
+		  touchmove: jQuery.proxy(self, '_touchMove'),
+		  touchend: jQuery.proxy(self, '_touchEnd')
 		});
 	}
 
-	// Call the original $.ui.mouse init method
+	// Call the original jQuery.ui.mouse init method
 	_mouseInit.call(self);
   };
 
@@ -334,19 +334,19 @@ if ($.ui) {
 	if (self.element.hasClass('touch-punch')) {
 		// Delegate the touch handlers to the widget's element
 		self.element.off({
-		  touchstart: $.proxy(self, '_touchStart'),
-		  touchmove: $.proxy(self, '_touchMove'),
-		  touchend: $.proxy(self, '_touchEnd')
+		  touchstart: jQuery.proxy(self, '_touchStart'),
+		  touchmove: jQuery.proxy(self, '_touchMove'),
+		  touchend: jQuery.proxy(self, '_touchEnd')
 		});
 	}
 
-	// Call the original $.ui.mouse destroy method
+	// Call the original jQuery.ui.mouse destroy method
 	_mouseDestroy.call(self);
   };
 
 })(jQuery);
 
-$.fn.elfinder = function(o, o2) {
+jQuery.fn.elfinder = function(o, o2) {
 	
 	if (o === 'instance') {
 		return this.getElFinder();
@@ -362,7 +362,7 @@ $.fn.elfinder = function(o, o2) {
 			opts, reloadCallback;
 		
 		if (!elfinder) {
-			if ($.isPlainObject(o)) {
+			if (jQuery.isPlainObject(o)) {
 				new elFinder(this, o, bootCallback);
 			}
 		} else {
@@ -384,9 +384,9 @@ $.fn.elfinder = function(o, o2) {
 				case 'reload':
 				case 'restart':
 					if (elfinder) {
-						opts = $.extend(true, elfinder.options, $.isPlainObject(o2)? o2 : {});
+						opts = jQuery.extend(true, elfinder.options, jQuery.isPlainObject(o2)? o2 : {});
 						bootCallback = elfinder.bootCallback;
-						if (elfinder.reloadCallback && $.isFunction(elfinder.reloadCallback)) {
+						if (elfinder.reloadCallback && jQuery.isFunction(elfinder.reloadCallback)) {
 							elfinder.reloadCallback(opts, bootCallback);
 						} else {
 							elfinder.destroy();
@@ -399,7 +399,7 @@ $.fn.elfinder = function(o, o2) {
 	});
 };
 
-$.fn.getElFinder = function() {
+jQuery.fn.getElFinder = function() {
 	var instance;
 	
 	this.each(function() {
@@ -412,7 +412,7 @@ $.fn.getElFinder = function() {
 	return instance;
 };
 
-$.fn.elfUiWidgetInstance = function(name) {
+jQuery.fn.elfUiWidgetInstance = function(name) {
 	try {
 		return this[name]('instance');
 	} catch(e) {
@@ -426,8 +426,8 @@ $.fn.elfUiWidgetInstance = function(name) {
 };
 
 // function scrollRight
-if (! $.fn.scrollRight) {
-	$.fn.extend({
+if (! jQuery.fn.scrollRight) {
+	jQuery.fn.extend({
 		scrollRight: function (val) {
 			var node = this.get(0);
 			if (val === undefined) {
@@ -439,8 +439,8 @@ if (! $.fn.scrollRight) {
 }
 
 // function scrollBottom
-if (! $.fn.scrollBottom) {
-	$.fn.extend({
+if (! jQuery.fn.scrollBottom) {
+	jQuery.fn.extend({
 		scrollBottom: function(val) { 
 			var node = this.get(0);
 			if (val === undefined) {

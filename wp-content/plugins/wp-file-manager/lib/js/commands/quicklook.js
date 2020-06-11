@@ -77,7 +77,7 @@
 		 * @return void
 		 **/
 		navtrigger = function(code) {
-			$(document).trigger($.Event('keydown', { keyCode: code, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
+			jQuery(document).trigger(jQuery.Event('keydown', { keyCode: code, ctrlKey : false, shiftKey : false, altKey : false, metaKey : false }));
 		},
 		/**
 		 * Return css for closed window
@@ -107,7 +107,7 @@
 		 **/
 		openedCss = function() {
 			var contain = self.options.contain || fm.options.dialogContained,
-				win = contain? fm.getUI() : $(window),
+				win = contain? fm.getUI() : jQuery(window),
 				elf = fm.getUI().offset(),
 				w = Math.min(width, win.width()-10),
 				h = Math.min(height, win.height()-80);
@@ -175,14 +175,14 @@
 		navdrag = false,
 		navmove = false,
 		navtm   = null,
-		leftKey = $.ui.keyCode.LEFT,
-		rightKey = $.ui.keyCode.RIGHT,
+		leftKey = jQuery.ui.keyCode.LEFT,
+		rightKey = jQuery.ui.keyCode.RIGHT,
 		coverEv = 'mousemove touchstart ' + ('onwheel' in document? 'wheel' : 'onmousewheel' in document? 'mousewheel' : 'DOMMouseScroll'),
-		title   = $('<span class="elfinder-dialog-title elfinder-quicklook-title"></span>'),
-		icon    = $('<div></div>'),
-		info    = $('<div class="elfinder-quicklook-info"></div>'),//.hide(),
-		cover   = $('<div class="ui-front elfinder-quicklook-cover"></div>'),
-		fsicon  = $('<div class="'+navicon+' '+navicon+'-fullscreen"></div>')
+		title   = jQuery('<span class="elfinder-dialog-title elfinder-quicklook-title"></span>'),
+		icon    = jQuery('<div></div>'),
+		info    = jQuery('<div class="elfinder-quicklook-info"></div>'),//.hide(),
+		cover   = jQuery('<div class="ui-front elfinder-quicklook-cover"></div>'),
+		fsicon  = jQuery('<div class="'+navicon+' '+navicon+'-fullscreen"></div>')
 			.on('click touchstart', function(e) {
 				if (navmove) {
 					return;
@@ -190,7 +190,7 @@
 				
 				var win     = self.window,
 					full    = win.hasClass(fullscreen),
-					$window = $(window),
+					$window = jQuery(window),
 					resize  = function() { self.preview.trigger('changesize'); };
 					
 				e.stopPropagation();
@@ -215,7 +215,7 @@
 					})
 					.removeAttr('style');
 
-					$(window).on(self.resize, resize)
+					jQuery(window).on(self.resize, resize)
 					.trigger(self.resize);
 
 					cover.on(coverEv, function(e) {
@@ -271,7 +271,7 @@
 						}
 					});
 				}
-				$(this).toggleClass(navicon+'-fullscreen-off');
+				jQuery(this).toggleClass(navicon+'-fullscreen-off');
 				var collection = win;
 				if (parent.is('.ui-resizable')) {
 					collection = collection.add(parent);
@@ -290,7 +290,7 @@
 					inDock = self.docked(),
 					getInfo = function() {
 						var ts = 0;
-						$.each(files, function(i, f) {
+						jQuery.each(files, function(i, f) {
 							var t = parseInt(f.ts);
 							if (ts >= 0) {
 								if (t > ts) {
@@ -306,7 +306,7 @@
 							mime : 'group',
 							size : spinner,
 							ts   : ts,
-							files : $.map(files, function(f) { return f.hash; }),
+							files : jQuery.map(files, function(f) { return f.hash; }),
 							getSize : true
 						};
 					};
@@ -335,20 +335,20 @@
 			cover.hide();
 		},
 			
-		prev = $('<div class="'+navicon+' '+navicon+'-prev"></div>').on('click touchstart', function(e) { ! navmove && navtrigger(leftKey); return false; }),
-		next = $('<div class="'+navicon+' '+navicon+'-next"></div>').on('click touchstart', function(e) { ! navmove && navtrigger(rightKey); return false; }),
-		navbar  = $('<div class="elfinder-quicklook-navbar"></div>')
+		prev = jQuery('<div class="'+navicon+' '+navicon+'-prev"></div>').on('click touchstart', function(e) { ! navmove && navtrigger(leftKey); return false; }),
+		next = jQuery('<div class="'+navicon+' '+navicon+'-next"></div>').on('click touchstart', function(e) { ! navmove && navtrigger(rightKey); return false; }),
+		navbar  = jQuery('<div class="elfinder-quicklook-navbar"></div>')
 			.append(prev)
 			.append(fsicon)
 			.append(next)
 			.append('<div class="elfinder-quicklook-navbar-separator"></div>')
-			.append($('<div class="'+navicon+' '+navicon+'-close"></div>').on('click touchstart', function(e) { ! navmove && self.window.trigger('close'); return false; }))
+			.append(jQuery('<div class="'+navicon+' '+navicon+'-close"></div>').on('click touchstart', function(e) { ! navmove && self.window.trigger('close'); return false; }))
 		,
-		titleClose = $('<span class="ui-front ui-icon elfinder-icon-close ui-icon-closethick"></span>').on('mousedown', function(e) {
+		titleClose = jQuery('<span class="ui-front ui-icon elfinder-icon-close ui-icon-closethick"></span>').on('mousedown', function(e) {
 			e.stopPropagation();
 			self.window.trigger('close');
 		}),
-		titleDock = $('<span class="ui-front ui-icon elfinder-icon-minimize ui-icon-minusthick"></span>').on('mousedown', function(e) {
+		titleDock = jQuery('<span class="ui-front ui-icon elfinder-icon-minimize ui-icon-minusthick"></span>').on('mousedown', function(e) {
 			e.stopPropagation();
 			if (! self.docked()) {
 				self.window.trigger('navdockin');
@@ -370,7 +370,7 @@
 	this.evUpdate = evUpdate;
 	(this.navbar = navbar)._show = navShow;
 	this.resize = 'resize.'+fm.namespace;
-	this.info = $('<div></div>').addClass(infocls)
+	this.info = jQuery('<div></div>').addClass(infocls)
 		.append(icon)
 		.append(info);
 	this.autoPlay = function() {
@@ -379,7 +379,7 @@
 		}
 		return false;
 	};
-	this.preview = $('<div class="elfinder-quicklook-preview ui-helper-clearfix"></div>')
+	this.preview = jQuery('<div class="elfinder-quicklook-preview ui-helper-clearfix"></div>')
 		// clean info/icon
 		.on('change', function() {
 			navShow();
@@ -449,12 +449,12 @@
 					}
 	
 					if (file.read && (tmb = fm.tmb(file))) {
-						$('<img/>')
+						jQuery('<img/>')
 							.hide()
 							.appendTo(self.preview)
 							.on('load', function() {
 								icon.addClass(tmb.className).css('background-image', "url('"+tmb.url+"')");
-								$(this).remove();
+								jQuery(this).remove();
 							})
 							.attr('src', tmb.url);
 					}
@@ -479,7 +479,7 @@
 			}
 		});
 
-	this.window = $('<div class="ui-front ui-helper-reset ui-widget elfinder-quicklook touch-punch" style="position:absolute"></div>')
+	this.window = jQuery('<div class="ui-front ui-helper-reset ui-widget elfinder-quicklook touch-punch" style="position:absolute"></div>')
 		.hide()
 		.addClass(fm.UA.Touch? 'elfinder-touch' : '')
 		.on('click', function(e) {
@@ -492,9 +492,9 @@
 			}
 		})
 		.append(
-			$('<div class="ui-dialog-titlebar ui-widget-header ui-corner-top ui-helper-clearfix elfinder-quicklook-titlebar"></div>')
+			jQuery('<div class="ui-dialog-titlebar ui-widget-header ui-corner-top ui-helper-clearfix elfinder-quicklook-titlebar"></div>')
 			.append(
-				$('<span class="ui-widget-header ui-dialog-titlebar-close ui-corner-all elfinder-titlebar-button elfinder-quicklook-titlebar-icon'+(platformWin? ' elfinder-titlebar-button-right' : '')+'"></span>').append(
+				jQuery('<span class="ui-widget-header ui-dialog-titlebar-close ui-corner-all elfinder-titlebar-button elfinder-quicklook-titlebar-icon'+(platformWin? ' elfinder-titlebar-button-right' : '')+'"></span>').append(
 					titleClose, titleDock
 				),
 				title
@@ -606,7 +606,7 @@
 		.on('navdockout', function(e) {
 			var w   = self.window,
 				box = fm.getUI('navdock'),
-				dfd = $.Deferred(),
+				dfd = jQuery.Deferred(),
 				clcss = closedCss(self.preview);
 			
 			dockHeight = w.outerHeight();
@@ -761,8 +761,8 @@
 			win.appendTo(parent);
 			
 			// close window on escape
-			$(document).on('keydown.'+fm.namespace, function(e) {
-				e.keyCode == $.ui.keyCode.ESCAPE && self.opened() && ! self.docked() && win.hasClass('elfinder-frontmost') && win.trigger('close');
+			jQuery(document).on('keydown.'+fm.namespace, function(e) {
+				e.keyCode == jQuery.ui.keyCode.ESCAPE && self.opened() && ! self.docked() && win.hasClass('elfinder-frontmost') && win.trigger('close');
 			});
 			
 			win.resizable({ 
@@ -783,7 +783,7 @@
 							// try re-get file object
 							self.value = Object.assign({}, fm.file(self.value.hash));
 						}
-						preview.trigger($.Event(evUpdate, {file : self.value}));
+						preview.trigger(jQuery.Event(evUpdate, {file : self.value}));
 					}
 				}
 			});
@@ -824,7 +824,7 @@
 				}
 			});
 
-			$.each(fm.commands.quicklook.plugins || [], function(i, plugin) {
+			jQuery.each(fm.commands.quicklook.plugins || [], function(i, plugin) {
 				if (typeof(plugin) == 'function') {
 					new plugin(self);
 				}
@@ -855,7 +855,7 @@
 			}
 		}).bind('change', function(e) {
 			if (e.data && e.data.changed && self.opened()) {
-				$.each(e.data.changed, function() {
+				jQuery.each(e.data.changed, function() {
 					if (self.window.data('hash') === this.hash) {
 						self.window.data('hash', null);
 						self.preview.trigger(evUpdate);
@@ -875,7 +875,7 @@
 	this.exec = function() {
 		self.closed() && updateOnSel();
 		self.enabled() && self.window.trigger(self.opened() ? 'close' : 'open');
-		return $.Deferred().resolve();
+		return jQuery.Deferred().resolve();
 	};
 
 	this.hideinfo = function() {

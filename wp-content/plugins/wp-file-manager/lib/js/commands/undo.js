@@ -34,7 +34,7 @@ elFinder.prototype.commands.undo = function() {
 	this.setUndo = function(undo, redo) {
 		var _undo = {};
 		if (undo) {
-			if ($.isPlainObject(undo) && undo.cmd && undo.callback) {
+			if (jQuery.isPlainObject(undo) && undo.cmd && undo.callback) {
 				Object.assign(_undo, undo);
 				if (redo) {
 					delete redo.undo;
@@ -50,7 +50,7 @@ elFinder.prototype.commands.undo = function() {
 	
 	this.exec = function() {
 		var redo = fm.getCommand('redo'),
-			dfd = $.Deferred(),
+			dfd = jQuery.Deferred(),
 			undo, res, _redo = {};
 		if (cmds.length) {
 			undo = cmds.pop();
@@ -155,7 +155,7 @@ elFinder.prototype.commands.redo = function() {
 	
 	this.exec = function() {
 		var undo = fm.getCommand('undo'),
-			dfd = $.Deferred(),
+			dfd = jQuery.Deferred(),
 			redo, res, _undo = {}, _redo = {};
 		if (cmds.length) {
 			redo = cmds.pop();

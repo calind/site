@@ -13,14 +13,14 @@ elFinder.prototype.commands.duplicate = function() {
 		var sel = this.files(select),
 			cnt = sel.length;
 
-		return cnt && fm.cwd().write && $.grep(sel, function(f) { return f.read && f.phash === fm.cwd().hash && ! fm.isRoot(f)? true : false; }).length == cnt ? 0 : -1;
+		return cnt && fm.cwd().write && jQuery.grep(sel, function(f) { return f.read && f.phash === fm.cwd().hash && ! fm.isRoot(f)? true : false; }).length == cnt ? 0 : -1;
 	};
 	
 	this.exec = function(hashes) {
 		var fm     = this.fm,
 			files  = this.files(hashes),
 			cnt    = files.length,
-			dfrd   = $.Deferred()
+			dfrd   = jQuery.Deferred()
 				.fail(function(error) {
 					error && fm.error(error);
 				}), 
@@ -30,7 +30,7 @@ elFinder.prototype.commands.duplicate = function() {
 			return dfrd.reject();
 		}
 		
-		$.each(files, function(i, file) {
+		jQuery.each(files, function(i, file) {
 			if (!file.read || !fm.file(file.phash).write) {
 				return !dfrd.reject(['errCopy', file.name, 'errPerm']);
 			}

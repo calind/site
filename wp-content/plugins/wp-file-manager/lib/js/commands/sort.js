@@ -10,7 +10,7 @@ elFinder.prototype.commands.sort = function() {
 		fm    = self.fm,
 		setVar = function() {
 			self.variants = [];
-			$.each(fm.sortRules, function(name, value) {
+			jQuery.each(fm.sortRules, function(name, value) {
 				if (fm.sorters[name]) {
 					var arr = (name === fm.sortType)? (fm.sortOrder === 'asc'? 'n' : 's') : '';
 					self.variants.push([name, (arr? '<span class="ui-icon ui-icon-arrowthick-1-'+arr+'"></span>' : '') + '&nbsp;' + fm.i18n('sort'+name)]);
@@ -38,7 +38,7 @@ elFinder.prototype.commands.sort = function() {
 				sub = icon.siblings('div.elfinder-contextmenu-sub');
 				sub.find('span.ui-icon').remove();
 				sub.children('div.elfinder-contextsubmenu-item').each(function() {
-					var tgt = $(this).children('span'),
+					var tgt = jQuery(this).children('span'),
 						name = tgt.text().trim(),
 						arr;
 					if (name === (i18Name.stick || (i18Name.stick = fm.i18n('sortFoldersFirst')))) {
@@ -71,15 +71,15 @@ elFinder.prototype.commands.sort = function() {
 	.bind('sorterupdate', function() {
 		setVar();
 		fm.getUI().children('.elfinder-button-sort-menu').children('.elfinder-button-menu-item').each(function() {
-			var tgt = $(this),
+			var tgt = jQuery(this),
 				rel = tgt.attr('rel');
 			tgt.toggle(!!(! rel || fm.sorters[rel]));
 		});
 	})
 	.bind('cwdrender', function() {
-		var cols = $(fm.cwd).find('div.elfinder-cwd-wrapper-list table');
+		var cols = jQuery(fm.cwd).find('div.elfinder-cwd-wrapper-list table');
 		if (cols.length) {
-			$.each(fm.sortRules, function(name, value) {
+			jQuery.each(fm.sortRules, function(name, value) {
 				var td = cols.find('thead tr td.elfinder-cwd-view-th-'+name);
 				if (td.length) {
 					var current = ( name == fm.sortType),
@@ -90,10 +90,10 @@ elFinder.prototype.commands.sort = function() {
 					if (current) {
 						td.addClass('ui-state-active');
 						arr = fm.sortOrder == 'asc' ? 'n' : 's';
-						$('<span class="ui-icon ui-icon-triangle-1-'+arr+'"></span>').appendTo(td);
+						jQuery('<span class="ui-icon ui-icon-triangle-1-'+arr+'"></span>').appendTo(td);
 					}
-					$(td).on('click', function(e){
-						if (! $(this).data('dragging')) {
+					jQuery(td).on('click', function(e){
+						if (! jQuery(this).data('dragging')) {
 							e.stopPropagation();
 							if (! fm.getUI('cwd').data('longtap')) {
 								fm.exec('sort', [], sort);
@@ -101,7 +101,7 @@ elFinder.prototype.commands.sort = function() {
 						}
 					})
 					.on('mouseenter mouseleave', function(e) {
-						$(this).toggleClass('ui-state-hover', e.type === 'mouseenter');
+						jQuery(this).toggleClass('ui-state-hover', e.type === 'mouseenter');
 					});
 				}
 				
@@ -115,7 +115,7 @@ elFinder.prototype.commands.sort = function() {
 	
 	this.exec = function(hashes, cOpt) {
 		var fm = this.fm,
-			sortopt = $.isPlainObject(cOpt)? cOpt : (function() {
+			sortopt = jQuery.isPlainObject(cOpt)? cOpt : (function() {
 				cOpt += '';
 				var sOpts = {};
 				if (cOpt === 'stick') {

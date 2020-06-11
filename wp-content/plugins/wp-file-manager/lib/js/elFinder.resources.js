@@ -108,7 +108,7 @@ elFinder.prototype.resources = {
 						}
 					}
 				}, colwidth,
-				dfrd = $.Deferred()
+				dfrd = jQuery.Deferred()
 					.fail(function(error) {
 						dstCls && dst.attr('class', dstCls);
 						empty && wz.addClass('elfinder-cwd-wrapper-empty');
@@ -169,7 +169,7 @@ elFinder.prototype.resources = {
 						}
 					}
 				},
-				input = $(tarea? '<textarea></textarea>' : '<input type="text"/>')
+				input = jQuery(tarea? '<textarea></textarea>' : '<input type="text"/>')
 					.on('keyup text', function(){
 						if (tarea) {
 							this.style.height = '1px';
@@ -183,9 +183,9 @@ elFinder.prototype.resources = {
 					})
 					.on('keydown', function(e) {
 						e.stopImmediatePropagation();
-						if (e.keyCode == $.ui.keyCode.ESCAPE) {
+						if (e.keyCode == jQuery.ui.keyCode.ESCAPE) {
 							dfrd.reject();
-						} else if (e.keyCode == $.ui.keyCode.ENTER) {
+						} else if (e.keyCode == jQuery.ui.keyCode.ENTER) {
 							e.preventDefault();
 							input.trigger('blur');
 						}
@@ -197,7 +197,7 @@ elFinder.prototype.resources = {
 						}
 					})
 					.on('blur', function() {
-						var name   = $.trim(input.val()),
+						var name   = jQuery.trim(input.val()),
 							parent = input.parent(),
 							valid  = true,
 							cut;
@@ -230,13 +230,13 @@ elFinder.prototype.resources = {
 
 							cut = (sel && move)? fm.exec('cut', sel) : null;
 
-							$.when(cut)
+							jQuery.when(cut)
 							.done(function() {
 								var toast   = {},
 									nextAct = {};
 								
 								rest();
-								input.hide().before($('<span>').text(name));
+								input.hide().before(jQuery('<span>').text(name));
 
 								fm.lockfiles({files : [id]});
 
@@ -254,7 +254,7 @@ elFinder.prototype.resources = {
 										fm.error(error, {
 											modal: true,
 											close: function() {
-												if (Array.isArray(error) && $.inArray('errUploadMime', error) !== -1) {
+												if (Array.isArray(error) && jQuery.inArray('errUploadMime', error) !== -1) {
 													dfrd.notify('errUploadMime').reject();
 												} else {
 													setTimeout(select, 120);
@@ -285,7 +285,7 @@ elFinder.prototype.resources = {
 													tmpMimes[item.mime] = fm.mimeTypes[item.mime];
 													fm.storage('mkfileTextMimes', Object.assign(tmpMimes, fm.storage('mkfileTextMimes') || {}));
 												}
-												Object.assign(nextAct, nextAction || acts[item.mime] || acts[item.mime.split('/')[0]] || acts[(fm.mimesCanMakeEmpty[item.mime] || $.inArray(item.mime, fm.resources.mimes.text) !== -1) ? 'text' : 'none'] || acts['default']);
+												Object.assign(nextAct, nextAction || acts[item.mime] || acts[item.mime.split('/')[0]] || acts[(fm.mimesCanMakeEmpty[item.mime] || jQuery.inArray(item.mime, fm.resources.mimes.text) !== -1) ? 'text' : 'none'] || acts['default']);
 												Object.assign(toast, nextAct.cmd ? {
 													incwd    : {msg: fm.i18n(['complete', fm.i18n('cmd'+cmd)]), action: nextAct},
 													inbuffer : {msg: fm.i18n(['complete', fm.i18n('cmd'+cmd)]), action: nextAct}
@@ -332,7 +332,7 @@ elFinder.prototype.resources = {
 				return dfrd.reject();
 			}
 
-			if ($.isPlainObject(self.nextAction)){
+			if (jQuery.isPlainObject(self.nextAction)){
 				nextAction = Object.assign({}, self.nextAction);
 			}
 			
@@ -355,7 +355,7 @@ elFinder.prototype.resources = {
 						}
 					});
 				}
-				nnode = node.contents().filter(function(){ return this.nodeType==3 && $(this).parent().attr('id') === fm.navHash2Id(file.hash); });
+				nnode = node.contents().filter(function(){ return this.nodeType==3 && jQuery(this).parent().attr('id') === fm.navHash2Id(file.hash); });
 				pnode = nnode.parent();
 				nnode.replaceWith(input.val(file.name));
 			} else {

@@ -9,7 +9,7 @@ elFinder.prototype.commands.places = function() {
 	var self   = this,
 	fm     = this.fm,
 	filter = function(hashes) {
-		return $.grep(self.files(hashes), function(f) { return f.mime == 'directory' ? true : false; });
+		return jQuery.grep(self.files(hashes), function(f) { return f.mime == 'directory' ? true : false; });
 	},
 	places = null;
 	
@@ -23,7 +23,7 @@ elFinder.prototype.commands.places = function() {
 	this.exec = function(hashes) {
 		var files = this.files(hashes);
 		places.trigger('regist', [ files ]);
-		return $.Deferred().resolve();
+		return jQuery.Deferred().resolve();
 	};
 	
 	fm.one('load', function(){
