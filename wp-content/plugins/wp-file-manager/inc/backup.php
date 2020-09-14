@@ -269,6 +269,7 @@ p{
     border-bottom: 1px solid #ddd;
     background: #fff;
 }
+
 /* All pop-ups css*/
 .fmbkp_console_popup, .restore_backup_popup, .dlt_backup_popup, .dlt_success_popup{
     position: fixed;
@@ -651,7 +652,7 @@ p{
 		<button class="exitBackBtn bkpCheckAll restore_btn"><?php _e('Select All', 'wp-file-manager'); ?></button>
         <button class="exitBackBtn bkpUnCheckAll log_btn disabled_btn"><?php _e('Deselect', 'wp-file-manager'); ?></button>	
 	</div>
-<p><i><?php _e('Note: Backup files will be under <code>'.$backup_dirname.'</code>', 'wp-file-manager'); ?></i></p>	
+<p><i><?php _e('Note: Backup files will be under <code>/wp-content/uploads/wp-file-manager-pro/fm_backup</code>', 'wp-file-manager'); ?></i></p>	
 </div>
 <?php $wpfmbackup = wp_create_nonce( 'wpfmbackup' ); ?>
 <script>
@@ -666,7 +667,7 @@ jQuery(document).ready(function(){
         var fm_bkp_other = jQuery('#fm_bkp_other').prop('checked');
         var fm_bkp_id = ''; // empty
         jQuery('.fmbkp_console_popup').show();
-        jQuery('#fmbkp_console').show().html('<p class="backup_wait">Backuping please wait...</p>');
+        jQuery('#fmbkp_console').show().html('<p class="backup_wait">Backup is running, please wait...</p>');
         wp_fm_backup(ajax_url, fm_bkp_database,fm_bkp_files,fm_bkp_plugins,fm_bkp_themes,fm_bkp_uploads,fm_bkp_other,fm_bkp_id);
   });
  function wp_fm_backup(ajax_url, fm_bkp_database,fm_bkp_files,fm_bkp_plugins,fm_bkp_themes,fm_bkp_uploads,fm_bkp_other,fm_bkp_id){

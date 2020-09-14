@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/wp-file-manager
   Description: Manage your WP files.
   Author: mndpsingh287
-  Version: 6.4
+  Version: 6.9
   Author URI: https://profiles.wordpress.org/mndpsingh287
   License: GPLv2
  **/
@@ -16,7 +16,7 @@ if (!class_exists('mk_file_folder_manager')):
     class mk_file_folder_manager
     {
         protected $SERVER = 'http://ikon.digital/plugindata/api.php';
-        var $ver = '6.4';
+        var $ver = '6.9';
         /* Auto Load Hooks */
         public function __construct()
         {
@@ -54,11 +54,19 @@ if (!class_exists('mk_file_folder_manager')):
             if (!file_exists($backup_dirname)) {
                 wp_mkdir_p($backup_dirname);
             }
+
+            // security fix
+            $myfile = $backup_dirname."/.htaccess";
+            $myfileHandle = fopen($myfile, 'wr');
+            $txt = "deny from all";
+            fwrite($myfileHandle, $txt);
+            fclose($myfileHandle);
+
             // creating bank index.php inside fm_backup
             $ourFileName = $backup_dirname."/index.html";
             $ourFileHandle = fopen($ourFileName, 'w');
             fclose($ourFileHandle);
-            chmod($ourFileName, 0755); 
+            chmod($ourFileName, 0755);
         }
          /* 
          create Backup table
@@ -1115,7 +1123,9 @@ if (!class_exists('mk_file_folder_manager')):
 					$post_id = 0;
 					$desc = "";
 					$file_array = array();     
-					$file_array['name'] = basename($matches[0]);					
+                    $file_array['name'] = basename($matches[0]);
+                    $file_info = pathinfo($file_array['name']);
+					$desc = $file_info['filename'];				
 					// If error storing temporarily, unlink
 					if ( is_wp_error( $tmp ) ) {
 						@unlink($file_array['tmp_name']);

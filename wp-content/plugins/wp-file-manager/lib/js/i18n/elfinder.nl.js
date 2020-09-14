@@ -120,7 +120,7 @@
 			'cmdback'              : 'Vorige',
 			'cmdcopy'              : 'Kopieer',
 			'cmdcut'               : 'Knip',
-			'cmddownload'          : 'Download',
+			'cmddownload'          : 'Downloaden',
 			'cmdduplicate'         : 'Dupliceer',
 			'cmdedit'              : 'Pas bestand aan',
 			'cmdextract'           : 'Bestanden uit archief uitpakken',
@@ -142,11 +142,11 @@
 			'cmdrestore'           : 'Herstellen', //from v2.1.24 added 3.5.2017
 			'cmdsearch'            : 'Zoek bestanden',
 			'cmdup'                : 'Ga een map hoger',
-			'cmdupload'            : 'Upload bestanden',
+			'cmdupload'            : 'bestanden uploaden',
 			'cmdview'              : 'Bekijk',
 			'cmdresize'            : 'Formaat wijzigen',
 			'cmdsort'              : 'Sorteren',
-			'cmdnetmount'          : 'Mount netwerk volume', // added 18.04.2012
+			'cmdnetmount'          : 'Mount netwerkvolume', // added 18.04.2012
 			'cmdnetunmount'        : 'Unmount', // from v2.1 added 30.04.2012
 			'cmdplaces'            : 'Naar Plaatsen', // added 28.12.2014
 			'cmdchmod'             : 'Wijzig modus', // from v2.1 added 20.6.2015
@@ -297,7 +297,7 @@
 			'confirmReq'           : 'Bevestiging nodig',
 			'confirmRm'            : 'Weet u zeker dat u deze bestanden wil verwijderen?<br/>Deze actie kan niet ongedaan gemaakt worden!',
 			'confirmRepl'          : 'Oud bestand vervangen door het nieuwe bestand?',
-			'confirmRest'          : 'Replace existing item with the item in trash?', // fromv2.1.24 added 5.5.2017						
+			'confirmRest'          : 'Bestaand item vervangen door item in prullenbak?', // fromv2.1.24 added 5.5.2017						
 			'confirmConvUTF8'      : 'Niet in UTF-8<br/>Converteren naar UTF-8?<br/>De inhoud wordt UTF-8 door op te slaan na de conversie', // from v2.1 added 08.04.2014
 			'confirmNonUTF8'  : 'Character encoding of this file couldn\'t be detected. It need to temporarily convert to UTF-8 for editting.<br/>Please select character encoding of this file.', // from v2.1.19 added 28.11.2016
 			'confirmNotSave'       : 'Het is aangepast.<br/>Wijzigingen gaan verloren als je niet opslaat', // from v2.1 added 15.7.2015
@@ -374,7 +374,7 @@
 			'rotate-cw'            : 'Draai 90 graden rechtsom',
 			'rotate-ccw'           : 'Draai 90 graden linksom',
 			'degree'               : '°',
-			'netMountDialogTitle'  : 'Mount netwerk volume', // added 18.04.2012
+			'netMountDialogTitle'  : 'Mount netwerkvolume', // added 18.04.2012
 			'protocol'             : 'Protocol', // added 18.04.2012
 			'host'                 : 'Host', // added 18.04.2012
 			'port'                 : 'Poort', // added 18.04.2012
@@ -487,6 +487,7 @@
 			'email'                : 'Email', // from v2.1.43 added 19.10.2018
 			'license'              : 'Licensie', // from v2.1.43 added 19.10.2018
 			'exportToSave'         : 'Dit item kan niet worden opgeslagen, exporteer naar je pc om wijzingen te bewaren', // from v2.1.44 added 1.12.2018
+			'Code Editor':'Code-editor',
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'          : 'Onbekend',
@@ -523,10 +524,10 @@
 			'kindText'             : 'Tekst bestand',
 			'kindTextPlain'        : 'Tekst',
 			'kindPHP'              : 'PHP bronbestand',
-			'kindCSS'              : 'Cascading style sheet',
+			'kindCSS'              : 'Trapsgewijs opmaakmodel',
 			'kindHTML'             : 'HTML document',
 			'kindJS'               : 'Javascript bronbestand',
-			'kindRTF'              : 'Rich Text Format',
+			'kindRTF'              : 'Rijk tekst formaat',
 			'kindC'                : 'C bronbestand',
 			'kindCHeader'          : 'C header bronbestand',
 			'kindCPP'              : 'C++ bronbestand',

@@ -131,7 +131,7 @@
 			'cmdgetfile'   : 'Sélectionner les fichiers',
 			'cmdhelp'      : 'À propos de ce logiciel',
 			'cmdhome'      : 'Accueil',
-			'cmdinfo'      : 'Informations',
+			'cmdinfo'      : 'Renseignements',
 			'cmdmkdir'     : 'Nouveau dossier',
 			'cmdmkdirin'   : 'Dans un nouveau dossier', // from v2.1.7 added 19.2.2016
 			'cmdmkfile'    : 'Nouveau fichier',
@@ -165,7 +165,7 @@
 			'cmdselectnone': 'Tout désélectionner', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Inverser la sélection', // from v2.1.28 added 15.08.2017
 			'cmdopennew'   : 'Ouvrir dans une nouvelle fenêtre', // from v2.1.38 added 3.4.2018
-			'cmdhide'      : 'Hide (Preference)', // from v2.1.41 added 24.7.2018
+			'cmdhide'      : 'Masquer (préférence)', // from v2.1.41 added 24.7.2018
 
 			/*********************************** buttons ***********************************/
 			'btnClose'  : 'Fermer',
@@ -180,9 +180,9 @@
 			'btnUnmount': 'Démonter', // from v2.1 added 30.04.2012
 			'btnConv'   : 'Convertir', // from v2.1 added 08.04.2014
 			'btnCwd'    : 'Ici',      // from v2.1 added 22.5.2015
-			'btnVolume' : 'Volume',    // from v2.1 added 22.5.2015
+			'btnVolume' : 'Le volume',    // from v2.1 added 22.5.2015
 			'btnAll'    : 'Tous',       // from v2.1 added 22.5.2015
-			'btnMime'   : 'Type MIME', // from v2.1 added 22.5.2015
+			'btnMime'   : 'Tapez MIME', // from v2.1 added 22.5.2015
 			'btnFileName':'Nom du fichier',  // from v2.1 added 22.5.2015
 			'btnSaveClose': 'Enregistrer & Ferme', // from v2.1 added 12.6.2015
 			'btnBackup' : 'Sauvegarde', // fromv2.1 added 28.11.2015
@@ -491,6 +491,7 @@
 			'exportToSave'    : 'This item can\'t be saved. To avoid losing the edits you need to export to your PC.', // from v2.1.44 added 1.12.2018
 			'dblclickToSelect': 'Double click on the file to select it.', // from v2.1.47 added 22.1.2019
 			'useFullscreen'   : 'Use fullscreen mode', // from v2.1.47 added 19.2.2019
+			'Code Editor':'Éditeur de code',
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Inconnu',
@@ -510,13 +511,13 @@
 			'kindAppFlash'    : 'Application Flash',
 			'kindPDF'         : 'Portable Document Format (PDF)',
 			'kindTorrent'     : 'Fichier BitTorrent',
-			'kind7z'          : 'Archive 7z',
-			'kindTAR'         : 'Archive TAR',
-			'kindGZIP'        : 'Archive GZIP',
-			'kindBZIP'        : 'Archive BZIP',
-			'kindXZ'          : 'Archive XZ',
-			'kindZIP'         : 'Archive ZIP',
-			'kindRAR'         : 'Archive RAR',
+			'kind7z'          : 'Archiver 7z',
+			'kindTAR'         : 'Archiver TAR',
+			'kindGZIP'        : 'Archiver GZIP',
+			'kindBZIP'        : 'Archiver BZIP',
+			'kindXZ'          : 'Archiver XZ',
+			'kindZIP'         : 'Archiver ZIP',
+			'kindRAR'         : 'Archiver RAR',
 			'kindJAR'         : 'Fichier Java JAR',
 			'kindTTF'         : 'Police True Type',
 			'kindOTF'         : 'Police Open Type',

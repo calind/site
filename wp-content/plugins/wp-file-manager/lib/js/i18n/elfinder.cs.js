@@ -159,7 +159,7 @@
 			'cmdempty'     : 'Vyprázdnit složku', // from v2.1.25 added 22.06.2017
 			'cmdundo'      : 'Krok zpět', // from v2.1.27 added 31.07.2017
 			'cmdredo'      : 'Udělat to znovu', // from v2.1.27 added 31.07.2017
-			'cmdpreference': 'Preference', // from v2.1.27 added 03.08.2017
+			'cmdpreference': 'Přednost', // from v2.1.27 added 03.08.2017
 			'cmdselectall' : 'Vyberat vše', // from v2.1.28 added 15.08.2017
 			'cmdselectnone': 'Nic nevyberať', // from v2.1.28 added 15.08.2017
 			'cmdselectinvert': 'Invertovat výběr', // from v2.1.28 added 15.08.2017
@@ -492,6 +492,7 @@
 			'exportToSave'    : 'Tuto položku nelze uložit. Abyste se vyhnuli ztrátě úprav, musíte je exportovat do počítače.', // from v2.1.44 added 1.12.2018
 			'dblclickToSelect': 'Poklepáním na soubor jej vyberte.', // from v2.1.47 added 22.1.2019
 			'useFullscreen'   : 'Použít režim celé obrazovky', // from v2.1.47 added 19.2.2019
+			'Code Editor':'Editor kódu',
 
 			/********************************** mimetypes **********************************/
 			'kindUnknown'     : 'Neznámý',
