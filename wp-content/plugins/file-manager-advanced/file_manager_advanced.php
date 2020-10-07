@@ -4,7 +4,7 @@
   Plugin URI: https://wordpress.org/plugins/file-manager-advanced
   Description: Cpanel for files management in wordpress
   Author: modalweb
-  Version: 3.4
+  Version: 3.6
   Author URI: https://profiles.wordpress.org/modalweb
   Text Domain: file-manager-advanced
   Domain Path: /languages

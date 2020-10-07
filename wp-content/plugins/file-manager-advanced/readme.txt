@@ -2,9 +2,9 @@
 Contributors: modalweb,filemanager
 Tags: file-manager, wp-filemanager, wp file manager, file manager, elfinder, wp-file-manager, ftp
 Requires at least: 4.0
-Tested up to: 5.4
+Tested up to: 5.5
 Requires PHP: 5.0.0
-Stable tag: 3.4
+Stable tag: 3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -109,6 +109,14 @@ Yes you can, go to settings, change root path.
 
 
 == Changelog ==
+
+= 3.6 (31st Aug, 2020) =
+
+* compatible with 5.5
+
+= 3.5 (19th July, 2020) =
+
+* compatible with 5.4.2
 
 = 3.4 (1st Apr, 2020) =
 
