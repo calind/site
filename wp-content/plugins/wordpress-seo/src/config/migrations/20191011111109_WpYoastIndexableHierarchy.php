@@ -1,17 +1,21 @@
 <?php
-/**
- * Yoast SEO Plugin File.
- *
- * @package WPSEO\Migrations
- */
 
+namespace Yoast\WP\SEO\Config\Migrations;
+
+use Yoast\WP\Lib\Migrations\Migration;
 use Yoast\WP\Lib\Model;
-use YoastSEO_Vendor\Ruckusing_Migration_Base;
 
 /**
- * Class WpYoastIndexableHierarchy
+ * Class WpYoastIndexableHierarchy.
  */
-class WpYoastIndexableHierarchy extends Ruckusing_Migration_Base {
+class WpYoastIndexableHierarchy extends Migration {
+
+	/**
+	 * The plugin this migration belongs to.
+	 *
+	 * @var string
+	 */
+	public static $plugin = 'free';
 
 	/**
 	 * Migration up.
@@ -41,7 +45,15 @@ class WpYoastIndexableHierarchy extends Ruckusing_Migration_Base {
 				'limit'       => 11,
 			]
 		);
-		$indexable_table->column( 'depth', 'integer', [ 'unsigned' => true, 'null' => true, 'limit' => 11 ] );
+		$indexable_table->column(
+			'depth',
+			'integer',
+			[
+				'unsigned' => true,
+				'null'     => true,
+				'limit'    => 11,
+			]
+		);
 		$indexable_table->finish();
 
 		$this->add_index( $table_name, 'indexable_id', [ 'name' => 'indexable_id' ] );

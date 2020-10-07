@@ -3,10 +3,9 @@ Contributors: yoast, joostdevalk, tacoverdo, omarreiss, atimmer, jipmoors
 Donate link: https://yoa.st/1up
 License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
-Tags: SEO, XML sitemap, Content analysis, Readability
-Requires at least: 5.3
-Tested up to: 5.4.1
-Stable tag: 14.3
+Tags: SEO, XML sitemap, Content analysis, Readability, Schema
+Tested up to: 5.5.1
+Stable tag: 15.0
 Requires PHP: 5.6.20
 
 Improve your WordPress SEO: Write better content and have a fully optimized WordPress site using the Yoast SEO plugin.
@@ -38,13 +37,13 @@ We know content is king, that's why Yoast SEO is famous for its readability anal
 
 * The SEO analysis: an invaluable tool to write SEO-friendly texts with the right (focus) keywords in mind.
 * The readability analysis: make sure that you are writing easy-to-digest, engaging content for both visitors and search engines.
-* Our snippet preview that shows you how your post or page will look in the search results. Even on mobile! 
+* Our snippet preview that shows you how your post or page will look in the search results. Even on mobile!
 * An **FAQ** and **HowTo** block for the WordPress editor so search engines know when you are serving a FAQ page or HowTo guides.
 * **[Premium]** Social previews to show you how your content will be shown on Twitter and Facebook.
 * **[Premium]** The Insights tool that shows you what your text focuses on. This way you can keep your article in line with your keyphrases.
 * **[Premium]** The ability to optimize your article for synonyms and related keyphrases.
 * **[Premium]** We now recognize different word forms of your keyphrase, like singular and plurals, but also different tenses of verbs (just in English for now). It helps you improve your text in a more natural way.
-* **[Premium]** Automatic internal linking suggestions: write your article and automatically get suggested posts to link to! 
+* **[Premium]** Automatic internal linking suggestions: write your article and automatically get suggested posts to link to!
 
 #### KEEP YOUR SITE IN PERFECT SHAPE
 
@@ -62,7 +61,7 @@ Whether you are a **business owner** or **blogger**, a **content creator**, a **
 
 The Yoast team aims to provide regular support for the Yoast SEO plugin on the WordPress.org forums. But please understand that we do prioritize our premium support. This one-on-one email support is available to people who [bought Yoast SEO Premium](https://yoa.st/1v8).
 
-Did you know that the [Yoast SEO Premium](https://yoa.st/1v8) also has several extra features: 
+Did you know that the [Yoast SEO Premium](https://yoa.st/1v8) also has several extra features:
 
 * It gives you the option to have **synonyms and related keyphrases**.
 * A **redirect manager** that f.i. helps you prevent 404 Page Not Found errors.
@@ -76,7 +75,7 @@ The [Yoast SEO Premium plugin](https://yoa.st/1v8) is well worth your investment
 You should also check out these other products by Yoast:
 
 * **[Yoast Local SEO](https://yoa.st/1uu)** to optimize all website that serve a local audience, like certain small businesses, or businesses with multiple locations.
-* **[Yoast Video SEO](https://yoa.st/1uw)** to make sure Google understands what you video is about, thus increasing your chances to rank in video results.
+* **[Yoast Video SEO](https://yoa.st/1uw)** to make sure Google understands what your video is about, thus increasing your chances to rank in video results.
 * **[Yoast News SEO](https://yoa.st/1uv)** for news publishers who want to improve their visibility and performance in Google News.
 * **[WooCommerce SEO](https://yoa.st/3rh)** for all online shops that want to perform better in search engines and on social platforms.
 
@@ -129,7 +128,7 @@ The sitemap index and individual sitemaps are updated automatically as you add o
 
 = How can I add my website to Google Search Console? =
 
-It is straightforward to add your website to Google Search Console. 
+It is straightforward to add your website to Google Search Console.
 1. Create a Google Search Console account and login into your account.
 2. Click ‘Add a property’ under the search drop-down.
 3. Enter your website URL in the box and click ‘Continue’.
@@ -146,7 +145,7 @@ If you want more details steps, please visit [our article on our knowledge base]
 
 = How do I implement Yoast SEO breadcrumbs? =
 
-The steps below are a temporary solution as manual edits made to theme files may be overwritten with future theme updates. Please contact the theme developer for a permanent solution. We’ve written an article about the [importance of breadcrumbs for SEO](https://yoa.st/3qv). 
+The steps below are a temporary solution as manual edits made to theme files may be overwritten with future theme updates. Please contact the theme developer for a permanent solution. We’ve written an article about the [importance of breadcrumbs for SEO](https://yoa.st/3qv).
 
 To implement the [breadcrumbs](https://yoa.st/3qw) function in Yoast SEO, you will have to edit your theme. We recommend that prior to any editing of the theme files, a backup is taken. Your host provider can help you take a backup.
 Copy the following code into your theme where you want the breadcrumbs to be. If you are not sure, you will need to experiment with placement:
@@ -161,7 +160,7 @@ if ( function_exists( 'yoast_breadcrumb' ) ) {
 
 Common places where you could place your breadcrumbs are inside your `single.php` and/or `page.php` file just above the page’s title. Another option that makes it really easy in some themes is by just pasting the code in `header.php` at the very end.
 
-In most non-WooTheme themes, this code snippet should not be added to your `functions.php` file. 
+In most non-WooTheme themes, this code snippet should not be added to your `functions.php` file.
 Alternatively, you can manually add the breadcrumb shortcode to individual posts or pages: `[wpseo_breadcrumb]`
 
 If you need more details or a step by step guide, read our [Implementation guide for Yoast SEO breadcrumbs](https://yoa.st/3qx).
@@ -172,7 +171,7 @@ Yoast SEO provides multiple options for setting a URL or group of URLs to noinde
 
 = Google shows the wrong description, how do I fix this? =
 
-If you’ve crafted nice meta descriptions for your blog posts, nothing is more annoying than Google showing another description for your site completely in the search result snippet. 
+If you’ve crafted nice meta descriptions for your blog posts, nothing is more annoying than Google showing another description for your site completely in the search result snippet.
 
 Possible causes could be:
 1. wrong description in code
@@ -188,7 +187,7 @@ Yoast SEO is updated every two weeks. If you want to know why, please read [this
 
 = How do I get support? =
 
-As our free plugin is used by millions of people worldwide, we cannot offer you all one on one support. If you have trouble with the Yoast SEO for WordPress plugin, you can get help on the support forums here at [wordpress.org](https://wordpress.org/support/plugin/wordpress-seo/) or by checking out or knowledge base at [kb.yoast.com](https://yoa.st/3r1). 
+As our free plugin is used by millions of people worldwide, we cannot offer you all one on one support. If you have trouble with the Yoast SEO for WordPress plugin, you can get help on the support forums here at [wordpress.org](https://wordpress.org/support/plugin/wordpress-seo/) or by checking out or knowledge base at [kb.yoast.com](https://yoa.st/3r1).
 
 The plugins you buy at Yoast are called ‘premium plugins’ (even if Premium isn’t in its name) and include a complete year of free updates and premium support. This means you can contact our support team if you have any questions about that plugin.
 
@@ -209,33 +208,67 @@ Your question has most likely been answered on our knowledge base: [kb.yoast.com
 
 == Changelog ==
 
-= 14.3 =
-Release Date: June 9th, 2020
+= 15.0 =
+Release Date: September 29th, 2020
 
-In every release of Yoast SEO, we fix bugs and find other ways to enhance our code. For instance, we’re always working on quality assurance, code style and other behind the scenes work. In Yoast SEO 14.3, you’ll find many of these improvements plus some bugfixes. Read more about those changes in [our release post](https://yoa.st/release-14-3)!
-
-Bugfixes:
-
-* Fixes a bug where the FAQ schema list item's position would start at 0 instead of 1.
-* Fixes a bug where the filters `wpseo_metadesc` and `wpseo_title` weren't called with the right argument, which could lead to errors.
-* Fixes a bug where our global CSS variables could conflict with global CSS variables of themes.
-
-= 14.2 =
-Release Date: May 26th, 2020
-
-In today's release, we’ve fixed several issues with breadcrumbs. One of these bugs turned the order of breadcrumbs on its head, which is not something we like. Things should work as expected now. We’ve also changed how we check if a focus keyphrase was used before. We currently run this against our indexable table, making the process more efficient. Read more about those changes in [our release post](https://yoa.st/release-14-2)!
-
-Bugfixes:
-
-* Fixes a bug where breadcrumbs would be saved in reversed order.
-* Fixes a bug where setting `Security: no advanced settings for authors` to `off` would remove the advanced settings tab for all users.
-* Fixes a bug where replacement variables would not be replaced when using the deprecated `WPSEO_Frontend` output without echoing it.
-* Fixes a bug where our `select2` styling would overwrite the `select2` styling of other plugins.
-* Fixes a bug where JavaScript could be executed via the error message on the Social section in the Yoast Settings. As this potentially dangerous data is not saved, abusing this was not possible.
+Today, we’re launching Yoast SEO 15.0. This release features some awesome new additions and enhancements. We’ve added full support for Arabic and made the Yoast SEO block editor sidebar fully-featured. Read more about those changes in [our release post](https://yoa.st/release-15-0)!
 
 Enhancements:
 
-* Optimizes the query used to check if a focus keyphrase has been previously used, by running it against our indexable table.
+* Introduces an advanced settings tab in the sidebar.
+* Introduces buttons in the sidebar to open the Facebook and Twitter Preview in a modal.
+* Changes the Google Preview modal styling to match the other new modals.
+* Always shows the Google Preview editor fields and as a result removes the 'Edit snippet' button.
+* Changes the styling of the Yoast SEO sidebar to match the standard Gutenberg styling.
+* Slightly rearranges the order of items in the Yoast SEO sidebar.
+* Adds a hover state styling to the items in the Metabox.
+* Improves the English transition word assessment by adding the following words to the transition word list: 'note that', 'not only', 'initially', 'as opposed to'.
+* Improves the keyphrase and prominent word recognition when words in the text occur with specific Arabic or Urdu punctuation marks.
+
+Bugfixes:
+
+* Fixes a bug where the value of the schema `@type` could contain `null`.
+* Fixes a bug where the `archive`, `imageindex` and `snippet` robot values would be output when `noindex` was present as well.
+* Fixes a bug where the indexable permalinks could have an incorrect value when the term slug was changed.
+* Fixes a bug where parts of the content of a password protected post could be output in the schema.
+* Fixes a bug where the 'Stop counting' button in the text link counter modal wouldn't stop the counting of links.
+* Fixes a bug where indexable hierarchies were not being created during bulk indexing.
+
+Other:
+
+* Adds the `wpseo_sitemap_index_links` filter to enable adding links to the sitemap index. Props to [Joseph Paul](https://github.com/jsphpl).
+
+= 14.9 =
+Release Date: September 1st, 2020
+
+Yoast SEO 14.9 comes with a new round of improvements, plus a new language-based enhancement: improved keyphrase recognition for Hebrew. Read more about those changes in [our release post](https://yoa.st/release-14-9)!
+
+Bugfixes:
+
+* Fixes a bug where a JavaScript console warning was thrown on category edit pages.
+* Fixes a bug where the page number was not shown in the breadcrumb for paginated series.
+* Fixes a bug where the `robots.txt` and `.htaccess` file editor would not work due to `get_home_path()` not being a writable path. Props to [druesome](https://github.com/druesome).
+* Fixes a bug where port numbers in the indexable permalinks were missing (when applicable).
+* Fixes a bug where the indexables table would contain incorrect permalinks for posts if the term slug had been changed and the post permalink contains the term slug.
+* Fixes a bug where the indexables table would contain incorrect permalinks for pages if the slug of the parent page had been changed.
+* Fixes a bug where a warning would occur when a query was unsuccessful while indexing post type archives. Props to [Sekiphp](https://github.com/Sekiphp).
+* Fixes a bug where closing parentheses would always be regarded as sentence endings in RTL languages.
+* Fixes a bug where closing parentheses would always be regarded as sentence endings when followed by an upper-case letter.
+
+Enhancements:
+
+* Adds an update notification for major and minor releases.
+* Improves the SQL performance by not performing unnecessary update queries when updating a post’s public status.
+* Optimizes performance by preventing regular database queries.
+* Improves keyphrase recognition in Polish by filtering more function words.
+* Improves the feedback string in the Keyphrase in Subheadings assessment by making it more explicit.
+* Improves all keyphrase-based assessments for Hebrew by filtering function words and allowing keyphrases to be recognized in the text when preceded by a prefix (e.g., “כ” or “ל”).
+* We already had a filter available to change the default Schema Article type (`wpseo_schema_article_post_types`), but it wasn't called anywhere. Now it is.
+
+Other:
+
+* Adds the weekly cron schedule to the `cron_schedules` filter to prevent overwriting the one WordPress adds. Props to [peter-webbird](https://github.com/peter-webbird).
+* Merges the googlebot and bingbot meta tag values into the robots meta tag value and deprecates the `Googlebot_Presenter` and `Bingbot_Presenter`.
 
 = Earlier versions =
 For the changelog of earlier versions, please refer to [the changelog on yoast.com](https://yoa.st/yoast-seo-changelog).
