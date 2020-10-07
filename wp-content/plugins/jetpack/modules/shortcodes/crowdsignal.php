@@ -388,7 +388,7 @@ if (
 						return $this->get_async_code( $settings, $poll_link, $poll_url );
 					} else {
 						if ( 1 === $attributes['cb'] ) {
-							$attributes['cb'] = '?cb=' . mktime();
+							$attributes['cb'] = '?cb=' . time();
 						} else {
 							$attributes['cb'] = false;
 						}
@@ -744,14 +744,14 @@ if (
 				return $content;
 			}
 
-			// Replace poll links
+			// Replace poll links.
 			$content = jetpack_preg_replace_outside_tags(
 				'!(?:\n|\A)https?://(polldaddy\.com/poll|poll\.fm)/([0-9]+?)(/.*)?(?:\n|\Z)!i',
 				'[crowdsignal poll=$2]',
 				$content
 			);
 
-			// Replace survey.fm links
+			// Replace survey.fm links.
 			$content = preg_replace(
 				'!(?:\n|\A)https?://(.*).survey.fm/(.*)(/.*)?(?:\n|\Z)!i',
 				'[crowdsignal type="iframe" survey="true" height="auto" domain="$1" id="$2"]',
