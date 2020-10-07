@@ -3,8 +3,6 @@
  * REST API Onboarding Tasks Controller
  *
  * Handles requests to complete various onboarding tasks.
- *
- * @package WooCommerce Admin/API
  */
 
 namespace Automattic\WooCommerce\Admin\API;
@@ -16,7 +14,6 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Onboarding Tasks Controller.
  *
- * @package WooCommerce Admin/API
  * @extends WC_REST_Data_Controller
  */
 class OnboardingTasks extends \WC_REST_Data_Controller {
@@ -252,51 +249,46 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 	private static function get_homepage_template( $post_id ) {
 		$products = wp_count_posts( 'product' );
 		if ( $products->publish >= 4 ) {
-			$images  = self::sideload_homepage_images( $post_id, 1 );
-			$image_1 = ! empty( $images[0] ) ? $images[0] : '';
-			$cover   = self::get_homepage_cover_block( $image_1 );
-
-			return $cover . '
+			$images   = self::sideload_homepage_images( $post_id, 1 );
+			$image_1  = ! empty( $images[0] ) ? $images[0] : '';
+			$template = self::get_homepage_cover_block( $image_1 ) . '
 				<!-- wp:heading {"align":"center"} -->
 				<h2 style="text-align:center">' . __( 'Shop by Category', 'woocommerce-admin' ) . '</h2>
 				<!-- /wp:heading -->
 				<!-- wp:shortcode -->
-				[product_categories limit="3" columns="3" orderby="menu_order"]
+				[product_categories number="0" parent="0"]
 				<!-- /wp:shortcode -->
 				<!-- wp:heading {"align":"center"} -->
 				<h2 style="text-align:center">' . __( 'New In', 'woocommerce-admin' ) . '</h2>
 				<!-- /wp:heading -->
-				<!-- wp:woocommerce/product-new {"columns":4} -->
-				<div class="wp-block-woocommerce-product-new">[products limit="4" columns="4" orderby="date" order="DESC"]</div>
-				<!-- /wp:woocommerce/product-new -->
+				<!-- wp:woocommerce/product-new {"columns":4} /-->
 				<!-- wp:heading {"align":"center"} -->
 				<h2 style="text-align:center">' . __( 'Fan Favorites', 'woocommerce-admin' ) . '</h2>
 				<!-- /wp:heading -->
-				<!-- wp:woocommerce/product-top-rated {"columns":4} -->
-				<div class="wp-block-woocommerce-product-top-rated">[products limit="4" columns="4" orderby="rating"]</div>
-				<!-- /wp:woocommerce/product-top-rated -->
+				<!-- wp:woocommerce/product-top-rated {"columns":4} /-->
 				<!-- wp:heading {"align":"center"} -->
 				<h2 style="text-align:center">' . __( 'On Sale', 'woocommerce-admin' ) . '</h2>
 				<!-- /wp:heading -->
-				<!-- wp:woocommerce/product-on-sale {"columns":4} -->
-				<div class="wp-block-woocommerce-product-on-sale">[products limit="4" columns="4" orderby="date" order="DESC" on_sale="1"]</div>
-				<!-- /wp:woocommerce/product-on-sale -->
+				<!-- wp:woocommerce/product-on-sale {"columns":4} /-->
 				<!-- wp:heading {"align":"center"} -->
 				<h2 style="text-align:center">' . __( 'Best Sellers', 'woocommerce-admin' ) . '</h2>
 				<!-- /wp:heading -->
-				<!-- wp:woocommerce/product-best-sellers {"columns":4} -->
-				<div class="wp-block-woocommerce-product-best-sellers">[products limit="4" columns="4" best_selling="1"]</div>
-				<!-- /wp:woocommerce/product-best-sellers -->
+				<!-- wp:woocommerce/product-best-sellers {"columns":4} /-->
 			';
+
+			/**
+			 * Modify the template/content of the default homepage.
+			 *
+			 * @param string $template The default homepage template.
+			 */
+			return apply_filters( 'woocommerce_admin_onboarding_homepage_template', $template );
 		}
 
-		$images  = self::sideload_homepage_images( $post_id, 3 );
-		$image_1 = ! empty( $images[0] ) ? $images[0] : '';
-		$image_2 = ! empty( $images[1] ) ? $images[1] : '';
-		$image_3 = ! empty( $images[2] ) ? $images[2] : '';
-		$cover   = self::get_homepage_cover_block( $image_1 );
-
-		return $cover . '
+		$images   = self::sideload_homepage_images( $post_id, 3 );
+		$image_1  = ! empty( $images[0] ) ? $images[0] : '';
+		$image_2  = ! empty( $images[1] ) ? $images[1] : '';
+		$image_3  = ! empty( $images[2] ) ? $images[2] : '';
+		$template = self::get_homepage_cover_block( $image_1 ) . '
 		<!-- wp:heading {"align":"center"} -->
 		<h2 style="text-align:center">' . __( 'New Products', 'woocommerce-admin' ) . '</h2>
 		<!-- /wp:heading -->
@@ -308,6 +300,9 @@ class OnboardingTasks extends \WC_REST_Data_Controller {
 		self::get_homepage_media_block( $image_3, 'right' ) . '
 
 		<!-- wp:woocommerce/featured-product /-->';
+
+		/** This filter is documented in src/API/OnboardingTasks.php. */
+		return apply_filters( 'woocommerce_admin_onboarding_homepage_template', $template );
 	}
 
 	/**

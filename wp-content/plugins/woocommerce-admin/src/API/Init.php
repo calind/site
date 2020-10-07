@@ -1,8 +1,6 @@
 <?php
 /**
  * REST API bootstrap.
- *
- * @package WooCommerce Admin/Classes
  */
 
 namespace Automattic\WooCommerce\Admin\API;
@@ -15,6 +13,24 @@ use \Automattic\WooCommerce\Admin\Loader;
  * Init class.
  */
 class Init {
+	/**
+	 * The single instance of the class.
+	 *
+	 * @var object
+	 */
+	protected static $instance = null;
+
+	/**
+	 * Get class instance.
+	 *
+	 * @return object Instance.
+	 */
+	final public static function instance() {
+		if ( null === static::$instance ) {
+			static::$instance = new static();
+		}
+		return static::$instance;
+	}
 
 	/**
 	 * Boostrap REST API.
@@ -42,7 +58,8 @@ class Init {
 			'Automattic\WooCommerce\Admin\API\DataCountries',
 			'Automattic\WooCommerce\Admin\API\DataDownloadIPs',
 			'Automattic\WooCommerce\Admin\API\Leaderboards',
-			MarketingOverview::class,
+			'Automattic\WooCommerce\Admin\API\Marketing',
+			'Automattic\WooCommerce\Admin\API\MarketingOverview',
 			'Automattic\WooCommerce\Admin\API\Options',
 			'Automattic\WooCommerce\Admin\API\Orders',
 			'Automattic\WooCommerce\Admin\API\Products',
@@ -73,6 +90,7 @@ class Init {
 			'Automattic\WooCommerce\Admin\API\Reports\Customers\Stats\Controller',
 			'Automattic\WooCommerce\Admin\API\Taxes',
 			'Automattic\WooCommerce\Admin\API\Themes',
+			'Automattic\WooCommerce\Admin\API\Plugins',
 		);
 
 		if ( Loader::is_onboarding_enabled() ) {
@@ -80,17 +98,8 @@ class Init {
 				$controllers,
 				array(
 					'Automattic\WooCommerce\Admin\API\OnboardingProfile',
-					'Automattic\WooCommerce\Admin\API\OnboardingPlugins',
 					'Automattic\WooCommerce\Admin\API\OnboardingTasks',
 					'Automattic\WooCommerce\Admin\API\OnboardingThemes',
-				)
-			);
-		} elseif ( Loader::is_feature_enabled( 'shipping-label-banner' ) ) {
-			// Shipping Banner needs to use /active /install and /activate endpoints.
-			$controllers = array_merge(
-				$controllers,
-				array(
-					\Automattic\WooCommerce\Admin\API\OnboardingPlugins::class,
 				)
 			);
 		}
@@ -139,7 +148,7 @@ class Init {
 
 	/**
 	 * Add the currency symbol (in addition to currency code) to each Order
-	 * object in REST API responses. For use in formatCurrency().
+	 * object in REST API responses. For use in formatAmount().
 	 *
 	 * @param {WP_REST_Response} $response REST response object.
 	 * @returns {WP_REST_Response}

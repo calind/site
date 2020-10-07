@@ -2,11 +2,11 @@
 Contributors: automattic
 Tags: ecommerce, e-commerce, store, sales, reports, analytics, dashboard, activity, notices, insights, stats, woo commerce, woocommerce
 Requires at least: 5.3.0
-Tested up to: 5.4.1
+Tested up to: 5.4.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.3
+Stable tag: 1.5.0
 License: GPLv3
-License URI: https://github.com/woocommerce/woocommerce-admin/blob/master/license.txt
+License URI: https://github.com/woocommerce/woocommerce-admin/blob/main/license.txt
 
 == Description ==
 
@@ -71,6 +71,161 @@ Release and roadmap notes are available on the [WooCommerce Developers Blog](htt
 
 == Changelog ==
 
+= 1.5.0 2020-08-07 =
+- Dev: New notification: Don't forget to test your checkout. #4805
+- Dev: Enable tax calculation before redirecting to standard tax rates page. #4878
+- Fix: Use clipRule and fillRule props. #4889, part of #4864
+- Fix: Admin order page shipping label prompt compatibility with WCS 1.24. #5025
+- Fix: Padding on finish, forward, and back buttons on the welcome modal. #5043
+- Fix: Show usage modal when skipping the OBW. #5061
+- Fix: Handle user deletion. #4977
+- Fix: Jetpack flow for automatic tax calculations. #5101
+- Dev: Added event recording to Orders, Stock, and Reviews panels. #4861
+- Dev: Added personalization to purchase extension task. #4849
+- Dev: Display modal with more info about the new homescreen. #4890
+- Dev: Task list - add a shortcut back to store setup. #4853
+- Dev: Update the colors of the illustrations in the welcome modal. #4945
+- Enhancement: Add eWAY to Payment Setup for AU/NZ Stores. #4947
+- Tweak: Remove the Composite products option from the onboarding wizard #4703
+- Tweak: Do not show bundled extensions in OBW when a CBD industry has been selected. #5040
+- Tweak: Remove industry option for travel. #5065
+- Tweak: New marketing copy for the Kliken Google Ads plugin. #5074
+- Tweak: Add ToS agreement copy to the WCPay setup task. #5085
+
+= 1.4.0 2020-07-22 =
+- Fix: Update returning customer total to include customers whose first order was within the report date range #4430
+- Fix: Fix an error in the Analytics/Orders table when there is an order deleted directly from the database #4630
+- Fix: Reselecting advanced filters in the customer list #4650
+- Fix: Reporting of deleted coupons #4671
+- Fix: Preventing refresh after answering a survey note #4711
+- Fix: Regular filters not working #4704
+- Fix: React warning in test that the key prop wasn't assigned in List #4808
+- Fix: Center continue buttons in the onboarding profile wizard #4082
+- Fix: Homepage template used in setup checklist customization task #4807
+- Fix: Errant Jetpack activation prompt in Stats Overview home screen widget #4817
+- Fix: Unable to activate theme with uppercase name #4393 🎉 @ayubadiputra 
+- Fix: Set active theme when OBW is shown via the task list #4834
+- Enhancement: Add option to dismiss tasks in Setup Checklist #4733
+- Enhancement: Show contextual help menu when working on store setup tasks. #4779
+- Enhancement: Add automatic PayPal account creation flow. #4804
+- Enhancement: Move the WooCommerce > Coupons dashboard menu item to Marketing > Coupons. #4786
+- Tweak: Add education and travel to the onboarding industry types #4694
+- Tweak: Refactor Jetpack connection flows #4655
+- Tweak: Refactor tax task to use promise chain #4683
+- Tweak: Add bundle install UI to Business Details step #4695
+- Tweak: Include Product Bundles and Product Add-ons as OBW product options #4705
+- Tweak: Toggle the “Physical products” checkbox on by default #4702
+- Tweak: Variation Names: Allow long names to be shown #4715
+- Tweak: Limit inbox status to unactioned notes #4765
+- Tweak: Only show usage tracking modal once in OBW. #4766
+- Tweak: Add WooCommerce Payments to Setup Checklist. #4793
+- Tweak: Update connection flow for Bundle UI #4717
+- Tweak: Style improvements for Marketing hub. #4794
+- Tweak: Added skip profiler functionality #4721
+- Tweak: Reordered home screen tasks #4754
+- Tweak: Create single source of truth for task list array #4825
+- Tweak: Rework the store details onboarding screen #4771
+- Tweak: Design of Product Types step in Onboarding #4707
+- Tweak: Add copy that WCS TOS will be accepted upon install #4799
+- Dev: Customize webpack jsonpFunction to avoid potential collision with other Webpack bundles #4644 🎉 @aaemnnosttv
+- Dev: Update @wordpress/base-styles and replace deprecated variables #4759
+
+= 1.3.2 2020-07-29 =
+- Fix: bug preventing saving user preferences on WP 5.3. #4869
+
+= 1.3.1 2020-07-20 =
+- Fix: PHP Fatal errors when columns are missing from the Notes table. #4831
+
+= 1.3.0 2020-07-08 =
+- Enhancement: Add Jetpack stats to performance indicatorts / homepage #4291
+- Enhancement: New "Store Management" quick links card on WooCommerce home screen. #4350
+- Enhancement: Inbox notifications layout updates #4218
+- Enhancement: New Home Screen #4303
+- Enhancement: Use WordPress Core colors for styling accents. #4558
+- Dev: Add jest-dom eslint plugin. #4327
+- Dev: Migrate onboarding data store to wp.data #4433
+- Dev: Remove use of `IconButton` in favor of `Button` #4415
+- Dev: Fix error handling for plugins on server error #4462
+- Dev: update @wordpress/components and @wordpress/base-styles #4427
+- Dev: Migrate user store to wp.data #4505
+- Dev: Add options data store to wp.data #4144
+- Dev: Runtime feature config override #4523
+- Dev: Check that the possibly_add_note function exists before calling it #4680
+- Dev: Remove unnecessary rest API init action. #4691
+- Dev: Don't include sourcemaps or unminified JS for "core" builds. #4642
+- Fix: misaligned 'required' text on selects #4307
+- Fix: exception when opening dashboard after selecting extensions to purchase #4357
+- Fix: REST API collections schema #4377
+- Fix: Monetary Advanced Filters in Customers Report with correct currency object prop. #4356
+- Fix: In App purchase "back link" #4301
+- Fix: Search results selectable by clicking on item text or icon #4474
+- Fix: Filters' static query parameters #4458
+- Fix: The WCPay method not appearing as recommended sometimes #4345
+- Fix: Removed URLSearchParams method #4501
+- Fix: REST API collections schema. #4484
+- Fix: null issue in wpNavMenuClassChange #4513 🎉 @gradosevic 
+- Fix: RTL stylesheet loading for split code chunks. #4542
+- Fix: Don't show store location step in tax and shipping tasks if the address has already been provided #4507
+- Fix: Check for enabled methods before payment task completion #4530
+- Fix: Solved a problem with the method onChoose in the last onboarding step. #4583
+- Fix: Only mark purchase task as complete when products exist #4574
+- Fix: Remove unnecessary rest_api_init action that caused incompatibility issues with other plugins. #4691
+- Fix: Fix WCPay sometimes not appearing on the task list #4647
+- Tweak: make revenue report total sales column optional #4397
+- Tweak: Adjustments to WooCommerce Payments setup task #4373
+- Tweak: Handling of plugin installs in OBW #4411
+- Tweak: Update design of Setup Checklist #4434
+- Tweak: Add scrollable styling to left side of Table, and keep updated #4179
+- Tweak - Add custom autocompleter support to Search componen #4518
+- Tweak: reduce asset filename length. #4535
+- Tweak: Use single dash for country/state dropdown options #4553
+- Tweak: Use label tag for toggleable shipping zones #4554
+- Tweak: Tweak - Make it easier to add submenu items to the Marketing menu #4561
+- Tweak: Remove duplicate/redundant inbox note after first order received. #4659
+- Tweak: Fix the embed page CSS so the top content sits better #4622
+
+
+= 1.2.4 2020-06-11 =
+- Tweak: reduce asset filename length and remove tilde characters. #4535
+- Fix: RTL stylesheet loading for split code chunks. #4542
+
+= 1.2.3 2020-05-22 =
+- Tweak: Updates to WooCommerce Payments in Setup Checklist #4293
+
+= 1.2.2 2020-05-18 =
+- Fix: Respect tracking opt-in before new page load. #4368
+- Enhancement: Add Jetpack connection to plugin benefits step #4374
+
+= 1.2.0 2020-05-18 =
+- Enhancement: Add onboarding payments note #4157 
+- Enhancement: Marketing Inbox Note #4030
+- Performance: Use Route based code splitting to reduce bundle size #4094
+- Performance: trim down inbox note API request. #3977
+- Fix: Proper display of elements in wc-admin pages when in a RTL environment. #4051
+- Fix: Update UX when knowledge base articles fail to retrieve #4133
+- Fix: Updated messaging after last step in OBW. #4148
+- Fix: Reset profiler when visiting old OBW URL #4166.
+- Fix: Dashboard flash before OBW chunk loads #4259
+- Tweak: Enable the default homepage template to be filtered #4072 🎉 @stevegrunwell
+- Tweak: Create admin note if Jetpack or WooCommerce Services plugin doesn't get installed due to an error during OBW #3888
+- Tweak: Update Email Marketing note. #4167
+- Tweak: Adjust "demo products" verbiage to "Sample Products" #4184 🎉 @jobthomas
+- Tweak: Don't reschedule imports on failed imports #4263
+- Tweak: Remove obsolete inbox messages #4182
+- Dev: Make query selector for admin alerts more specific #4289 🎉 @pauloiankoski 
+- Dev: Guard against null themes in OBW #4244
+- Dev: Update wcadmin db version after db callback #4323
+- Dev: Only migrate options on version change #4324
+- Dev: Use PAGE_ROOT constant to reduce redundant strings #4238 🎉 @codemascot
+- Dev: Decouple Plugins DataStore from onboarding feature #4048
+- Dev: Move API out of Onboarding #4093
+- Dev: Add Profiler Step View Tracks #4141
+- Dev: Add React Testing Library #4221
+- Dev: Add List and Link components to Storybook #4219
+- Dev: Cast Shipping Total to float #4042 🎉 @barryhughes
+- Dev: Dynamic Currency with Context API #4027
+- Dev: Remove Duplicate array entry #4049 🎉 @tivnet
+
 = 1.1.3 2020-05-18 =
 - Tweak: Onboarding: Add Jetpack flow back to onboarding profiler. #4382
 - Fix: Respect tracking opt-in before new page load. #4368
@@ -79,31 +234,24 @@ Release and roadmap notes are available on the [WooCommerce Developers Blog](htt
 - Version bumped on Composer/Packagist but not released to WordPress.org.
 
 = 1.1.1 2020-05-05 =
-- Fix: OBW Industry selection bug for non-US stores. #4120
-- Tweak: Remove Stripe deferred account activation, and revert to oAuth connection flow. #4164
-- Tweak: Remove A/B testing from order page shipping prompt. #4180
-- Tweak: Move Storefront theme to the beginning of the theme OBW step. #4187
-- Fix: Button hover color on shipping label banner. #4230
-- Fix: WooCommerce Services installation when OBW is disabled. #4233
-- Fix: App crash when using date-based advanced filters. #4286
+- Fix: Storefront should show at top of theme options in onboarding wizard. #4187
+- Tweak: Remove Stripe auto-connect from payment task. #4164
+- Tweak: Hide suggested extensions in Marketing Tab if opted out of "Marketplace Suggestions"
 
-= 1.1.0 2020-04-14 =
-- Tweak: Update form example to better format the form return data #3706
-- Dev: Align WooCommerce javascript code standards/linting/styles with WordPress core. #3674
+= 1.1.0 2020-04-23 =
 - Tweak: Added link to "go shopping" button #3712
 - Fix: Make analytics tables use the site's date format setting #3715
 - Fix: Alignment of select text #3723 🎉 @edmundcwm
-- Dev: Added Storybook for documenting internal components. #3679
-- Dev: Add PayFast payment gateway option for sites in South Africa #3738 
-- Dev: Onboarding: Update screen order and remove Jetpack connection in profiler #3739
-- Dev: Onboarding - business step: add more options in the competitors list and other fixes #3812
-- Dev: Onboarding: Redesign plugin benefits screen #3764
+- Tweak: Add PayFast payment gateway option for sites in South Africa #3738 
+- Tweak: Onboarding: Update screen order and remove Jetpack connection in profiler #3739
+- Tweak: Onboarding - business step: add more options in the competitors list and other fixes #3812
+- Tweak: Onboarding: Redesign plugin benefits screen #3764
 - Fix: inconsistent wording downloads report #3844 🎉 @jobthomas
 - Tweak: Onboarding: Use full width template for homepage in stores using Storefront #3846
 - Tweak: Remove 'add first product' note. #3876
 - Enhancement: Improve focus on task list #3796
 - Enhancement: Allow individual payment method setup in the onboarding task list #3782
-- Dev: Onboarding: Add toggles to configured payments in task list #3801
+- Tweak: Onboarding: Add toggles to configured payments in task list #3801
 - Onboarding: Add offline payment methods #3832
 - Fix: Verify Stripe API keys in payment set up step. #3910
 - Fix: Connect to WooCommerce.com note disappears before connecting. #3909
@@ -123,7 +271,7 @@ Release and roadmap notes are available on the [WooCommerce Developers Blog](htt
 - Enahncement: Add WC Pay to startup checklist
 - Enhancement: Marketing Tab
 - Enhancement: Add WooCommerce Payments Inbox note #4013
-- Dev: Added hook to delete woocommerce_onboarding_homepage_post_id #4015
+- Fix: Added hook to delete woocommerce_onboarding_homepage_post_id #4015
 - Performance: only query requested stat totals in reports. #4009
 - Fix: Show admin notices on legacy admin screens. #4019
 - Tweak: Reduce the number of default widgets on the dashboard. #4035
@@ -136,7 +284,7 @@ Release and roadmap notes are available on the [WooCommerce Developers Blog](htt
 - Fix: OBW: Allow CBD only for US stores #4117
 
 
-= 1.0.3 2020-03-19 =
+= 1.0.3 2020-03-22 =
 
 - Fix: Stop calling protected has_satisfied_dependencies() on outdated plugin. #3938
 - Fix: Rename image assets in OBW business details step. #3931
@@ -337,7 +485,7 @@ Release and roadmap notes are available on the [WooCommerce Developers Blog](htt
 - Fix: Retrieve week last year data by calendar date instead of week alignment. #3271 (Analytics, Packages)
 - Bug: Check if extended_info is set for order report items #3315 (REST API)
 - Tweak: remove global settings dependency from Navigation package. #3294 (Components, Packages)
-- Fix: Fix checkout of master branch in CI environment. #3296 (Build)
+- Fix: Fix checkout of main branch in CI environment. #3296 (Build)
 - Fix: decouple Date package from global wcSettings object. #3278 (Components, Packages)
 - Fix: Make the order count between customer and table total consistent. #3290 (Analytics)
 - Fix: decouple Currency and Number packages from global wcSettings object. #3277 (Components, Packages)
@@ -409,7 +557,7 @@ Release and roadmap notes are available on the [WooCommerce Developers Blog](htt
 - Dev: Add GitHub pages deploy step to Travis config. #2940 (Build, Documentation)
 - Dev: Fix plugin installation when working from a push instead of a pull request. #2950 (Build)
 - Dev: Fix pull request branch detection on CI (try #2) #2944 (Build)
-- Dev: Only build pushes to master branch. #2941 (Build)
+- Dev: Only build pushes to main branch. #2941 (Build)
 - Performance: reduce JS bundle size. #2933 (Build)
 - Dev: Fix pull request branch detection on CI #2942 (Build)
 - Dev: refresh component documentation #2872 (Build, Components, Documentation, Packages)
