@@ -1,9 +1,9 @@
 === Storefront ===
 Contributors: automattic, tiagonoronha, jameskoster
-Requires at least: 4.7
-Tested up to: 5.4.1
-Stable tag: 2.5.6
-Version: 2.5.6
+Requires at least: 5.2.7
+Tested up to: 5.5
+Stable tag: 2.7.0
+Version: 2.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Tags: e-commerce, two-columns, left-sidebar, right-sidebar, custom-background, custom-colors, custom-header, custom-menu, featured-images, full-width-template, threaded-comments, accessibility-ready, rtl-language-support, footer-widgets, sticky-post, theme-options, editor-style
@@ -48,6 +48,32 @@ To the best of our knowledge, Google doesn’t track nor share end user data.
 Privacy Policy for the Google Fonts API: https://developers.google.com/fonts/faq#what_does_using_the_google_fonts_api_mean_for_the_privacy_of_my_users
 
 == Changelog ==
+
+= 2.7.0 - 2020-09-02 =
+* Fix - Respect user-selected Color and Font size values for All Products' Product Title Block. [#1424](https://github.com/woocommerce/storefront/pull/1424)
+* Fix - Fix issue with draft products showing up in pagination [#1452](https://github.com/woocommerce/storefront/pull/1452)
+* Enhancement - Add icons to notices. [#1453](https://github.com/woocommerce/storefront/pull/1453)
+
+= 2.6.0 - 2020-08-18 =
+* Fix - Add defensive checks for WC Cart instance [#1440](https://github.com/woocommerce/storefront/pull/1440)
+* Fix - Fix focus outline in My Account page with Firefox [#1428](https://github.com/woocommerce/storefront/pull/1428)
+* Fix - Merge duplicate CSS Selectors [#1419](https://github.com/woocommerce/storefront/pull/1419) 👏[@ismail-elkorchi](https://github.com/woocommerce/storefront/issues?q=is%3Apr+author%3AIsmail-elkorchi)
+* Fix - incorrect starter content for Home page [#1422](https://github.com/woocommerce/storefront/pull/1422)
+* Enhancement - Add Cart and Checkout block styles [#1412](https://github.com/woocommerce/storefront/pull/1412)
+
+= 2.5.8 - 2020-06-19 =
+* Fix – Stylesheet storefront-woocommerce-style has storefront-style and storefront-icons as explicit dependencies, so child themes can define storefront-woocommerce-style as a dependency without the risk of breaking the stylesheets order. #1369
+* Fix – Removed woocommerce-legacy.css stylesheets for unsupported versions of WooCommerce (< 4.0). #1368
+* Dev - Adopt RenovateBot for managing dependencies. #1363
+* Dev - Update various dependencies, including major updates:
+  - `@wordpress/babel-preset-default` v4 #1387
+  - `stylelint` v13 #1390
+
+= 2.5.7 - 2020-06-02 =
+* Fix - Edit, reply and author icons are now displayed in comment list. #1319
+* Fix - Updated font-weight of the All Products block so it matches the other product grid blocks. #1344
+* Dev - Include FontAwesome brands icon set. #1345
+
 
 = 2.5.6 - 2020-05-05 =
 * Enhancement - Custom site background color is now used in editor preview. #1317
