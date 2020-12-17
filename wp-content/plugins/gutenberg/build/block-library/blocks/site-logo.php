@@ -32,8 +32,8 @@ function gutenberg_render_block_core_site_logo( $attributes ) {
 		$classnames[] = "align{$attributes['align']}";
 	}
 
-	$class_name = implode( ' ', $classnames );
-	$html       = sprintf( '<div class="%s"><a href="' . get_bloginfo( 'url' ) . '" rel="home" title="' . get_bloginfo( 'name' ) . '">%s</a></div>', $class_name, $custom_logo );
+	$wrapper_attributes = get_block_wrapper_attributes( array( 'class' => implode( ' ', $classnames ) ) );
+	$html               = sprintf( '<div %s><a href="' . get_bloginfo( 'url' ) . '" rel="home" title="' . get_bloginfo( 'name' ) . '">%s</a></div>', $wrapper_attributes, $custom_logo );
 	remove_filter( 'wp_get_attachment_image_src', $adjust_width_height_filter );
 	return $html;
 }
@@ -43,16 +43,14 @@ function gutenberg_render_block_core_site_logo( $attributes ) {
  * Registers the `core/site-logo` block on the server.
  */
 function gutenberg_register_block_core_site_logo() {
-	if ( gutenberg_is_experiment_enabled( 'gutenberg-full-site-editing' ) ) {
-		register_block_type_from_metadata(
-			__DIR__ . '/site-logo',
-			array(
-				'render_callback' => 'gutenberg_render_block_core_site_logo',
-			)
-		);
-		add_filter( 'pre_set_theme_mod_custom_logo', 'gutenberg_sync_site_logo_to_theme_mod' );
-		add_filter( 'theme_mod_custom_logo', 'gutenberg_override_custom_logo_theme_mod' );
-	}
+	register_block_type_from_metadata(
+		__DIR__ . '/site-logo',
+		array(
+			'render_callback' => 'gutenberg_render_block_core_site_logo',
+		)
+	);
+	add_filter( 'pre_set_theme_mod_custom_logo', 'gutenberg_sync_site_logo_to_theme_mod' );
+	add_filter( 'theme_mod_custom_logo', 'gutenberg_override_custom_logo_theme_mod' );
 }
 add_action( 'init', 'gutenberg_register_block_core_site_logo', 20 );
 
