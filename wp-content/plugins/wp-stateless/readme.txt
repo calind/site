@@ -6,7 +6,7 @@ License: GPLv2 or later
 Requires PHP: 5.6
 Requires at least: 5.0
 Tested up to: 5.5
-Stable tag: 3.0.4
+Stable tag: 3.1.0
 
 Upload and serve your WordPress media files from Google Cloud Storage.
 
@@ -26,6 +26,7 @@ New to Google Cloud? Google is offering you a [$300 credit](https://cloud.google
 = Modes =
 * Backup - Upload media files to Google Storage and serve local file urls.
 * CDN - Copy media files to Google Storage and serve them directly from there.
+* Ephemeral - Store and serve media files with Google Cloud Storage only. Media files are not stored locally, but local storage is used temporarily for processing and is required for certain compatibilities.
 * Stateless - Store and serve media files with Google Cloud Storage only. Media files are not stored locally.
 
 = Features =
@@ -37,8 +38,9 @@ New to Google Cloud? Google is offering you a [$300 credit](https://cloud.google
 * Batch image thumbnail regeneration.
 * Synchronization tools for uploading existing files and images.
 * All settings supported with wp-config constants and network setting overrides.
-* Multiple modes: Backup, CDN, Stateless.
+* Multiple modes: Backup, CDN, Ephemeral, Stateless.
 * All files served in HTTPS mode.
+* Serverless platform compatible, including Google App Engine.
 * Multisite compatible.
 
 = Support, Feedback, & Contribute =
@@ -105,6 +107,15 @@ To ensure new releases cause as little disruption as possible, we rely on a numb
 Before upgrading to WP-Stateless 3.0, please, make sure you tested it on your development environment.
 
 == Changelog ==
+= 3.1.0 =
+* NEW - Completely rewritten the synchronization tool. GitHub issue [#523](https://github.com/udx/wp-stateless/issues/523).
+* NEW - New configuration constant `WP_STATELESS_SYNC_MAX_BATCH_SIZE`. Sets the maximum size of a background sync batch of items to be saved in a single row in the database. [More details](https://wp-stateless.github.io/docs/constants/#wp_stateless_sync_max_batch_size).
+* NEW - New configuration constant `WP_STATELESS_SYNC_LOG`. Sets a path to a log file where to output logging information during the background sync. [More details](https://wp-stateless.github.io/docs/constants/#wp_stateless_sync_log).
+* NEW - New configuration constant `WP_STATELESS_SYNC_HEALTHCHECK_INTERVAL`. Defines an interval in minutes for a cron task that periodically checks the health of a particular background sync process. [More details](https://wp-stateless.github.io/docs/constants/#wp_stateless_sync_healthcheck_interval).
+* FIX - Fixed an issue when original files were not deleted from the server in the Ephemeral mode. GitHub issue [#484](https://github.com/udx/wp-stateless/issues/484).
+* FIX - Fixed an incorrect behavior of image `srcset` attribute in the Backup mode. GitHub issue [#558](https://github.com/udx/wp-stateless/issues/558).
+* COMPATIBILITY - Litespeed Cache - Fixed an incorrect upload folder determination. GitHub issue [#527](https://github.com/udx/wp-stateless/issues/527).
+
 = 3.0.4 =
 * FIX - Fixed inability to use dashes in the upload folder name. GitHub issue [#565](https://github.com/udx/wp-stateless/issues/565).
 * COMPATIBILITY - Elementor - Fixed wrong upload directory. GitHub issue [#560](https://github.com/udx/wp-stateless/issues/560).
