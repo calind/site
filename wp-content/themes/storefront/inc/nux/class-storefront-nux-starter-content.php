@@ -466,7 +466,8 @@ if ( ! class_exists( 'Storefront_NUX_Starter_Content' ) ) :
 
 			// Get empty categories.
 			$categories = get_terms(
-				'product_cat', array(
+				'product_cat',
+				array(
 					'hide_empty' => false,
 				)
 			);
@@ -642,7 +643,8 @@ if ( ! class_exists( 'Storefront_NUX_Starter_Content' ) ) :
 		public function filter_sf_categories( $args ) {
 			// Get Categories.
 			$product_cats = get_terms(
-				'product_cat', array(
+				'product_cat',
+				array(
 					'fields'     => 'ids',
 					'hide_empty' => false,
 				)
@@ -654,7 +656,7 @@ if ( ! class_exists( 'Storefront_NUX_Starter_Content' ) ) :
 				$args['hide_empty'] = false;
 
 				// List of categories to display.
-				$args['ids'] = implode( $product_cats, ',' );
+				$args['ids'] = implode( ',', $product_cats );
 			}
 
 			return $args;
