@@ -1,10 +1,10 @@
 === Jetpack - WP Security, Backup, Speed, & Growth ===
 Contributors: automattic, adamkheckler, aduth, akirk, allendav, alternatekev, andy, annezazu, apeatling, azaozz, batmoo, barry, beaulebens, biskobe, blobaugh, brbrr, cainm, cena, cfinke, chaselivingston, chellycat, clickysteve, csonnek, danielbachhuber, davoraltman, daniloercoli, delawski, designsimply, dllh, drawmyface, dsmart, dzver, ebinnion, egregor, eliorivero, enej, eoigal, erania-pinnera, ethitter, fgiannar, gcorne, georgestephanis, gibrown, goldsounds, hew, hugobaeta, hypertextranch, iammattthomas, iandunn, jblz, jasmussen, jeffgolenski, jeherve, jenhooks, jenia, jessefriedman, jgs, jkudish, jmdodd, joanrho, johnjamesjacoby, jshreve, kbrownkd, keoshi, koke, kraftbj, lancewillett, leogermani, lschuyler, macmanx, martinremy, matt, matveb, mattwiebe, maverick3x6, mcsf, mdawaffe, mdbitz, MichaelArestad, migueluy, mikeyarce, mkaz, nancythanki, nickmomrik, obenland, oskosk, pento, professor44, rachelsquirrel, rdcoll, ryancowles, richardmuscat, richardmtl, robertbpugh, roccotripaldi, samhotchkiss, scarstocea, scottsweb, sdquirk, sermitr, simison, stephdau, tmoorewp, tyxla, Viper007Bond, westi, yoavf, zinigor
 Tags: WP, backup, social, AMP, WooCommerce, malware, scan, spam, CDN, social
-Stable tag: 8.9.1
-Requires at least: 5.4
+Stable tag: 9.2.1
+Requires at least: 5.5
 Requires PHP: 5.6
-Tested up to: 5.5
+Tested up to: 5.6
 
 The best WP plugin for backup, anti spam, malware scan, CDN, AMP, social, search, contact form, and integrations with Woo, Facebook, Instagram, Google
 
@@ -32,7 +32,7 @@ Get blazing fast site speed with Jetpack, the premier WP plugin built to leverag
 
 * Jetpack has partnered with Google AMP to create the best, highest performance all-in-one toolkit for WordPress. By using Jetpack and AMP together, you get all the features you need to build a beautiful, fast, modern website with no coding required.
 * Image CDN for images and static files, like CSS and JavaScript, served from our servers, not yours, which saves you money and bandwidth.
-* Lazy load images for a super fast experience, even on mobile. Jetpack’s lazy loading automatically delays the loading of media on your posts and pages until your visitors scroll down to where they appear on the page. 
+* Lazy load images for a super fast experience, even on mobile. Jetpack’s lazy loading automatically delays the loading of media on your posts and pages until your visitors scroll down to where they appear on the page.
 * Unlimited, high speed, ad free video hosting keeps the focus on your content, not on ads or recommendations that lead people off site.
 * Custom site search is incredibly powerful and customizable. Helps your visitors instantly find the right content so they read and buy more. Works great with WooCommerce / eCommerce sites to help filter products so customers get what they want on your site faster.
 * Recommended to use with WP Super Cache for ultimate WordPress site speed.
@@ -119,7 +119,7 @@ Once you’ve installed Jetpack, your stats will be available on your Jetpack da
 
 There are opportunities for developers at all levels to contribute. [Learn more about contributing to Jetpack](https://jetpack.com/contribute) or consider [joining our beta program](https://jetpack.com/beta).
 
-= Is Jetpack CRM included in the Jetpack plugin? = 
+= Is Jetpack CRM included in the Jetpack plugin? =
 
 No, please download the separate Jetpack CRM plugin to use Jetpack CRM.
 
@@ -204,7 +204,7 @@ Blocks are the individual sections that make up a page. There are many block typ
 * Tiled Gallery Block - With Tiled Galleries you can display your image galleries in four styles: tiled mosaic, circular grid, square tiles, and tiled columns.
 * Video Block - The Video block enhances the existing WordPress Video block and allows you to upload videos from your computer to be hosted on WordPress.com, rather than on your host’s servers.
 * WhatsApp Button Block - The WhatsAPP Button block will allow your customers to send them a message to enquire about their product or services, or ask for support. Clicking on the button will open WhatsApp and pre-fill the phone number and initial message.
- 
+
 Jetpack has also created extensions for some WordPress core blocks:
 
 * Unrolling Tweet Threads – This extension to the Twitter block allows you to import an entire Tweet thread into the editor as native blocks.
@@ -213,21 +213,21 @@ Jetpack has also created extensions for some WordPress core blocks:
 = Do I need an SSL certificate? =
 
 You don’t need an SSL Certificate to run Jetpack on your WordPress website. However, it’s recommended to integrate them both into your overall security strategy. An SSL certificate (Secure Sockets Layer certificate) creates a secure connection between your website and your site visitors’ browsers. It encrypts any data shared on your site — like addresses, emails, phone numbers, and credit card information — and protects that data from hackers.
- 
+
 If you don’t have an SSL certificate, your site will show a “not secure” warning on users’ browsers, which can reduce your legitimacy in their eyes. SSL certificates also have a positive impact on search engine rankings.
- 
+
 The process of setting up an SSL certificate will depend on your hosting provider. Some hosts include free certificates, while others charge annually.
 
 = How does Jetpack work with WP Super Cache? =
 
-WP Super Cache works by caching your WordPress pages as static HTML pages so that page requests, for an already cached page, do not need to be processed by the WordPress PHP scripts. Typically, most visitors of your site will view cached versions of the WordPress pages, so your server will have more processing power to serve an increased number of users. 
- 
+WP Super Cache works by caching your WordPress pages as static HTML pages so that page requests, for an already cached page, do not need to be processed by the WordPress PHP scripts. Typically, most visitors of your site will view cached versions of the WordPress pages, so your server will have more processing power to serve an increased number of users.
+
 Jetpack has an image CDN that works by caching and serving your WordPress images globally from its own servers. These plugins are both maintained by Automattic and work together to give you ultimate site speed.
 
 = What version of PHP do I need? =
 
 Sites must be built on PHP 5.6 or greater, but Jetpack always supports the latest version of PHP.
- 
+
 = Can Jetpack help my site comply with GDPR? =
 
 Our Cookie and Consent Banner can help you comply with GDPR. The European Union’s ePrivacy Directive (often referred to as the ‘cookie law’) and General Data Protection Regulation (GDPR) place requirements on website owners and operators to provide information about, and gain consent for their use of cookies.
@@ -243,81 +243,70 @@ Our Cookie and Consent Banner can help you comply with GDPR. The European Union�
 
 == Changelog ==
 
-= 9.0.1 =
+= 9.2.1 =
 
-* Release date: October 6, 2020
-
-**Bug fixes**
-
-* General: remove a database optimization task that could potentially cause database issues.
-
-= 9.0 =
-
-* Release date: October 6, 2020
-* Release post: https://wp.me/p1moTy-rLy
-
-**Major Enhancements**
-
-* Publicize: add the ability to publish the entire content of posts to Twitter as threads.
-
-**Enhancements**
-
-* Blocks: update icon color for all blocks provided by Jetpack.
-* Custom CSS: add support for the `clip-path` property.
-* Custom CSS: add rebeccapurple color to the list of colors that can be processed by the SCSS and LESS preprocessors.
-* Dashboard: clarify Backup & Scan settings and alerts.
-* Dashboard: improve the reconnecting process for site owners willing to disconnect and then reconnect Jetpack to WordPress.com.
-* Dashboard: do not display option to purchase a plan when in Offline mode.
-* Embeds: add Loom.com as a new embed option.
-* Embeds: update song.link oEmbed to support more formats.
-* Embeds: allow Instagram embeds to keep working via the WordPress.com REST API.
-* Google Analytics: move the legacy variant from the HTML body to head.
-* Instant Search: optimize images displayed in Search results thanks to Jetpack's Image CDN.
-* Instant Search: improve layout of search results on mobile devices.
-* Instant Search: trigger the search overlay upon typing into the search input.
-* Pay with PayPal Block: display more helpful content in subscription emails.
-* OpenTable Block: display wide style widget as standard on mobile.
-* Site Health: add new test for testing blog and current user's token health.
-* Site Health: refine information shared when using the "Copy site info to clipboard" button.
-* Site Health: offer more information and help in failing tests.
-* Slideshow Block: remove the default background color.
-* Synchronization: improve performance of synchronization of term changes.
+* Release date: December 10, 2020
 
 **Improved compatibility**
 
-* Autoloader: add support for non-optimized PSR-4 namespace loading.
-* Autoloader: add PSR-0 support.
-* Autoloader: add handling for filtered `active_plugins` options that would otherwise have left classes out.
-* Contact Form: add more integration settings for a better compatibility with Jetpack CRM.
-* Contact Form: ensure that forms are displayed correctly in legacy AMP Reader views.
-* Dashboard: remove plugin autoupdate settings from the dashboard now that WordPress itself handles this feature.
-* Embeds: ensure that Instagram and Facebook embeds are always available, to avoid breaking embeds on existing posts.
-* Embeds: solve PHP 8 compatibility issues with Crowdsignal embeds.
-* EventBrite Block: ensure full compatibility with the AMP plugin.
-* Google Calendar Block: ensure full compatibility with the AMP plugin.
-* Image Compare Block: improve display on AMP views.
-* Infinite Scroll: ensure Infinite Scroll works on AMP views as well for the Twenty Nineteen and Twenty Twenty themes.
-* Infinite Scroll: add tools allowing theme authors to implement Infinite Scroll on AMP views in their own theme.
-* Pinterest Block: ensure full compatibility with the AMP plugin.
-* Security Scanning: avoid validation issues when using the AMP plugin and when notified of a security threat on your site.
-* Slideshow Block: ensure images are displayed properly when using the Swell theme.
-* Synchronization: ensure review comments are properly synchronized with WordPress.com.
-* Twitter Threads Block: add support for unrolling threads when Gutenberg 8.8+ is activated.
-* WordPress.com REST API: improved PHP 8.0 support.
+* Site Health Tools: improve PHP 8 compatibility.
+* Twenty Twenty One: add support for Jetpack's Content Options.
 
 **Bug fixes**
 
-* Activity Log: avoid potential duplicate entries.
-* Beautiful Math: resolve incorrectly rendered LaTeX images cached during a server migration.
-* Connection Flow: resolve conflicts where "staging" connection errors were wrongly detected for some sites.
-* Copy Post: ensure categories can be copied properly on sites using an old database schema.
-* Donations / Payments: fix link to WordPress.com on sites where WordPress is installed in a subdirectory.
-* Image CDN: ensure Wikimedia-hosted images are correctly handled by the CDN.
-* Infinity Scroll: remove the loading spinner when loading an extra set of posts and receiving an empty response.
-* Stats: do not track visits when site is in staging mode.
-* Synchronization: ensure theme information is correctly synchronized with WordPress.com.
-* WordPress.com Block Editor: ensure that "Code Editor" menu item is available on mobile devices.
-* WordPress.com REST API: improve messaging when uploading a media file via the API fails.
+* Instant Search: fix layout issues with filtering checkboxes with some themes.
+* WordPress.com Toolbar: avoid Fatal errors when the feature is not active.
+* WordPress.com Toolbar: avoid 404 errors when loading the toolbar.
+
+= 9.2 =
+
+* Release date: December 1, 2020
+* Release post: https://wp.me/p1moTy-scn
+
+**Enhancements**
+
+* Connection Flow: clarify error message when the options table is not writable.
+* Contact Form Block: display fallback link when the block is rendered in non-WordPress contexts, such as subscription emails.
+* Contact Form Block: display the correct default email address and subject in the form block settings.
+* Dashboard: clarify language around support options.
+* Dashboard: replace /plans and /plans-prompt routes with a redirect to cloud.jetpack.com/pricing.
+* Instagram Embeds: add support for embed parameters supported by Instagram.
+* Payments Block: move unreadable notice to the sidebar.
+* Pinterest Block: ensure that Pinterest embeds are displayed nicely in non-WordPress contexts, such as subscription emails.
+* Podcast Block: display fallback link when the block is rendered in non-WordPress contexts, such as RSS feeds.
+* Search: improve URL formatting for the expanded search layout.
+* Sharing: ensure the first suitable image found in a post is always the one used in Open Graph Image meta tags.
+* Site Health Tools: update description of Synchronization issues for better usability.
+* Slideshow Block: ensure that slideshows are displayed nicely in subscription emails.
+* Status: improve detection of staging servers.
+* Story Block: improve display of the block.
+* Synchronization: improve synchronization of comment status, taxononmies, and terms between your site and WordPress.com.
+* Tiled Gallery Block: improve rendering when the block is rendered in non-WordPress contexts, such as subscription emails.
+* WhatsApp button Block: improve text alignment on mobile devices.
+* WordPress.com Toolbar: include admin color in user's REST API output.
+
+**Improved compatibility**
+
+* Autoloader: support Composer 2.0.7.
+* General: continued work towards ensuring that Jetpack is fully compatible with the upcoming version of PHP, PHP 8.
+* General: ensure Jetpack's full compatibility with the upcoming WordPress 5.6 release.
+* General: update Jetpack's minimum required WordPress version to 5.5, in anticipation of the upcoming WordPress 5.6 release.
+* Sharing: disable Open Graph Meta tags added by the Web Stories plugin when Jetpack's tags are active.
+* Stats: support Web Stories plugin.
+* Synchronization: ensure better synchronization of post meta data (used by Publicize, Subscriptions, Search) in WordPress 5.6.
+* Twenty Twenty-One: ensure that Jetpack's features are compatible with the upcoming new default theme
+
+**Bug fixes**
+
+* Connection: handle XMLRPC requests when SERVER_PORT is not defined.
+* External Media: fix a conflict with CoBlock's image replace feature.
+* Dashboard: fix incorrect links to Jetpack credentials form.
+* Google Analytics: ensure compatibility with Google Analytics 4 (GA4).
+* Sitemaps: ensure that the Home URL is slashed on subdirectory websites.
+* Social Icons widget: display only one icon when a URL matches both a domain and the feed URL match.
+* Sync: avoid trying to sync when something else disabled syncing a request.
+* Whatsapp Button Block: fix Guyana country code metadata.
+* WordPress.com REST API: restore post comments when untrashing a post, such as via the mobile apps.
 
 --------
 
