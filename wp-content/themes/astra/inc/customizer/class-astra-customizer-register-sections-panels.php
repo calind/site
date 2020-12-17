@@ -374,7 +374,6 @@ if ( ! class_exists( 'Astra_Customizer_Register_Sections_Panels' ) ) {
 				),
 
 			);
-
 			return array_merge( $configurations, $configs );
 		}
 	}

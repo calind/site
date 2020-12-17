@@ -103,7 +103,8 @@ if ( ! class_exists( 'Astra_Admin_Settings' ) ) {
 			add_action( 'admin_enqueue_scripts', __CLASS__ . '::register_scripts' );
 
 			if ( ! is_customize_preview() ) {
-				add_action( 'admin_enqueue_scripts', __CLASS__ . '::admin_submenu_css' );
+				// add css on the admin init action to resolve the error in the PWA service worker js.
+				add_action( 'admin_head', __CLASS__ . '::admin_submenu_css' );
 			}
 
 			$requested_page = isset( $_REQUEST['page'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['page'] ) ) : '';// phpcs:ignore WordPress.Security.NonceVerification.Recommended
@@ -176,11 +177,9 @@ if ( ! class_exists( 'Astra_Admin_Settings' ) ) {
 		 * @since 1.4.0
 		 */
 		public static function register_notices() {
-
-			if ( class_exists( 'Astra_Ext_White_Label_Markup' ) ) {
-				if ( ! empty( Astra_Ext_White_Label_Markup::$branding['astra']['name'] ) ) {
-					return;
-				}
+			// Return if white labeled.
+			if ( astra_is_white_labelled() ) {
+				return;
 			}
 
 			// Force Astra welcome notice on theme activation.
@@ -414,22 +413,6 @@ if ( ! class_exists( 'Astra_Admin_Settings' ) ) {
 					$css_prefix = '-rtl.css';
 				}
 			}
-
-			/**
-			 * Filters the Admin JavaScript handles added
-			 *
-			 * @since v1.4.10
-			 *
-			 * @param array array of the javascript handles.
-			 */
-			$js_handle = apply_filters( 'astra_admin_script_handles', array( 'jquery', 'wp-color-picker' ) );
-
-			// Add customize-base handle only for the Customizer Preview Screen.
-			if ( true === is_customize_preview() ) {
-				$js_handle[] = 'customize-base';
-			}
-
-			wp_register_script( 'astra-color-alpha', ASTRA_THEME_URI . 'assets/js/' . $dir . '/wp-color-picker-alpha' . $js_prefix, $js_handle, ASTRA_THEME_VERSION, true );
 
 			if ( in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
 				$post_types = get_post_types( array( 'public' => true ) );
@@ -1181,6 +1164,7 @@ if ( ! class_exists( 'Astra_Admin_Settings' ) ) {
 		 */
 		public static function astra_available_plugins() {
 
+			// Return if white labeled.
 			if ( astra_is_white_labelled() ) {
 				return;
 			}
@@ -1557,8 +1541,8 @@ if ( ! class_exists( 'Astra_Admin_Settings' ) ) {
 		 * @since 2.5.4
 		 */
 		public static function admin_submenu_css() {
-			?>
-			<style class="astra-menu-appearance-style">
+
+			echo '<style class="astra-menu-appearance-style">
 					#menu-appearance a[href^="edit.php?post_type=astra-"]:before,
 					#menu-appearance a[href^="themes.php?page=astra-"]:before,
 					#menu-appearance a[href^="edit.php?post_type=astra_"]:before,
@@ -1569,8 +1553,8 @@ if ( ! class_exists( 'Astra_Admin_Settings' ) ) {
 						margin-right: 0.5em;
 						opacity: 0.5;
 					}
-				</style>
-				<?php
+				</style>';
+
 		}
 	}
 

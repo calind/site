@@ -404,23 +404,26 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/buttons/class-astra-customizer-button-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-site-layout-configs.php';
-			require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-header-layout-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-site-identity-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-blog-layout-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-blog-single-layout-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-sidebar-layout-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-site-container-layout-configs.php';
-			require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-footer-layout-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/colors-background/class-astra-body-colors-configs.php';
-			require ASTRA_THEME_DIR . 'inc/customizer/configurations/colors-background/class-astra-footer-colors-configs.php';
-			require ASTRA_THEME_DIR . 'inc/customizer/configurations/colors-background/class-astra-advanced-footer-colors-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/typography/class-astra-archive-typo-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/typography/class-astra-body-typo-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/typography/class-astra-content-typo-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/typography/class-astra-header-typo-configs.php';
 			require ASTRA_THEME_DIR . 'inc/customizer/configurations/typography/class-astra-single-typo-configs.php';
-			// @codingStandardsIgnoreEnd WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
 
+			if ( astra_existing_header_footer_configs() ) {
+				require ASTRA_THEME_DIR . 'inc/customizer/configurations/buttons/class-astra-existing-button-configs.php';
+				require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-header-layout-configs.php';
+				require ASTRA_THEME_DIR . 'inc/customizer/configurations/layout/class-astra-footer-layout-configs.php';
+				require ASTRA_THEME_DIR . 'inc/customizer/configurations/colors-background/class-astra-advanced-footer-colors-configs.php';
+				require ASTRA_THEME_DIR . 'inc/customizer/configurations/colors-background/class-astra-footer-colors-configs.php';
+			}
+			// @codingStandardsIgnoreEnd WPThemeReview.CoreFunctionality.FileInclude.FileIncludeFound
 		}
 
 		/**
@@ -668,6 +671,14 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 				)
 			);
 
+			Astra_Customizer_Control_Base::add_control(
+				'ast-responsive-select',
+				array(
+					'callback'          => 'Astra_Control_Responsive_Select',
+					'sanitize_callback' => '',
+				)
+			);
+
 			/**
 			 * Helper files
 			 */
@@ -730,37 +741,7 @@ if ( ! class_exists( 'Astra_Customizer' ) ) {
 				}
 			}
 
-			wp_enqueue_style( 'wp-color-picker' );
-			wp_enqueue_script( 'astra-color-alpha' );
-
-			/**
-			 * Localize wp-color-picker & wpColorPickerL10n.
-			 *
-			 * This is only needed in WordPress version >= 5.5 because wpColorPickerL10n has been removed.
-			 *
-			 * @see https://github.com/WordPress/WordPress/commit/7e7b70cd1ae5772229abb769d0823411112c748b
-			 *
-			 * This is should be removed once the issue is fixed from wp-color-picker-alpha repo.
-			 * @see https://github.com/kallookoo/wp-color-picker-alpha/issues/35
-			 *
-			 * @since 2.5.3
-			 */
-			if ( astra_wp_version_compare( '5.4.99', '>=' ) ) {
-				// Localizing variables.
-				wp_localize_script(
-					'wp-color-picker',
-					'wpColorPickerL10n',
-					array(
-						'clear'            => __( 'Clear', 'astra' ),
-						'clearAriaLabel'   => __( 'Clear color', 'astra' ),
-						'defaultString'    => __( 'Default', 'astra' ),
-						'defaultAriaLabel' => __( 'Select default color', 'astra' ),
-						'pick'             => __( 'Select Color', 'astra' ),
-						'defaultLabel'     => __( 'Color value', 'astra' ),
-					)
-				);
-			}
-
+			wp_enqueue_style( 'wp-components' );
 			wp_enqueue_script( 'thickbox' );
 			wp_enqueue_style( 'thickbox' );
 

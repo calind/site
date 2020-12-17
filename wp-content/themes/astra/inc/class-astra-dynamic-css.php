@@ -608,6 +608,20 @@ if ( ! class_exists( 'Astra_Dynamic_CSS' ) ) {
 			/* Parse CSS from array() */
 			$parse_css = astra_parse_css( $css_output );
 
+			
+			/**  
+			 *
+			 * Fix button aligment issue comming from the gutenberg plugin (v9.3.0).
+			 */
+			$gtn_plugin_button_center_alignment = array(
+				'.wp-block-buttons.aligncenter' => array(
+					'justify-content' => 'center',
+				),
+			);
+			$parse_css                         .= astra_parse_css( $gtn_plugin_button_center_alignment );
+			
+
+
 			/*
 			* Fix the wide width issue in gutenberg
 			* check if the current user is existing user or new user.
@@ -674,6 +688,11 @@ if ( ! class_exists( 'Astra_Dynamic_CSS' ) ) {
 						'padding-left'  => '20px',
 						'padding-right' => '20px',
 					),
+
+					'.ast-plain-container.ast-no-sidebar .entry-content .alignwide .wp-block-cover__inner-container, .ast-plain-container.ast-no-sidebar .entry-content .alignfull .wp-block-cover__inner-container' => array(
+						'width' => astra_get_css_value( $site_content_width + 40, 'px' ), 
+					),
+					
 					// Full Width / Stretched - No Sidebar.
 					'.ast-page-builder-template.ast-no-sidebar .entry-content .wp-block-group.alignwide, .ast-page-builder-template.ast-no-sidebar .entry-content .wp-block-group.alignfull' => array(
 						'margin-left'  => '0',
@@ -693,7 +712,7 @@ if ( ! class_exists( 'Astra_Dynamic_CSS' ) ) {
 				// Remove margin top when Primary Header is not set and No Sidebar is added in Full-Width / Contained Layout.
 				if ( is_singular() ) {
 					$display_header = get_post_meta( get_the_ID(), 'ast-main-header-display', true );
-					if ( 'disabled' === $display_header && apply_filters( 'astra_content_margin_full_width_contained', true ) || ( Astra_Ext_Transparent_Header_Markup::is_transparent_header() ) ) {
+					if ( 'disabled' === $display_header && apply_filters( 'astra_content_margin_full_width_contained', true ) || ( Astra_Ext_Transparent_Header_Markup::is_transparent_header() ) || ( self::gutenberg_core_blocks_css_comp() ) ) {
 						$gtn_margin_top = array(
 							'.ast-plain-container.ast-no-sidebar #primary' => array(
 								'margin-top'    => '0',
@@ -703,6 +722,185 @@ if ( ! class_exists( 'Astra_Dynamic_CSS' ) ) {
 						$parse_css     .= astra_parse_css( $gtn_margin_top );
 					}
 				}
+			}
+
+			if ( self::gutenberg_core_blocks_css_comp() ) {
+
+				/**
+				 * If transparent header is activated then it adds top 1.5em padding space, so this CSS will fix this issue.
+				 * This issue is only visible on responsive devices.
+				 *
+				 * @since 2.6.0
+				 */
+				if ( is_singular() ) {
+
+					$trans_header_responsive_top_space_css_fix = array(
+						'.ast-theme-transparent-header #primary, .ast-theme-transparent-header #secondary' => array(
+							'padding' => 0,
+						),
+					);
+
+					/* Parse CSS from array() -> max-width: (tablet-breakpoint)px CSS */
+					$parse_css .= astra_parse_css( $trans_header_responsive_top_space_css_fix, '', astra_get_tablet_breakpoint() );
+				}
+
+				$desktop_screen_gb_css = array(
+					// Group block, Columns block, Gallery block, Table block & has-text-align-center selector compatibility Desktop CSS.
+					'.wp-block-columns'                  => array(
+						'margin-bottom' => 'unset',
+					),
+					'.wp-block-image.size-full'          => array(
+						'margin' => '2rem 0',
+					),
+					'.wp-block-separator.has-background' => array(
+						'padding' => '0',
+					),
+					'.wp-block-gallery'                  => array(
+						'margin-bottom' => '1.6em',
+					),
+					'.wp-block-group'                    => array(
+						'padding-top'    => '4em',
+						'padding-bottom' => '4em',
+					),
+					'.wp-block-group__inner-container .wp-block-columns:last-child, .wp-block-group__inner-container :last-child, .wp-block-table table' => array(
+						'margin-bottom' => '0',
+					),
+					'.blocks-gallery-grid'               => array(
+						'width' => '100%',
+					),
+					'.wp-block-navigation-link__content' => array(
+						'padding' => '5px 0',
+					),
+					'.wp-block-group .wp-block-group .has-text-align-center, .wp-block-group .wp-block-column .has-text-align-center' => array(
+						'max-width' => '100%',
+					),
+					'.has-text-align-center'             => array(
+						'margin' => '0 auto',
+					),
+				);
+
+				/* Parse CSS from array() -> Desktop CSS */
+				$parse_css .= astra_parse_css( $desktop_screen_gb_css );
+
+				$middle_screen_min_gb_css = array(
+					// Group & Column block > align compatibility (min-width:1200px) CSS.
+					'.wp-block-cover__inner-container, .alignwide .wp-block-group__inner-container, .alignfull .wp-block-group__inner-container' => array(
+						'max-width' => '1200px',
+						'margin'    => '0 auto',
+					),
+					'.wp-block-group.alignnone, .wp-block-group.aligncenter, .wp-block-group.alignleft, .wp-block-group.alignright, .wp-block-group.alignwide, .wp-block-columns.alignwide' => array(
+						'margin' => '2rem 0 1rem 0',
+					),
+				);
+
+				/* Parse CSS from array() -> min-width: (1200)px CSS */
+				$parse_css .= astra_parse_css( $middle_screen_min_gb_css, '1200' );
+
+				$middle_screen_max_gb_css = array(
+					// Group & Column block (max-width:1200px) CSS.
+					'.wp-block-group'                     => array(
+						'padding' => '3em',
+					),
+					'.wp-block-group .wp-block-group'     => array(
+						'padding' => '1.5em',
+					),
+					'.wp-block-columns, .wp-block-column' => array(
+						'margin' => '1rem 0',
+					),
+				);
+
+				/* Parse CSS from array() -> max-width: (1200)px CSS */
+				$parse_css .= astra_parse_css( $middle_screen_max_gb_css, '', '1200' );
+
+				$tablet_screen_min_gb_css = array(
+					// Columns inside Group block compatibility (min-width: tablet-breakpoint) CSS.
+					'.wp-block-columns .wp-block-group' => array(
+						'padding' => '2em',
+					),
+				);
+
+				/* Parse CSS from array() -> min-width: (tablet-breakpoint)px CSS */
+				$parse_css .= astra_parse_css( $tablet_screen_min_gb_css, astra_get_tablet_breakpoint() );
+
+				$mobile_screen_max_gb_css = array(
+					// Content | image | video inside Media & Text block, Cover block, Image inside cover block compatibility (max-width: mobile-breakpoint) CSS.
+					'.wp-block-cover-image .wp-block-cover__inner-container, .wp-block-cover .wp-block-cover__inner-container' => array(
+						'width' => 'unset',
+					),
+					'.wp-block-cover, .wp-block-cover-image' => array(
+						'padding' => '2em 0',
+					),
+					'.wp-block-group, .wp-block-cover' => array(
+						'padding' => '2em',
+					),
+					'.wp-block-media-text__media img, .wp-block-media-text__media video' => array(
+						'width'     => 'unset',
+						'max-width' => '100%',
+					),
+					'.wp-block-media-text.has-background .wp-block-media-text__content' => array(
+						'padding' => '1em',
+					),
+				);
+
+				if ( ! self::gutenberg_media_text_block_css_compat() ) {
+					// Added this [! self::gutenberg_media_text_block_css_compat()] condition as we update the same selector CSS in gutenberg_media_text_block_css_compat() function with new padding: 8% 0; CSS for max-width: (mobile-breakpoint).
+					$mobile_screen_max_gb_css['.wp-block-media-text .wp-block-media-text__content'] = array(
+						'padding' => '3em 2em',
+					);
+				}
+
+				/* Parse CSS from array() -> max-width: (mobile-breakpoint)px CSS */
+				$parse_css .= astra_parse_css( $mobile_screen_max_gb_css, '', astra_get_mobile_breakpoint() );
+			}
+
+			if ( self::gutenberg_media_text_block_css_compat() ) {
+
+				/**
+				 * Remove #primary padding on mobile devices which compromises deigned layout.
+				 *
+				 * @since 2.6.1
+				 */
+				if ( is_singular() ) {
+
+					$remove_primary_padding_on_mobile_css = array(
+						'.ast-plain-container.ast-no-sidebar #primary' => array(
+							'padding' => 0,
+						),
+					);
+
+					/* Parse CSS from array() -> max-width: (tablet-breakpoint)px CSS */
+					$parse_css .= astra_parse_css( $remove_primary_padding_on_mobile_css, '', astra_get_tablet_breakpoint() );
+				}
+
+				$media_text_block_padding_css = array(
+					// Media & Text block CSS compatibility (min-width: mobile-breakpoint) CSS.
+					'.entry-content .wp-block-media-text.has-media-on-the-right .wp-block-media-text__content' => array(
+						'padding' => '0 8% 0 0',
+					),
+					'.entry-content .wp-block-media-text .wp-block-media-text__content' => array(
+						'padding' => '0 0 0 8%',
+					),
+					'.ast-plain-container .site-content .entry-content .has-custom-content-position.is-position-bottom-left > *, .ast-plain-container .site-content .entry-content .has-custom-content-position.is-position-bottom-right > *, .ast-plain-container .site-content .entry-content .has-custom-content-position.is-position-top-left > *, .ast-plain-container .site-content .entry-content .has-custom-content-position.is-position-top-right > *, .ast-plain-container .site-content .entry-content .has-custom-content-position.is-position-center-right > *, .ast-plain-container .site-content .entry-content .has-custom-content-position.is-position-center-left > *'  => array(
+						'margin' => 0,
+					),
+				);
+
+				/* Parse CSS from array() -> min-width: (mobile-breakpoint)px CSS */
+				$parse_css .= astra_parse_css( $media_text_block_padding_css, astra_get_mobile_breakpoint() );
+
+				$mobile_screen_media_text_block_css = array(
+					// Media & Text block padding CSS for (max-width: mobile-breakpoint) CSS.
+					'.entry-content .wp-block-media-text .wp-block-media-text__content' => array(
+						'padding' => '8% 0',
+					),
+					'.wp-block-media-text .wp-block-media-text__media img' => array(
+						'width'     => 'auto',
+						'max-width' => '100%',
+					),
+				);
+
+				/* Parse CSS from array() -> max-width: (mobile-breakpoint)px CSS */
+				$parse_css .= astra_parse_css( $mobile_screen_media_text_block_css, '', astra_get_mobile_breakpoint() );
 			}
 
 			$static_layout_css = array(
@@ -2199,6 +2397,32 @@ if ( ! class_exists( 'Astra_Dynamic_CSS' ) ) {
 			$astra_settings                                = get_option( ASTRA_THEME_SETTINGS );
 			$astra_settings['gtn-full-wide-grp-cover-css'] = isset( $astra_settings['gtn-full-wide-grp-cover-css'] ) ? false : true;
 			return apply_filters( 'astra_gtn_group_cover_css_comp', $astra_settings['gtn-full-wide-grp-cover-css'] );
+		}
+
+		/**
+		 * Do not apply new Group, Column and Media & Text block CSS for existing users.
+		 *
+		 * @since 2.6.0
+		 * @return boolean false if it is an existing user , true if not.
+		 */
+		public static function gutenberg_core_blocks_css_comp() {
+			$astra_settings                                    = get_option( ASTRA_THEME_SETTINGS );
+			$astra_settings['guntenberg-core-blocks-comp-css'] = isset( $astra_settings['guntenberg-core-blocks-comp-css'] ) ? false : true;
+			return apply_filters( 'astra_gutenberg_core_blocks_design_compatibility', $astra_settings['guntenberg-core-blocks-comp-css'] );
+		}
+
+		/**
+		 * Do not apply new Group, Column and Media & Text block CSS for existing users.
+		 *
+		 * CSS for adding spacing|padding support to Gutenberg Media-&-Text Block
+		 *
+		 * @since 2.6.1
+		 * @return boolean false if it is an existing user , true if not.
+		 */
+		public static function gutenberg_media_text_block_css_compat() {
+			$astra_settings = get_option( ASTRA_THEME_SETTINGS );
+			$astra_settings['guntenberg-media-text-block-padding-css'] = isset( $astra_settings['guntenberg-media-text-block-padding-css'] ) ? false : true;
+			return apply_filters( 'astra_gutenberg_media_text_block_spacing_compatibility', $astra_settings['guntenberg-media-text-block-padding-css'] );
 		}
 	}
 }

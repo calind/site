@@ -1519,7 +1519,6 @@ if ( ! class_exists( 'Astra_Woocommerce' ) ) :
 			$astra_settings['global-btn-woo-css'] = isset( $astra_settings['global-btn-woo-css'] ) ? false : true;
 			return apply_filters( 'astra_global_btn_woo_comp', $astra_settings['global-btn-woo-css'] );
 		}
-
 	}
 
 endif;

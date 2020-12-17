@@ -354,3 +354,16 @@ function astra_remove_controls( $wp_customize ) {
 }
 
 add_filter( 'astra_customizer_configurations', 'astra_remove_controls', 99 );
+
+/**
+ * Is theme existing header footer configs enable.
+ *
+ * @since 2.6.0
+ *
+ * @return boolean true/false.
+ */
+function astra_existing_header_footer_configs() {
+
+	return apply_filters( 'astra_existing_header_footer_configs', true );
+}
+

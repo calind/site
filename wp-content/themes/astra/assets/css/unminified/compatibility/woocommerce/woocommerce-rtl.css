@@ -4609,3 +4609,14 @@ button.pswp__button--zoom:hover {
 .widget_product_categories .children {
   padding-right: 20px;
 }
+
+/**
+ * Firefox browser compatibility for WooCommerce.
+ *
+ * 1. Product Search widget button misalign issue.
+ */
+@supports (-moz-appearance: none) {
+  .sidebar-main .widget_product_search .search-field {
+    width: 60%;
+  }
+}

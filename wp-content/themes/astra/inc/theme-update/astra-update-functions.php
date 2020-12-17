@@ -274,3 +274,124 @@ function astra_footer_widget_bg() {
 		update_option( 'astra-settings', $theme_options );
 	}
 }
+
+/**
+ * Migrate Background control options to new array.
+ *
+ * @since 2.6.0
+ *
+ * @return void
+ */
+function astra_bg_control_migration() {
+
+	$db_options = array(
+		'footer-adv-bg-obj',
+		'footer-bg-obj',
+		'sidebar-bg-obj',
+	);
+
+	$theme_options = get_option( 'astra-settings', array() );
+
+	foreach ( $db_options as $option_name ) {
+
+		if ( ! ( isset( $theme_options[ $option_name ]['background-type'] ) && isset( $theme_options[ $option_name ]['background-media'] ) ) && isset( $theme_options[ $option_name ] ) ) {
+
+			if ( ! empty( $theme_options[ $option_name ]['background-image'] ) ) {
+				$theme_options[ $option_name ]['background-type']  = 'image';
+				$theme_options[ $option_name ]['background-media'] = attachment_url_to_postid( $theme_options[ $option_name ]['background-image'] );
+			} else {
+				$theme_options[ $option_name ]['background-type']  = '';
+				$theme_options[ $option_name ]['background-media'] = '';
+			}
+
+			update_option( 'astra-settings', $theme_options );
+		}
+	}
+}
+
+/**
+ * Migrate Background Responsive options to new array.
+ *
+ * @since 2.6.0
+ *
+ * @return void
+ */
+function astra_bg_responsive_control_migration() {
+
+	$db_options = array(
+		'site-layout-outside-bg-obj-responsive',
+		'content-bg-obj-responsive',
+		'header-bg-obj-responsive',
+		'primary-menu-bg-obj-responsive',
+		'above-header-bg-obj-responsive',
+		'above-header-menu-bg-obj-responsive',
+		'below-header-bg-obj-responsive',
+		'below-header-menu-bg-obj-responsive',
+	);
+
+	$theme_options = get_option( 'astra-settings', array() );
+
+	foreach ( $db_options as $option_name ) {
+
+		if ( ! ( isset( $theme_options[ $option_name ]['desktop']['background-type'] ) && isset( $theme_options[ $option_name ]['desktop']['background-media'] ) ) && isset( $theme_options[ $option_name ] ) ) {
+
+			if ( ! empty( $theme_options[ $option_name ]['desktop']['background-image'] ) ) {
+				$theme_options[ $option_name ]['desktop']['background-type']  = 'image';
+				$theme_options[ $option_name ]['desktop']['background-media'] = attachment_url_to_postid( $theme_options[ $option_name ]['desktop']['background-image'] );
+			} else {
+				$theme_options[ $option_name ]['desktop']['background-type']  = '';
+				$theme_options[ $option_name ]['desktop']['background-media'] = '';
+			}
+
+			if ( ! empty( $theme_options[ $option_name ]['tablet']['background-image'] ) ) {
+				$theme_options[ $option_name ]['tablet']['background-type']  = 'image';
+				$theme_options[ $option_name ]['tablet']['background-media'] = attachment_url_to_postid( $theme_options[ $option_name ]['tablet']['background-image'] );
+			} else {
+				$theme_options[ $option_name ]['tablet']['background-type']  = '';
+				$theme_options[ $option_name ]['tablet']['background-media'] = '';
+			}
+
+			if ( ! empty( $theme_options[ $option_name ]['mobile']['background-image'] ) ) {
+				$theme_options[ $option_name ]['mobile']['background-type']  = 'image';
+				$theme_options[ $option_name ]['mobile']['background-media'] = attachment_url_to_postid( $theme_options[ $option_name ]['mobile']['background-image'] );
+			} else {
+				$theme_options[ $option_name ]['mobile']['background-type']  = '';
+				$theme_options[ $option_name ]['mobile']['background-media'] = '';
+			}
+
+			update_option( 'astra-settings', $theme_options );
+		}
+	}
+}
+
+/**
+ * Do not apply new Group, Column and Media & Text block CSS for existing users.
+ *
+ * @since 2.6.0
+ *
+ * @return void
+ */
+function astra_gutenberg_core_blocks_design_compatibility() {
+	$theme_options = get_option( 'astra-settings', array() );
+
+	if ( ! isset( $theme_options['guntenberg-core-blocks-comp-css'] ) ) {
+		$theme_options['guntenberg-core-blocks-comp-css'] = false;
+		update_option( 'astra-settings', $theme_options );
+	}
+}
+
+/**
+ * Do not apply new Media & Text block padding CSS & not remove padding for #primary on mobile devices directly for existing users.
+ *
+ * @since 2.6.1
+ *
+ * @return void
+ */
+function astra_gutenberg_media_text_block_css_compatibility() {
+	$theme_options = get_option( 'astra-settings', array() );
+
+	if ( ! isset( $theme_options['guntenberg-media-text-block-padding-css'] ) ) {
+		$theme_options['guntenberg-media-text-block-padding-css'] = false;
+		update_option( 'astra-settings', $theme_options );
+	}
+}

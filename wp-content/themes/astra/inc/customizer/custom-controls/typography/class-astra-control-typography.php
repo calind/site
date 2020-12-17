@@ -144,16 +144,8 @@ final class Astra_Control_Typography extends WP_Customize_Control {
 
 		switch ( $this->type ) {
 
-			case 'ast-font-family':
-				$this->render_font( $this->ast_inherit );
-				break;
-
 			case 'ast-font-variant':
 				$this->render_font_variant( $this->ast_inherit );
-				break;
-
-			case 'ast-font-weight':
-				$this->render_font_weight( $this->ast_inherit );
 				break;
 		}
 	}
@@ -212,67 +204,7 @@ final class Astra_Control_Typography extends WP_Customize_Control {
 		echo ' data-value="' . esc_attr( $this->value() ) . '"';
 		echo ' data-name="' . esc_attr( $this->name ) . '"';
 	}
-
-	/**
-	 * Renders a font control.
-	 *
-	 * @since 1.0.16 Added the action 'astra_customizer_font_list' to support custom fonts.
-	 * @since 1.0.0
-	 * @param  string $default Inherit/Default.
-	 * @access protected
-	 * @return void
-	 */
-	protected function render_font( $default ) {
-		echo '<label>';
-		$this->render_content_title();
-		echo '</label>';
-		echo '<select ';
-		$this->link();
-		$this->render_connect_attribute();
-		echo '>';
-
-		echo '</select>';
-	}
-
-	/**
-	 * Renders a font weight control.
-	 *
-	 * @since 1.0.0
-	 * @param  string $default Inherit/Default.
-	 * @access protected
-	 * @return void
-	 */
-	protected function render_font_weight( $default ) {
-		echo '<label>';
-		$this->render_content_title();
-		echo '</label>';
-		echo '<select ';
-		$this->link();
-		$this->render_connect_attribute();
-		echo '>';
-		if ( 'normal' == $this->value() ) {
-			echo '<option value="normal" ' . selected( 'normal', $this->value(), false ) . '>' . esc_attr( $default ) . '</option>';
-		} else {
-			echo '<option value="inherit" ' . selected( 'inherit', $this->value(), false ) . '>' . esc_attr( $default ) . '</option>';
-		}
-		$selected       = '';
-		$selected_value = $this->value();
-		$all_fonts      = $this->ast_all_font_weight;
-
-		foreach ( $all_fonts as $key => $value ) {
-			if ( $key == $selected_value ) {
-				$selected = ' selected = "selected" ';
-			} else {
-				$selected = '';
-			}
-			// Exclude all italic values.
-			if ( strpos( $key, 'italic' ) === false ) {
-				echo '<option value="' . esc_attr( $key ) . '"' . esc_attr( $selected ) . '>' . esc_attr( $value ) . '</option>';
-			}
-		}
-		echo '</select>';
-	}
-
+	
 	/**
 	 * Renders a font variant control.
 	 *
@@ -304,12 +236,17 @@ final class Astra_Control_Typography extends WP_Customize_Control {
 	 * @see WP_Customize_Control::to_json()
 	 */
 	public function to_json() {
+		
 		parent::to_json();
 
-		$this->json['label']       = esc_html( $this->label );
-		$this->json['description'] = $this->description;
-		$this->json['name']        = $this->name;
-		$this->json['value']       = $this->value();
+		$this->json['label']               = esc_html( $this->label );
+		$this->json['description']         = $this->description;
+		$this->json['name']                = $this->name;
+		$this->json['value']               = $this->value();
+		$this->json['connect']             = $this->connect;
+		$this->json['variant']             = $this->variant;
+		$this->json['link']                = $this->get_link();
+		$this->json['ast_all_font_weight'] = $this->ast_all_font_weight;
 	}
 
 	/**
